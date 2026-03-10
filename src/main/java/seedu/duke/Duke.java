@@ -1,7 +1,7 @@
 package seedu.duke;
 
 import task.Add;
-
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -24,19 +24,29 @@ public class Duke {
         }
     }
 
+    private static void sortApplications(ArrayList<Add> applications) {
+        if (applications.isEmpty()) {
+            System.out.println("No applications to sort!");
+            return;
+        }
+        Collections.sort(applications);
+        System.out.println("Sorted by submission date!");
+        listApplications(applications);
+    }
     /**
      * Main entry-point for the java.duke.Duke application.
      */
     public static void main(String[] args) {
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
+        String logo = ""
+                + "     _   ___   ____   ____   ___  _       ___   _____ \n"
+                + "    | | / _ \\ | __ ) |  _ \\ |_ _|| |     / _ \\ |_   _|\n"
+                + " _  | || | | ||  _ \\ | |_) | | | | |    | | | |  | |  \n"
+                + "| |_| || |_| || |_) ||  __/  | | | |___ | |_| |  | |  \n"
+                + " \\___/  \\___/ |____/ |_|    |___||_____| \\___/   |_|  \n";
         System.out.println("Hello from\n" + logo);
 
         System.out.println("Welcome to Job Application Tracker!");
-        System.out.println("Commands: add | list | bye");
+        System.out.println("Commands: add | list | sort | bye");
         System.out.println("Format: add c/COMPANY p/POSITION d/DATE");
         System.out.println("Example: add c/Google p/Software Engineer Intern d/2024-09-12");
 
@@ -79,8 +89,10 @@ public class Duke {
 
             } else if (input.equals("list")) {
                 listApplications(applications);
+            } else if (input.equals("sort")){
+                sortApplications(applications);
             } else {
-                System.out.println("Unknown command. Use: add or list or bye");
+                System.out.println("Unknown command. Use: add or list or sort or bye");
             }
         }
 
