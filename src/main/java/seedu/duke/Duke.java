@@ -27,14 +27,16 @@ public class Duke {
 
         while (true) {
             System.out.print("> ");
+
+            if (!in.hasNextLine()) {
+                break;
+            }
             String input = in.nextLine().trim();
 
-            // ADDED: Handle commands
             if (input.equals("bye")) {
                 System.out.println("Bye! You added " + applications.size() + " application(s).");
                 break;
             } else if (input.startsWith("add ")) {
-                // Parse the add command
                 int cIndex = input.indexOf("c/");
                 int pIndex = input.indexOf("p/");
                 int dIndex = input.indexOf("d/");
