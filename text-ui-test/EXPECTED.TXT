@@ -5,8 +5,8 @@ Hello from
 | |_| || |_| || |_) ||  __/  | | | |___ | |_| |  | |  
  \___/  \___/ |____/ |_|    |___||_____| \___/   |_|  
 
-Welcome to JobPilot!
-Commands: add | list | sort | delete | bye
+Welcome to Job Application Tracker!
+Commands: add | list | bye
 Format: add c/COMPANY p/POSITION d/DATE
 Example: add c/Google p/Software Engineer Intern d/2024-09-12
 > Added: Google | SE manager | 2025-03-10 | Pending
