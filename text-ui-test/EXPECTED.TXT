@@ -9,11 +9,11 @@ Welcome to JobPilot!
 Commands: add | list | sort | delete | bye
 Format: add c/COMPANY p/POSITION d/DATE
 Example: add c/Google p/Software Engineer Intern d/2024-09-12
-> Added: Google | Software Engineer Intern | 2024-09-12 | Pending
+> Added: Google | SE manager | 2025-03-10 | Pending
 You have 1 application(s)
-Here are your applications:
-1. Google | Software Engineer Intern | 2024-09-12 | Pending
-Deleted application:
-Google | Software Engineer Intern | 2024-09-12 | Pending
+> Here are your applications:
+1. Google | SE manager | 2025-03-10 | Pending
+> Deleted application:
+Google | SE manager | 2025-03-10 | Pending
 You have 0 application(s) left.
-Bye! You added 0 application(s).
+> Bye! You added 0 application(s).
