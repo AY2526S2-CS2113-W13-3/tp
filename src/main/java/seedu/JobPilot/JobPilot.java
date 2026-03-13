@@ -43,7 +43,7 @@ public class JobPilot {
      * @param applications The list containing job applications.
      * @param input The raw user command string.
      */
-    private static void updateStatus(ArrayList<Add> applications, String input) {
+    public static void updateStatus(ArrayList<Add> applications, String input) {
         try {
             // Format: status INDEX set/STATUS note/NOTE
             int setIndex = input.indexOf("set/");

@@ -39,6 +39,10 @@ public class Add implements Comparable<Add>{
         this.status = status;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     @Override
     public String toString() {
         return company + " | " + position + " | " + date + " | " + status;
