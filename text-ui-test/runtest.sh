@@ -1,34 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -e
+set -x
 
-# change to script directory
-cd "${0%/*}" || exit
+JAR_PATH="../build/libs/duke.jar"
 
-# go to project root
-cd ..
-
-# build jar
-./gradlew clean shadowJar
-
-# go to test folder
-cd text-ui-test || exit
-
-rm -f ACTUAL.TXT EXPECTED-UNIX.TXT
-
-# run program
-java -jar ../build/libs/duke.jar < input.txt > ACTUAL.TXT 2>&1
-
-# normalize line endings
-cp EXPECTED.TXT EXPECTED-UNIX.TXT
-dos2unix EXPECTED-UNIX.TXT ACTUAL.TXT
-
-# compare
-diff EXPECTED-UNIX.TXT ACTUAL.TXT
-
-if [ $? -eq 0 ]
-then
-    echo "Test passed!"
-    exit 0
-else
-    echo "Test failed!"
+if [ ! -f "$JAR_PATH" ]; then
+    echo "Error: $JAR_PATH not found!"
     exit 1
 fi
+
+java -jar "$JAR_PATH" < input.txt > ACTUAL.TXT
+diff ACTUAL.TXT EXPECTED.TXT

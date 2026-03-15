@@ -121,7 +121,7 @@ public class JobPilot {
 
 
     /**
-     * Main entry-point for the java.jobpilot.jobpilot application.
+     * Main entry-point for the application.
      */
     public static void main(String[] args) {
         String logo = ""
@@ -132,7 +132,7 @@ public class JobPilot {
                 + " \\___/  \\___/ |____/ |_|    |___||_____| \\___/   |_|  \n";
         System.out.println("Hello from\n" + logo);
 
-        System.out.println("Welcome to jobpilot!");
+        System.out.println("Welcome to JobPilot!");
         System.out.println("Commands: add | list | sort | status | delete | bye");
 
         Scanner in = new Scanner(System.in);
