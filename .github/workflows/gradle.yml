@@ -10,11 +10,20 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Set up repository
+        uses: actions/checkout@master
 
-      # Step 2: Setup Java 17
+      - name: Set up repository
+        uses: actions/checkout@master
+        with:
+          ref: master
+
+      - name: Merge to master
+        run: git checkout --progress --force ${{ github.sha }}
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
@@ -22,41 +31,24 @@ jobs:
           java-version: '17'
           java-package: jdk+fx
 
-      # Step 3: Validate Gradle Wrapper
-      - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v3
+      - name: Build and check with Gradle
+        run: ./gradlew check
 
-      # Step 4: Build project and shadowJar
-      - name: Build shadow jar and run checks
-        run: ./gradlew shadowJar check
-
-      # Step 5: List jar files (debugging)
-      - name: List built jar files
-        run: ls -l build/libs
-
-      # Step 6: Install dos2unix for Linux/macOS
-      - name: Install dos2unix (Linux)
+      - name: Install dos2unix on Linux
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y dos2unix
 
-      - name: Install dos2unix (macOS)
+      - name: Install dos2unix on macOS
         if: runner.os == 'macOS'
         run: brew install dos2unix
 
-      # Step 7: Make sure shell script is executable (Linux/macOS)
-      - name: Make runtest.sh executable
+      - name: Perform IO redirection test (*NIX or macOS)
         if: runner.os == 'Linux' || runner.os == 'macOS'
-        run: chmod +x text-ui-test/runtest.sh
-
-      # Step 8: Run the text-ui-test (*NIX)
-      - name: Perform IO redirection test (*NIX)
-        if: runner.os == 'Linux' || runner.os == 'macOS'
-        working-directory: text-ui-test
+        working-directory: ${{ github.workspace }}/text-ui-test
         run: ./runtest.sh
 
-      # Step 9: Run the text-ui-test (Windows)
       - name: Perform IO redirection test (Windows)
-        if: runner.os == 'Windows'
-        working-directory: text-ui-test
+        if: always() && runner.os == 'Windows'
+        working-directory: ${{ github.workspace }}/text-ui-test
         shell: cmd
         run: runtest.bat
