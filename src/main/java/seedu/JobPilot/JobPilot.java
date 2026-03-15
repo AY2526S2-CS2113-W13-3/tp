@@ -139,7 +139,6 @@ public class JobPilot {
         ArrayList<Add> applications = new ArrayList<>();
 
         while (true) {
-            System.out.print("> ");
             String input = in.nextLine().trim();
 
             if (input.equals("bye")) {
