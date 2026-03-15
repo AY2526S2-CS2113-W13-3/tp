@@ -5,7 +5,7 @@ Hello from
 | |_| || |_| || |_) ||  __/  | | | |___ | |_| |  | |  
  \___/  \___/ |____/ |_|    |___||_____| \___/   |_|  
 
-Welcome to JobPilot!
+Welcome to jobpilot!
 Commands: add | list | sort | status | delete | bye
 Added: Google | SE manager | 2025-03-10 | Pending
 Added: Amazon | Data Analyst | 2025-03-08 | Pending

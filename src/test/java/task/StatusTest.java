@@ -2,7 +2,7 @@ package task;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seedu.JobPilot.JobPilot;
+import jobpilot.JobPilot;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

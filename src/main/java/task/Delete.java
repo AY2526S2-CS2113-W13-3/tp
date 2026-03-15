@@ -1,6 +1,6 @@
 package task;
 
-import seedu.JobPilot.Exceptions.JobPilotException;
+import exception.JobPilotException;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package seedu.JobPilot.Exceptions;
+package exception;
 
 public class JobPilotException extends Exception{
     public JobPilotException(String description) {
