@@ -4,11 +4,54 @@ import seedu.JobPilot.Exceptions.JobPilotException;
 import task.Add;
 import task.Delete;
 
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class JobPilot {
+
+    /**
+     * Adds a new job application to the list.
+     *
+     * @param applications The list of job applications
+     * @param input The raw user command string
+     * @throws JobPilotException If there's an error in the command format
+     */
+    public static void addApplication(ArrayList<Add> applications, String input) throws JobPilotException {
+        try {
+            int cIndex = input.indexOf("c/");
+            int pIndex = input.indexOf("p/");
+            int dIndex = input.indexOf("d/");
+
+            if (cIndex == -1 || pIndex == -1 || dIndex == -1) {
+                throw new JobPilotException("Missing required fields! Use: add c/COMPANY p/POSITION d/DATE");
+            }
+
+            if (cIndex > pIndex || pIndex > dIndex) {
+                throw new JobPilotException("Wrong order! Use: c/COMPANY then p/POSITION then d/DATE");
+            }
+
+            String company = input.substring(cIndex + 2, pIndex).trim();
+            String position = input.substring(pIndex + 2, dIndex).trim();
+            String dateStr = input.substring(dIndex + 2).trim();
+
+            if (company.isEmpty() || position.isEmpty() || dateStr.isEmpty()) {
+                throw new JobPilotException("Fields cannot be empty!");
+            }
+
+            Add app = new Add(company, position, dateStr);
+            applications.add(app);
+
+            System.out.println("Added: " + app);
+
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date! Please use YYYY-MM-DD (e.g., 2024-09-12)");
+        } catch (StringIndexOutOfBoundsException e) {
+            throw new JobPilotException("Error parsing command!");
+        }
+    }
+
     /**
      * Method for listing all the applications
      *
@@ -91,8 +134,6 @@ public class JobPilot {
 
         System.out.println("Welcome to JobPilot!");
         System.out.println("Commands: add | list | sort | status | delete | bye");
-        System.out.println("Format: add c/COMPANY p/POSITION d/DATE");
-        System.out.println("Example: add c/Google p/Software Engineer Intern d/2024-09-12");
 
         Scanner in = new Scanner(System.in);
         ArrayList<Add> applications = new ArrayList<>();
@@ -101,36 +142,15 @@ public class JobPilot {
             System.out.print("> ");
             String input = in.nextLine().trim();
 
-            // ADDED: Handle commands
             if (input.equals("bye")) {
                 System.out.println("Bye! You added " + applications.size() + " application(s).");
                 break;
-            } else if (input.startsWith("add ")) {
-                // Parse the add command
-                int cIndex = input.indexOf("c/");
-                int pIndex = input.indexOf("p/");
-                int dIndex = input.indexOf("d/");
-
-                if (cIndex == -1 || pIndex == -1 || dIndex == -1) {
-                    System.out.println("Invalid format! Use: add c/COMPANY p/POSITION d/DATE");
-                    continue;
+            } else if (input.startsWith("add")) {
+                try {
+                    addApplication(applications, input);
+                } catch (JobPilotException e) {
+                    System.out.println(e.getMessage());
                 }
-
-                String company = input.substring(cIndex + 2, pIndex).trim();
-                String position = input.substring(pIndex + 2, dIndex).trim();
-                String date = input.substring(dIndex + 2).trim();
-
-                if (company.isEmpty() || position.isEmpty() || date.isEmpty()) {
-                    System.out.println("Fields cannot be empty!");
-                    continue;
-                }
-
-                Add app = new Add(company, position, date);
-                applications.add(app);
-
-                System.out.println("Added: " + app);
-                System.out.println("You have " + applications.size() + " application(s)");
-
             } else if (input.equals("list")) {
                 listApplications(applications);
             } else if (input.equals("sort")) {

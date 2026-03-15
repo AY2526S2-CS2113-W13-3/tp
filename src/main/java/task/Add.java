@@ -2,6 +2,8 @@ package task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 /**
  * Represents a job application and provides methods to manage its data.
  */
@@ -11,10 +13,10 @@ public class Add implements Comparable<Add>{
     private LocalDate date; 
     private String status;
 
-    public Add(String company, String position, String dateStr) {
+    public Add(String company, String position, String date) throws DateTimeParseException {
         this.company = company;
         this.position = position;
-        this.date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
+        this.date = LocalDate.parse(date);
         this.status = "Pending";
     }
 
@@ -32,9 +34,8 @@ public class Add implements Comparable<Add>{
     }
 
     public String getDate() {
-        return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
-
     public void setStatus(String status) {
         this.status = status;
     }
