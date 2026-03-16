@@ -70,7 +70,7 @@ public class JobPilot {
         }
     }
 
-    private static void sortApplications(ArrayList<Add> applications) {
+    public static void sortApplications(ArrayList<Add> applications) {
         if (applications.isEmpty()) {
             System.out.println("No applications to sort!");
             return;
