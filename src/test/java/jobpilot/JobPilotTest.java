@@ -74,4 +74,45 @@ public class JobPilotTest {
         assertTrue(output.contains("2. Microsoft | Backend Engineer | 2025-02-01 | Pending"));
         assertTrue(output.contains("3. Amazon | DevOps Engineer | 2025-03-01 | Pending"));
     }
+
+    @Test
+    public void listApplications_emptyList_printsNoApplicationMessage() {
+        ArrayList<Add> emptyApps = new ArrayList<>();
+
+        JobPilot.listApplications(emptyApps);
+
+        String output = outContent.toString().trim();
+        assertEquals("There is no application yet.", output);
+    }
+
+    @Test
+    public void listApplications_singleApplication_printsApplication() {
+        Add app = new Add("Google", "Software Engineer", "2025-01-10");
+        ArrayList<Add> apps = new ArrayList<>();
+        apps.add(app);
+
+        JobPilot.listApplications(apps);
+
+        String output = outContent.toString().trim();
+
+        assertTrue(output.contains("Here are your applications:"));
+        assertTrue(output.contains("1. Google | Software Engineer | 2025-01-10 | Pending"));
+    }
+
+    @Test
+    public void listApplications_multipleApplications_printsAllApplications() {
+        Add app1 = new Add("Google", "Software Engineer", "2025-01-10");
+        Add app2 = new Add("Amazon", "Data Analyst", "2025-02-10");
+
+        ArrayList<Add> apps = new ArrayList<>();
+        apps.add(app1);
+        apps.add(app2);
+
+        JobPilot.listApplications(apps);
+
+        String output = outContent.toString().trim();
+
+        assertTrue(output.contains("1. Google | Software Engineer | 2025-01-10 | Pending"));
+        assertTrue(output.contains("2. Amazon | Data Analyst | 2025-02-10 | Pending"));
+    }
 }
