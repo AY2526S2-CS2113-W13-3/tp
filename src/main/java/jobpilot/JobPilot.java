@@ -57,7 +57,7 @@ public class JobPilot {
      *
      * @param applications
      */
-    private static void listApplications(ArrayList<Add> applications) {
+    public static void listApplications(ArrayList<Add> applications) {
         if (applications.isEmpty()) {
             System.out.println("There is no application yet.");
         } else {
