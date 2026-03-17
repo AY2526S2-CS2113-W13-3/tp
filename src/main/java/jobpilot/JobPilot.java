@@ -134,15 +134,14 @@ public class JobPilot {
 
         System.out.println("Welcome to JobPilot!");
         System.out.println("Commands: add | list | sort | status | delete | bye");
-
         // Check if assertions are enabled
-        boolean assertionsEnabled = false;
-        assert assertionsEnabled = true;
-        if (assertionsEnabled) {
-            System.out.println("ASSERTIONS ARE ENABLED");
-        } else {
-            System.out.println("ASSERTIONS ARE DISABLED - Use java -ea");
-        }
+        // boolean assertionsEnabled = false;
+        // assert assertionsEnabled = true;
+        // if (assertionsEnabled) {
+        //    System.out.println("ASSERTIONS ARE ENABLED");
+        // } else {
+        //    System.out.println("ASSERTIONS ARE DISABLED - Use java -ea");
+        // }
 
         Scanner in = new Scanner(System.in);
         ArrayList<Add> applications = new ArrayList<>();
