@@ -1,18 +1,29 @@
 #!/usr/bin/env bash
 
 # change to script directory
-cd "${0%/*}"
+cd "${0%/*}" || exit
 
+# go to project root
 cd ..
+
+# build jar
 ./gradlew clean shadowJar
 
-cd text-ui-test
+# go to test folder
+cd text-ui-test || exit
 
-java  -jar $(find ../build/libs/ -mindepth 1 -print -quit) < input.txt > ACTUAL.TXT
+rm -f ACTUAL.TXT EXPECTED-UNIX.TXT
 
+# run program
+java -jar ../build/libs/duke.jar < input.txt > ACTUAL.TXT 2>&1
+
+# normalize line endings
 cp EXPECTED.TXT EXPECTED-UNIX.TXT
 dos2unix EXPECTED-UNIX.TXT ACTUAL.TXT
+
+# compare
 diff EXPECTED-UNIX.TXT ACTUAL.TXT
+
 if [ $? -eq 0 ]
 then
     echo "Test passed!"

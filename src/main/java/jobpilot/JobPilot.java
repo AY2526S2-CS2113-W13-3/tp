@@ -1,6 +1,6 @@
-package seedu.JobPilot;
+package jobpilot;
 
-import seedu.JobPilot.Exceptions.JobPilotException;
+import exception.JobPilotException;
 import task.Add;
 import task.Delete;
 
@@ -19,10 +19,19 @@ public class JobPilot {
      * @throws JobPilotException If there's an error in the command format
      */
     public static void addApplication(ArrayList<Add> applications, String input) throws JobPilotException {
+        assert applications != null : "Applications list cannot be null";
+        assert input != null : "Input cannot be null";
+        assert input.startsWith("add") : "Command must start with 'add'";
+
         try {
             int cIndex = input.indexOf("c/");
             int pIndex = input.indexOf("p/");
             int dIndex = input.indexOf("d/");
+
+            if (cIndex != -1 && pIndex != -1 && dIndex != -1) {
+                assert cIndex < pIndex : "c/ should come before p/ in valid input";
+                assert pIndex < dIndex : "p/ should come before d/ in valid input";
+            }
 
             if (cIndex == -1 || pIndex == -1 || dIndex == -1) {
                 throw new JobPilotException("Missing required fields! Use: add c/COMPANY p/POSITION d/DATE");
@@ -57,7 +66,7 @@ public class JobPilot {
      *
      * @param applications
      */
-    private static void listApplications(ArrayList<Add> applications) {
+    public static void listApplications(ArrayList<Add> applications) {
         if (applications.isEmpty()) {
             System.out.println("There is no application yet.");
         } else {
@@ -70,7 +79,7 @@ public class JobPilot {
         }
     }
 
-    private static void sortApplications(ArrayList<Add> applications) {
+    public static void sortApplications(ArrayList<Add> applications) {
         if (applications.isEmpty()) {
             System.out.println("No applications to sort!");
             return;
@@ -121,7 +130,7 @@ public class JobPilot {
 
 
     /**
-     * Main entry-point for the java.JobPilot.JobPilot application.
+     * Main entry-point for the application.
      */
     public static void main(String[] args) {
         String logo = ""
@@ -134,6 +143,15 @@ public class JobPilot {
 
         System.out.println("Welcome to JobPilot!");
         System.out.println("Commands: add | list | sort | status | delete | bye");
+
+        // Check if assertions are enabled
+        boolean assertionsEnabled = false;
+        assert assertionsEnabled = true;
+        if (assertionsEnabled) {
+            System.out.println("ASSERTIONS ARE ENABLED");
+        } else {
+            System.out.println("ASSERTIONS ARE DISABLED - Use java -ea");
+        }
 
         Scanner in = new Scanner(System.in);
         ArrayList<Add> applications = new ArrayList<>();
@@ -171,13 +189,12 @@ public class JobPilot {
     }
 
     /**
-     * Deletes an application from the list using the index provided by the user by invoking the Delete class.
+     * Deletes an application from the list by parsing the index provided by the user.
      *
      * @param input The full user command (e.g., "delete 2").
      * @param applications The list storing all job applications.
-     * @throws NumberFormatException If the index provided is not a valid integer.
+     * @throws JobPilotException If the index provided is not a valid integer.
      */
-
     private static void deleteApplication(String input, ArrayList<Add> applications) throws JobPilotException {
         try {
             Delete.deleteApplication(input, applications);

@@ -2,7 +2,7 @@ package task;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seedu.JobPilot.Exceptions.JobPilotException;
+import exception.JobPilotException;
 
 import java.util.ArrayList;
 

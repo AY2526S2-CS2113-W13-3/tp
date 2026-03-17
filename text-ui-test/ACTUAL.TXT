@@ -7,22 +7,26 @@ Hello from
 
 Welcome to JobPilot!
 Commands: add | list | sort | status | delete | bye
-Added: Google | SE manager | 2025-03-10 | Pending
-Added: Amazon | Data Analyst | 2025-03-08 | Pending
-Added: Microsoft | SDE Intern | 2025-03-12 | Pending
-Here are your applications:
+> Added: Google | SE manager | 2025-03-10 | Pending
+> Added: Amazon | Data Analyst | 2025-03-08 | Pending
+> Added: Microsoft | SDE Intern | 2025-03-12 | Pending
+> Here are your applications:
 1. Google | SE manager | 2025-03-10 | Pending
 2. Amazon | Data Analyst | 2025-03-08 | Pending
 3. Microsoft | SDE Intern | 2025-03-12 | Pending
-Sorted by submission date!
+> Sorted by submission date!
 Here are your applications:
 1. Amazon | Data Analyst | 2025-03-08 | Pending
 2. Google | SE manager | 2025-03-10 | Pending
 3. Microsoft | SDE Intern | 2025-03-12 | Pending
-Deleted application:
+> Deleted application:
 Amazon | Data Analyst | 2025-03-08 | Pending
 You have 2 application(s) left.
-Here are your applications:
+> Here are your applications:
 1. Google | SE manager | 2025-03-10 | Pending
 2. Microsoft | SDE Intern | 2025-03-12 | Pending
+<<<<<<< HEAD
 Bye! You added 2 application(s).
+=======
+> Bye! You added 2 application(s).
+>>>>>>> 6fbb3caca3f699f551210ea3b7d8c4541c46c9c2
