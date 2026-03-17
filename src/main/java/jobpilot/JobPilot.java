@@ -19,19 +19,10 @@ public class JobPilot {
      * @throws JobPilotException If there's an error in the command format
      */
     public static void addApplication(ArrayList<Add> applications, String input) throws JobPilotException {
-        assert applications != null : "Applications list cannot be null";
-        assert input != null : "Input cannot be null";
-        assert input.startsWith("add") : "Command must start with 'add'";
-
         try {
             int cIndex = input.indexOf("c/");
             int pIndex = input.indexOf("p/");
             int dIndex = input.indexOf("d/");
-
-            if (cIndex != -1 && pIndex != -1 && dIndex != -1) {
-                assert cIndex < pIndex : "c/ should come before p/ in valid input";
-                assert pIndex < dIndex : "p/ should come before d/ in valid input";
-            }
 
             if (cIndex == -1 || pIndex == -1 || dIndex == -1) {
                 throw new JobPilotException("Missing required fields! Use: add c/COMPANY p/POSITION d/DATE");
@@ -50,8 +41,8 @@ public class JobPilot {
             }
 
             Add app = new Add(company, position, dateStr);
-            applications.add(app);
 
+            applications.add(app);
             System.out.println("Added: " + app);
 
         } catch (DateTimeParseException e) {

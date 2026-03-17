@@ -22,9 +22,6 @@ public class Add implements Comparable<Add>{
         assert !position.trim().isEmpty(): "Position cannot be empty string!";
         assert !date.trim().isEmpty(): "Date cannot be empty string!";
 
-        assert date.matches("\\d{4}-\\d{2}-\\d{2}")
-                : "Date should be in YYYY-MM-DD format, but got: " + date;
-
         this.company = company;
         this.position = position;
         this.date = LocalDate.parse(date);
