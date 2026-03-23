@@ -200,11 +200,11 @@ public class JobPilot {
             if (isAdd) {
                 app.addIndustryTag(tag);
                 LOGGER.log(Level.INFO, "Added tag " + tag + " to application at index " + listIndex);
-                System.out.println("Added tag: " + tag + " → " + app);
+                System.out.println("Added tag: " + tag + " ->" + app);
             } else {
                 app.removeIndustryTag(tag);
                 LOGGER.log(Level.INFO, "Removed tag " + tag + " from application at index " + listIndex);
-                System.out.println("Removed tag: " + tag + " → " + app);
+                System.out.println("Removed tag: " + tag + " ->" + app);
             }
 
         } catch (NumberFormatException e) {

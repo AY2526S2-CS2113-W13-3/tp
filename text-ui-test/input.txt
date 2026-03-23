@@ -2,7 +2,19 @@ add c/Google p/SE manager d/2025-03-10
 add c/Amazon p/Data Analyst d/2025-03-08
 add c/Microsoft p/SDE Intern d/2025-03-12
 list
+tag 1 add/TECH
+tag 2 add/FINANCE
+tag 2 add/DATA
+tag 3 add/TECH
+tag 3 add/INTERN
+status 1 set/OFFER note/Negotiate salary
+status 2 set/Interview note/Case study prep
+status 3 set/Pending note/Waiting for reply
+search Google
+search micro
 sort
+list
+tag 2 remove/FINANCE
 delete 1
 list
 bye
