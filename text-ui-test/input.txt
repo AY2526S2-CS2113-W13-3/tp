@@ -17,4 +17,5 @@ list
 tag 2 remove/FINANCE
 delete 1
 list
+search google
 bye

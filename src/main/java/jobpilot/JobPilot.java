@@ -3,7 +3,7 @@ package jobpilot;
 import exception.JobPilotException;
 import task.Add;
 import task.Delete;
-import task.IndustryTag; // 新增：导入标签类
+import task.IndustryTag; 
 
 import java.time.format.DateTimeParseException;
 import java.util.Collections;
@@ -74,11 +74,11 @@ public class JobPilot {
 
         System.out.println("Here are your applications:");
         int index = 0;
-        for (Add app : applications) {
-            if (app == null) {
+        for (Add application : applications) {
+            if (application == null) {
                 System.out.println((index + 1) + ". [Invalid application data]");
             } else {
-                System.out.println((index + 1) + ". " + app);
+                System.out.println((index + 1) + ". " + application);
             }
             index++;
         }

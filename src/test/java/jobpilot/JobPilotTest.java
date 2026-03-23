@@ -115,4 +115,79 @@ public class JobPilotTest {
         assertTrue(output.contains("1. Google | Software Engineer | 2025-01-10 | Pending"));
         assertTrue(output.contains("2. Amazon | Data Analyst | 2025-02-10 | Pending"));
     }
+
+    @Test
+    public void searchByCompany_noMatches_printsNoApplicationsFound() {
+        ArrayList<Add> apps = new ArrayList<>();
+        apps.add(new Add("Google", "Software Engineer", "2025-01-10"));
+        apps.add(new Add("Amazon", "Data Analyst", "2025-02-10"));
+
+        JobPilot.searchByCompany(apps, "search Microsoft");
+
+        String output = outContent.toString().trim();
+        assertTrue(output.contains("No applications found for company: Microsoft"));
+    }
+
+    @Test
+    public void searchByCompany_exactMatch_findsApplication() {
+        ArrayList<Add> apps = new ArrayList<>();
+        apps.add(new Add("Google", "Software Engineer", "2025-01-10"));
+        apps.add(new Add("Amazon", "Data Analyst", "2025-02-10"));
+
+        JobPilot.searchByCompany(apps, "search Google");
+
+        String output = outContent.toString().trim();
+        assertTrue(output.contains("Found 1 application(s) matching 'Google'"));
+        assertTrue(output.contains("Google | Software Engineer | 2025-01-10 | Pending"));
+        assertFalse(output.contains("Amazon"));
+    }
+
+    @Test
+    public void searchByCompany_partialMatch_findsApplication() {
+        ArrayList<Add> apps = new ArrayList<>();
+        apps.add(new Add("Google", "Software Engineer", "2025-01-10"));
+        apps.add(new Add("GoGoTravel", "Product Manager", "2025-02-10"));
+        apps.add(new Add("Amazon", "Data Analyst", "2025-03-10"));
+
+        JobPilot.searchByCompany(apps, "search Go");
+
+        String output = outContent.toString().trim();
+        assertTrue(output.contains("Found 2 application(s) matching 'Go'"));
+        assertTrue(output.contains("Google"));
+        assertTrue(output.contains("GoGoTravel"));
+        assertFalse(output.contains("Amazon"));
+    }
+
+    @Test
+    public void searchByCompany_caseInsensitive_findsApplication() {
+        ArrayList<Add> apps = new ArrayList<>();
+        apps.add(new Add("Google", "Software Engineer", "2025-01-10"));
+        apps.add(new Add("Amazon", "Data Analyst", "2025-02-10"));
+
+        JobPilot.searchByCompany(apps, "search GOOGLE");
+
+        String output = outContent.toString().trim();
+        assertTrue(output.contains("Found 1 application(s) matching 'GOOGLE'"));
+        assertTrue(output.contains("Google"));
+    }
+
+    @Test
+    public void searchByCompany_emptySearchTerm_printsErrorMessage() {
+        ArrayList<Add> apps = new ArrayList<>();
+        apps.add(new Add("Google", "Software Engineer", "2025-01-10"));
+
+        JobPilot.searchByCompany(apps, "search ");
+
+        String output = outContent.toString().trim();
+        assertTrue(output.contains("Please provide a company name to search"));
+    }
+
+    @Test
+    public void searchByCompany_emptyList_printsNoApplicationsMessage() {
+        ArrayList<Add> emptyApps = new ArrayList<>();
+
+        JobPilot.searchByCompany(emptyApps, "search Google");
+        String output = outContent.toString().trim();
+        assertEquals("No applications to search!", output);
+    }
 }

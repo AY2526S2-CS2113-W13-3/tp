@@ -23,6 +23,8 @@ public class Delete {
                 throw new JobPilotException("Please provide an index. Example: delete 1");
             }
 
+            assert applications != null : "The application list is empty!";
+
             int deleteIndex = Integer.parseInt(parts[1]) - 1;
 
             if (deleteIndex < 0 || deleteIndex >= applications.size()) {
@@ -35,6 +37,7 @@ public class Delete {
             System.out.println(removed);
             System.out.println("You have " + applications.size() + " application(s) left.");
 
+            assert removed != null : "The application was not successfully deleted. Please try again!";
         } catch (NumberFormatException e) {
             throw new JobPilotException("Invalid format! Use: delete INDEX");
         }
