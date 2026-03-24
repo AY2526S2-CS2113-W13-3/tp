@@ -1,0 +1,53 @@
+@startuml
+skinparam ParticipantBackgroundColor #white
+skinparam ActorBackgroundColor #white
+skinparam NoteBackgroundColor #white
+skinparam LifeLineBackgroundColor #white
+skinparam ArrowColor #black
+skinparam SequenceMessageAlign center
+
+actor User as user
+participant ":JobPilot" as jp
+participant "Delete:Delete" as del <<static>>
+participant "applications:ArrayList<Add>" as apps
+participant "removed:Add" as removed
+participant "System.out:PrintStream" as sysout
+
+user -> jp : "delete 2"
+activate jp
+
+jp -> jp : deleteApplication("delete 2", applications)
+activate jp #darkgrey
+
+jp -> del : deleteApplication("delete 2", applications)
+activate del
+
+note right of del
+    1. splits input: parts = ["delete", "2"]
+    2. parses parts[1]: index = 2
+    3. validates: deleteIndex = 1
+end note
+
+del -> apps : remove(1)
+activate apps
+return removed:Add
+
+del -> removed : toString()
+activate removed
+return "Amazon | Data Analyst | ..."
+
+del -> sysout : println("Deleted application:")
+activate sysout
+return
+del -> sysout : println("Amazon | Data Analyst | ...")
+activate sysout
+return
+del -> sysout : println("You have 1 application(s) left.")
+activate sysout
+return
+
+deactivate del
+deactivate jp
+jp --> user : wait for input
+deactivate jp
+@enduml

@@ -1,0 +1,25 @@
+@startuml
+hide empty members
+skinparam packageStyle rectangle
+
+package "System Memory State (Step 5)" {
+    object "<u>applications:ArrayList<Add></u>" as apps {
+        size = 1
+    }
+
+    object "<u>app1:Add</u>" as app1 {
+        company = "Google"
+        position = "Software Engineer"
+        date = "01/01/2026"
+        status = "PENDING"
+        tags = "Tech"
+    }
+}
+
+apps --> app1 : index 0
+
+note right of apps
+  "app2" reference is removed.
+  Details of the deleted application are printed.
+end note
+@enduml
