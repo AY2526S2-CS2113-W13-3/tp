@@ -237,6 +237,176 @@ JobPilot -> User : display results
 - Introduce indexing for faster lookup in large datasets
 - Separate search logic into its own component for better modularity
 
+### Sort Application Feature
+
+#### Implementation Details
+
+The Sort feature allows users to sort all job applications by date in ascending chronological order. This feature is implemented directly within the `JobPilot` class.
+
+**Command Format**: `sort`
+
+The command does not require any parameters. When executed, all applications are sorted by date automatically.
+
+Example Usage:
+- `sort` (Sort all applications by date)
+
+The sorting logic is implemented in the method:
+
+- `JobPilot#sortApplications(ArrayList<Add>)`
+
+Applications are stored in a central `ArrayList<Add>`. The list is sorted using a date comparator: Collections.sort(applications, Comparator.comparing(Add::getDate));
+
+
+Given below is an example usage scenario:
+
+**Step 1.** The user executes `sort`. Input is read in `JobPilot.main()`.
+
+**Step 2.** The system detects the `sort` command and calls `sortApplications`.
+
+**Step 3.** The method checks if the application list is empty.
+
+**Step 4.** If not empty, the list is sorted in ascending order by date.
+
+**Step 5.** The sorted list is displayed to the user.
+
+---
+
+#### Error Handling
+
+| Error Scenario | Condition | User Response |
+|----------------|----------|---------------|
+| No Applications | Application list is empty | "No applications to sort!" |
+
+---
+
+#### Design Rationale
+
+| Decision | Rationale |
+|----------|----------|
+| Sort by date automatically | Most logical for job tracking |
+| Ascending order | Ensures earliest applications appear first |
+| No command parameters | Keeps command simple and intuitive |
+| Use `Collections.sort` | Reliable and easy to maintain |
+
+---
+
+#### Design Considerations
+
+**Aspect: Sorting logic placement**
+
+* **Current Implementation:** Sorting handled in `JobPilot`
+  * *Pros:* Simple and direct integration
+  * *Cons:* Slight coupling with main class
+
+---
+
+### Tag Industry to Job Application Feature
+
+#### Implementation Details
+
+The Tag feature allows users to add or remove industry tags for job applications. Tags are automatically converted to uppercase and duplicates are prevented. This feature is implemented using a dedicated `IndustryTag` class.
+
+**Command Format**: `tag INDEX add/TAG` or `tag INDEX remove/TAG`
+
+Example Usage:
+- `tag 1 add/TECH`
+- `tag 2 remove/FINANCE`
+
+The feature is implemented using the following methods:
+
+- `JobPilot#tagApplication(String, ArrayList<Add>)`
+- `IndustryTag#executeTagCommand(ArrayList<Add>, String)`
+
+Given below is an example usage scenario:
+
+**Step 1.** The user executes a tag command.
+
+**Step 2.** `JobPilot` routes the command to `IndustryTag`.
+
+**Step 3.** The index, action, and tag content are parsed.
+
+**Step 4.** The target application is retrieved.
+
+**Step 5.** The tag is added or removed:
+- Converted to uppercase
+- Duplicate tags prevented
+
+**Step 6.** The updated application is displayed.
+
+---
+
+#### Error Handling
+
+| Error Scenario | Condition | User Response |
+|----------------|----------|---------------|
+| Missing index | No index provided | "Please provide an index. Example: tag 1 add/TECH" |
+| Invalid index | Out of bounds | "Invalid application number!" |
+| Empty tag | No tag content | "Tag cannot be empty!" |
+| Remove non-existent tag | Tag not found | "Tag not found on this application!" |
+
+---
+
+#### Design Rationale
+
+| Decision | Rationale |
+|----------|----------|
+| Separate `IndustryTag` class | Improves modularity and separation of concerns |
+| Uppercase tags | Ensures consistency |
+| Deduplication | Prevents redundant data |
+| `add/` and `remove/` syntax | Matches existing command patterns |
+
+---
+
+### Separate Notes from Status Feature
+
+#### Implementation Details
+
+This feature separates the original `status` field into `status` and `notes`, allowing independent updates.
+
+**Command Format**: `status INDEX set/STATUS note/NOTES`
+
+Example Usage:
+- `status 1 set/OFFER note/Negotiate salary`
+- `status 2 set/INTERVIEW note/Prepare portfolio`
+
+The feature is implemented in:
+
+- `JobPilot#updateStatus(String, ArrayList<Add>)`
+
+Given below is an example usage scenario:
+
+**Step 1.** The user executes a status command.
+
+**Step 2.** Input is parsed to extract index, status, and notes.
+
+**Step 3.** The target application is retrieved.
+
+**Step 4.** `setStatus()` and `setNotes()` are called.
+
+**Step 5.** The updated application is displayed.
+
+---
+
+#### Error Handling
+
+| Error Scenario | Condition | User Response |
+|----------------|----------|---------------|
+| Missing index | No index provided | "Please provide an index." |
+| Invalid index | Out of range | "Invalid application number!" |
+| Invalid format | Incorrect syntax | "Invalid status format!" |
+| Empty status | No status given | "Status cannot be empty!" |
+
+---
+
+#### Design Rationale
+
+| Decision | Rationale |
+|----------|----------|
+| Separate status and notes | Improves clarity of data |
+| Dedicated command | Keeps logic focused |
+| `note/` prefix | Supports multi-word notes |
+| Backward compatibility | Existing data remains valid |
+
 
 ## Product scope
 ### Target user profile
