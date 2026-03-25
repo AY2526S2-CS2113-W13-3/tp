@@ -10,24 +10,14 @@ public class Deleter {
     /**
      * Deletes an application from the list by parsing the index provided by the user.
      *
-     * @param input        The full user command (e.g., "delete 2").
      * @param applications The list storing all job applications.
+     * @param deleteIndex The index of the application to be removed.
      * @return The application that was successfully removed.
      * @throws JobPilotException If the index provided is not a valid integer or is out of range.
      */
-    public static Application deleteApplication(String input, ArrayList<Application> applications)
+    public static Application deleteApplication(ArrayList<Application> applications, int deleteIndex)
             throws JobPilotException {
         try {
-            String[] parts = input.split(" ");
-
-            if (parts.length < 2) {
-                throw new JobPilotException("Please provide an index. Example: delete 1");
-            }
-
-            assert applications != null : "The application list is empty!";
-
-            int deleteIndex = Integer.parseInt(parts[1]) - 1;
-
             if (deleteIndex < 0 || deleteIndex >= applications.size()) {
                 throw new JobPilotException("Invalid application number!");
             }

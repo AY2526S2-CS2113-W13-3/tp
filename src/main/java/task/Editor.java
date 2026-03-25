@@ -1,6 +1,8 @@
 package task;
 
 import exception.JobPilotException;
+import ui.Ui;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -138,8 +140,7 @@ public class Editor {
                     "No valid fields to update! Use: c/COMPANY, p/POSITION, d/DATE, or s/STATUS");
         }
 
-        System.out.println("Updated application:");
-        System.out.println(target);
+        Ui.showApplicationEdited(target);
     }
 
     /**
