@@ -124,7 +124,7 @@ public class CommandRunner {
             break;
 
         default:
-            Ui.showError("Unknown command.");
+            Ui.showError("Unknown command. Type 'help' to see all available commands.");
         }
 
         return true;

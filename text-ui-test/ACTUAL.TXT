@@ -7,6 +7,12 @@ Hello from
 
 Welcome to JobPilot!
 Type 'help' to see all available commands!
+Deleted application:
+Apple | SE manager | 2027-01-09 | OFFER (Note: Negotiate salary) | Tags: [TECH]
+You have 1 application(s) left.
+Deleted application:
+Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+You have 0 application(s) left.
 Available Commands:
 add c/COMPANY p/POSITION d/DATE                             Add a new job application
 edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]     Edit existing application

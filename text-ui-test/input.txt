@@ -1,3 +1,5 @@
+delete 1
+delete 1
 help
 add c/Google p/SE manager d/2025-03-10
 add c/Amazon p/Data Analyst d/2025-03-08

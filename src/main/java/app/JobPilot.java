@@ -18,7 +18,7 @@ public class JobPilot {
     private static final Logger LOGGER = Logger.getLogger(JobPilot.class.getName());
 
     public static void main(String[] args) {
-        LOGGER.setLevel(Level.OFF);
+        LOGGER.setLevel(Level.INFO);
 
         Ui.showWelcome();
         Storage storage = new Storage();

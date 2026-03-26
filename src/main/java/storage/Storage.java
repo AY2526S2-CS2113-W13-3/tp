@@ -20,8 +20,6 @@ import java.util.logging.Logger;
  */
 public class Storage {
 
-    private static final Logger logger = Logger.getLogger(Storage.class.getName());
-
     public static final String CURRENT_WORKING_DIRECTORY = System.getProperty("user.dir");
     private static final Path FILE_PATH = Paths.get(CURRENT_WORKING_DIRECTORY, "data", "JobPilotData.txt");
     private File jobPilotDataFile;
@@ -134,12 +132,7 @@ public class Storage {
             }
 
             writer.close();
-
-            logger.info("Successfully saved " + applications.size()
-                    + " application(s) to file: " + jobPilotDataFile.getAbsolutePath());
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to save data to file: "
-                    + jobPilotDataFile.getAbsolutePath(), e);
             System.out.println("I could not save your data! " + e.getMessage());
         }
     }
