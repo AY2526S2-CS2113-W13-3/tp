@@ -1,19 +1,44 @@
 @echo off
-setlocal enableextensions
-pushd %~dp0
+ setlocal enabledelayedexpansion
 
-cd ..
-call gradlew clean shadowJar
+ REM change to script directory
+ cd /d %~dp0
 
-cd build\libs
-for /f "tokens=*" %%a in (
-    'dir /b *.jar'
-) do (
-    set jarloc=%%a
-)
+ REM go to project root
+ cd ..
 
-java -jar %jarloc% < ..\..\text-ui-test\input.txt > ..\..\text-ui-test\ACTUAL.TXT
+ REM build jar
+ call gradlew clean shadowJar
 
-cd ..\..\text-ui-test
+ REM go to test folder
+ cd text-ui-test || exit /b 1
 
-FC ACTUAL.TXT EXPECTED.TXT >NUL && ECHO Test passed! || Echo Test failed!
+ REM clean old files
+ if exist ACTUAL.TXT del ACTUAL.TXT
+ if exist EXPECTED-UNIX.TXT del EXPECTED-UNIX.TXT
+
+ REM find jar file
+ cd ..\build\libs
+ for %%f in (*.jar) do (
+     set "JAR=%%f"
+ )
+
+ REM go back to test folder
+ cd ..\..\text-ui-test
+
+ REM run program
+ java -jar ..\build\libs\%JAR% < input.txt > ACTUAL.TXT 2>&1
+
+ REM normalize line endings (basic Windows-safe way)
+ type EXPECTED.TXT > EXPECTED-UNIX.TXT
+
+ REM compare files
+ FC EXPECTED-UNIX.TXT ACTUAL.TXT >nul
+
+ if %errorlevel%==0 (
+     echo Test passed!
+     exit /b 0
+ ) else (
+     echo Test failed!
+     exit /b 1
+ )
