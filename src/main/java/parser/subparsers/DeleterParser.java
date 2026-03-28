@@ -3,7 +3,6 @@ package parser.subparsers;
 import exception.JobPilotException;
 import parser.ParsedCommand;
 
-// @@ author abigailtong
 /**
  * Parses the delete command.
  */
