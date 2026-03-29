@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * Ensures that the application list is saved between sessions.
  */
 public class Storage {
-
+    private static final Logger LOGGER = Logger.getLogger(Storage.class.getName());
     public static final String CURRENT_WORKING_DIRECTORY = System.getProperty("user.dir");
     private static final Path FILE_PATH = Paths.get(CURRENT_WORKING_DIRECTORY, "data", "JobPilotData.txt");
     private File jobPilotDataFile;
@@ -31,6 +31,7 @@ public class Storage {
      */
     public Storage() {
         jobPilotDataFile = FILE_PATH.toFile();
+        LOGGER.setLevel(Level.SEVERE);
 
         try {
             File parentDir = jobPilotDataFile.getParentFile();
@@ -57,6 +58,8 @@ public class Storage {
 
         try {
             Scanner scanner = new Scanner(jobPilotDataFile);
+
+            LOGGER.log(Level.INFO, "Loading data from " + FILE_PATH);
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
@@ -98,6 +101,7 @@ public class Storage {
             scanner.close();
 
         } catch (FileNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "JobPilot Data file not found at " + FILE_PATH, e);
             System.out.println("No existing data file found. Starting fresh!");
         }
 
@@ -113,6 +117,7 @@ public class Storage {
     public void saveToFile(ArrayList<Application> applications) {
         try {
             FileWriter writer = new FileWriter(jobPilotDataFile, false);
+            LOGGER.log(Level.INFO, "Saving data to " + FILE_PATH);
 
             for (Application app : applications) {
                 StringBuilder sb = new StringBuilder();
@@ -130,8 +135,8 @@ public class Storage {
 
                 writer.write(sb.toString() + System.lineSeparator());
             }
-
             writer.close();
+            LOGGER.log(Level.INFO, "Exported empty warehouse state.");
         } catch (IOException e) {
             System.out.println("I could not save your data! " + e.getMessage());
         }

@@ -4,9 +4,40 @@
 
 {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
 
-## Design & Implementation
+## Design
 
-{Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
+### UI Component
+
+The API of this component is specified in `Ui.java`.
+
+![Ui Component](diagrams/component-ui/ui-class.png)
+
+The UI consists of a centralized `Ui` class that serves as the boundary between the user and the system. Since it is a CLI application, it relies on standard input and output.
+
+The `UI` component uses the standard Java `Scanner` to capture user input. The formatting for UI outputs (e.g., the welcome logo, help menus, and application lists) is defined directly within the `Ui` class using text blocks and formatted strings.
+
+The `UI` component,
+
+* reads raw user commands from the console.
+* displays formatted messages, search results, and errors to the user based on command execution.
+* operates passively; it relies on the `JobPilot` main loop and `CommandRunner` to invoke its specific display methods (e.g., `showApplicationAdded`, `showSearchResults`).
+* depends on some classes in the `Model` component, as it displays `Application` and `IndustryTag` objects.
+
+
+### Storage Component
+
+The **API** of this component is specified in `Storage.java`.
+
+![Ui Component](diagrams/component-ui/ui-class.png)
+
+The `Storage` component,
+
+* can save job application data in a text format (`.txt`), separated by '|', and read them back into corresponding `Application` objects.
+* handles missing directories or files automatically by creating the necessary `data/JobPilotData.txt` file upon initialization if it does not exist.
+* parses the text file, actively invalidating corrupted or invalid lines during the loading process to ensure the application does not crash upon startup.
+* depends on some classes in the `task` component, because the `Storage` component's primary job is to serialize and deserialize `Application` and `IndustryTag` objects.
+
+## Implementation
 
 ### Edit Application Feature
 The Edit feature allows users to modify existing job applications. This feature was implemented by Labelle.
@@ -55,30 +86,34 @@ The Edit application feature is implemented through a Edit class:
 
 #### Implementation Details
 
-The Delete application mechanism is facilitated by the main `JobPilot` class and delegated to a dedicated `Delete` utility class. The application's core state is managed within a single `ArrayList<Add>` named `applications`, which stores all job application entities.
+The Delete application mechanism is facilitated by the `CommandRunner` component, which manages the application's core state through an `ArrayList<Application>` named `applications`.
 
-The operations are exposed and handled internally via the following methods:
+The operations are exposed and handled internally via the following flow:
 
-* `JobPilot#deleteApplication(String, ArrayList<Add>)` — Acts as an intermediate router that intercepts the raw user input and delegates it to the `Delete` class.
-* `Delete#deleteApplication(String, ArrayList<Add>)` — Parses the string to extract the target index, validates the bounds against the `ArrayList`, removes the `Add` object, and handles the console output.
+* `DeleterParser#parse(String)` — Parses the raw user input to extract the target index, converting it to a 0-based index and returning a structured `ParsedCommand` object.
+* `CommandRunner#run(ParsedCommand)` — Acts as the central router, matching the `DELETE` command type and coordinating between the logic and UI components.
+* `Deleter#deleteApplication(ArrayList<Application>, int)` — Validates the array bounds, removes the target `Application` object from the memory list, and returns the removed object.
+* `Ui#showApplicationDeleted(Application, int)` — Handles the console output to inform the user of the successful deletion.
 
 Given below is an example usage scenario demonstrating how the Delete mechanism behaves at each step.
 
-**Step 1.** The user executes `delete 2`. The `Scanner` inside the `JobPilot.main()` loop reads the raw input string.
+**Step 1.** The user executes `delete 2`. The `Ui.readCommand()` method captures the raw input string.
 
-**Step 2.** The `if-else` execution block in `JobPilot.main()` recognizes the `delete` command and routes execution to the private helper method `JobPilot#deleteApplication()`.
+**Step 2.** The input is passed to `Parser.parse()`, which identifies the `delete` keyword and delegates to `DeleterParser.parse()`.
 
-**Step 3.** The helper method immediately delegates the operation to the static `Delete.deleteApplication()` method. The `Delete` class splits the raw string by spaces (`input.split(" ")`) to extract the index `"2"`.
+**Step 3.** `DeleterParser` splits the string, extracts the index `"2"`, converts it to a 0-based integer (`1`), and packages it into a `ParsedCommand(type=DELETE, index=1)` object.
 
-**Step 4.** `Delete.deleteApplication()` parses the extracted string into an integer and converts it to a 0-based index (`1`). It validates that the index is within the valid bounds of the `applications` list.
+**Step 4.** The `CommandRunner#run()` method receives the `ParsedCommand`. The `switch` statement recognizes the `DELETE` type and invokes `Deleter.deleteApplication(applications, cmd.index)`.
 
 ![Steps 1 to 4](diagrams/delete/step14.png)
 
-**Step 5.** The target `Add` object is removed via `applications.remove(1)`. Instead of returning control to a UI component, the `Delete` class directly prints the details of the removed object and the remaining application count to `System.out`.
+**Step 5.** `Deleter` validates that index `1` is within the valid bounds of the `applications` list. It removes the target `Application` object via `applications.remove(1)` and returns the deleted object back to the `CommandRunner`.
 
 ![Step 5](diagrams/delete/step5.png)
 
-*Note: If the user inputs a non-numeric index (e.g., `delete abc`), a `NumberFormatException` is caught internally by the `Delete` class, which then throws a custom `JobPilotException` back up to the main loop to be displayed.*
+**Step 6.** `CommandRunner` receives the deleted `Application` and passes it to `Ui.showApplicationDeleted(removed, applications.size())`, which safely prints the confirmation message to the console.
+
+*Note: If the user inputs a non-numeric index (e.g., `delete abc`), a `NumberFormatException` is caught internally by the `DeleterParser`, which then throws a custom `JobPilotException`. This exception is caught in `Parser`, returning an `ERROR` type `ParsedCommand` that the `Ui` displays.*
 
 The following sequence diagram shows the flow of deleting an application:
 
@@ -86,14 +121,14 @@ The following sequence diagram shows the flow of deleting an application:
 
 #### Design Considerations
 
-**Aspect: Command delegation:**
+**Aspect: Command delegation and Separation of Concerns:**
 
-* **Current Implementation:** The static `Delete` class handles both the domain logic (removing the `Add` object from the `ArrayList`) and the UI logic (printing the success message via `System.out`).
-  * *Pros:* Splits the workload of `JobPilot` by extracting the specific deletion into its own class.
-  * *Cons:* Increased coupling.
-* **Alternative:** Have `Delete.deleteApplication` return the deleted `Add` object.
-  * *Pros:* Separates concerns, making the deletion logic purely functional, highly cohesive, and significantly easier to test.
-  * *Cons:* Requires refactoring the current architecture, which is difficult due to the given time constraints.
+* **Current Implementation:** The `Deleter` class is strictly responsible for domain logic (removing the `Application` object from the `ArrayList`) and returns the deleted object back to the caller. It does not contain any `System.out.println` statements.
+  * *Pros:* High cohesion and loose coupling. By returning the object rather than printing directly, the deletion logic becomes purely functional. This makes `Deleter` extremely easy to unit test and ensures that formatting changes only need to be made in the `Ui` class.
+  * *Cons:* Requires a slightly longer call chain (Parser -> Runner -> Deleter -> Ui) compared to a monolithic approach.
+* **Alternative:** Have `Deleter.deleteApplication` handle the `ArrayList` removal and print the success message directly to the console.
+  * *Pros:* Less boilerplate code and fewer method hand-offs in the `CommandRunner`.
+  * *Cons:* Violates the Single Responsibility Principle (SRP) by mixing domain logic with presentation logic, making automated testing difficult and UI migrations (e.g., moving to a GUI) nearly impossible.
 
 ### Search by Company Feature
 
@@ -432,15 +467,12 @@ Given below is an example usage scenario:
 | Backward compatibility | Existing data remains valid |
 
 
-## Product scope
-### 
-  profile
+## Product Scope
+### Target User Profile
+University students and fresh graduates applying for internships or jobs and want to keep track of their applications.
 
-
-  students or job seekers looking for an efficient way to track internship and full-time job applications using a CLI interface.
-
-### Value proposition
-In the current job market, applying to many roles has become the norm. As such, JobPilot acts a 
+### Value Proposition
+In the current job market, applying to many roles has become the norm. As such, JobPilot acts a
 tracker to allow users to get a bird's eye view of all their applications and manage them effectively.
 
 ## User Stories
@@ -563,11 +595,10 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 
 1. Perform `add`, `edit`, or `delete` command.  
    **Expected:**
-  - `Storage.saveToFile()` is called.
-  - `JobPilotData.txt` updated with the latest application list.
-  - On next launch, the list reflects all modifications.
+- `Storage.saveToFile()` is called.
+- `JobPilotData.txt` updated with the latest application list.
+- On next launch, the list reflects all modifications.
   
   
 
 
-  

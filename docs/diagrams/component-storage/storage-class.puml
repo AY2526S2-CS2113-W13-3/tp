@@ -1,0 +1,39 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam ClassBackgroundColor #bfa060
+skinparam ClassBorderColor #6e5927
+skinparam ArrowColor #6e5927
+skinparam StereotypeCBackgroundColor #bfa060
+hide circle
+skinparam arrowThickness 1.1
+skinparam classAttributeIconSize 0
+
+
+package "Storage Component" <<Rectangle>> #FFFFFF {
+    class "«class»\nStorage" as Storage {
+        - FILE_PATH : Path
+        + loadFromFile() : ArrayList<Application>
+        + saveToFile(...) : void
+    }
+}
+
+' External package for the data models being saved
+package "Task Component" as Model #FFFFFF {
+    class Application #EEEEEE
+    class IndustryTag #EEEEEE
+}
+
+' Supporting dependencies for I/O
+rectangle "java.io / java.util" as Support #FFFFFF {
+    class File #EEEEEE
+    class Scanner #EEEEEE
+    class FileWriter #EEEEEE
+}
+
+' Defining dependencies mirroring AB3's visual structure
+Storage .left.> Support : uses for text operations >
+Storage .down.> Model : each is serialized/deserialized <
+
+' Hidden links to keep layout clean
+Storage -[hidden]- Model
+@enduml

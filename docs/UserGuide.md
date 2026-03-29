@@ -43,7 +43,7 @@ bye                                                         Exit the application
 ### Deleting an application: `delete`
 Deletes the specified application from JobPilot.
 
-Format: delete INDEX
+Format: `delete INDEX`
 
 - Deletes the application at the specified INDEX.
 - The index refers to the index number shown in the displayed application list though the list command.
@@ -83,10 +83,17 @@ Bye! You added 4 application(s).
 
 ## Command Summary
 
-{Give a 'cheat sheet' of commands here}
-
 | Action | Format, Examples |
 |--------|----------------|
+| Add | `add c/COMPANY p/POSITION d/DATE` <br> e.g., `add c/Google p/Software Engineer d/2026-03-29` |
+| Edit | `edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]` <br> e.g., `edit 2 c/Google p/Backend Engineer s/Interview` |
 | Delete | `delete INDEX` <br> e.g., `delete 1` |
-| Help   | `help` |
-| Exit   | `bye` |
+| Status | `status INDEX set/STATUS note/NOTE` <br> e.g., `status 1 set/Interview note/Phone screening completed` |
+| Filter | `filter status/STATUS` <br> e.g., `filter status/Applied` |
+| Tag Add | `tag INDEX add/TAG` <br> e.g., `tag 1 add/Tech` |
+| Tag Remove | `tag INDEX remove/TAG` <br> e.g., `tag 1 remove/Tech` |
+| List | `list` |
+| Sort | `sort` |
+| Search | `search COMPANY_NAME` <br> e.g., `search Google` |
+| Help | `help` |
+| Exit | `bye` |
