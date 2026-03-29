@@ -1,0 +1,37 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam ClassBackgroundColor #93C47D
+skinparam ClassBorderColor #38761D
+skinparam DefaultTextAlignment center
+hide circle
+skinparam arrowThickness 1.1
+skinparam classAttributeIconSize 0
+
+package "UI Component" {
+    class "«static»\nUi" as Ui {
+        + readCommand() : String
+        + showWelcome() : void
+        + showApplicationList(...) : void
+        + showSearchResults(...) : void
+        + showApplicationEdited(...) : void
+        + showError(...) : void
+    }
+}
+
+package "App Component" as Logic #FFFFFF {
+    class "CommandRunner" as CommandRunner #EEEEEE
+    class "JobPilot" as JobPilot #EEEEEE
+}
+
+package "Task Component" as Model #FFFFFF {
+    class "Application" as Application #EEEEEE
+    class "IndustryTag" as IndustryTag #EEEEEE
+}
+
+JobPilot .down.> Ui : reads input via >
+CommandRunner .right.> Ui : invokes display methods >
+Ui .down.> Application : reads data for output >
+Ui .down.> IndustryTag : reads data for output >
+
+@enduml
