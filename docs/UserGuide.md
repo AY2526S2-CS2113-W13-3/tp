@@ -40,6 +40,41 @@ help                                                        Show this message
 bye                                                         Exit the application
 ```
 
+### Adding an application: add
+Adds a new job application to JobPilot.
+
+Format: add c/COMPANY p/POSITION d/DATE
+- c/COMPANY - Name of the company
+- p/POSITION - Job title/position
+- d/DATE - Application submission date in YYYY-MM-DD format
+
+Example:
+add c/Google p/SE manager d/2025-03-10
+
+Example output:
+Added: Google | SE manager | 2025-03-10 | Pending
+
+### Editing an application: edit
+Edits an existing application's fields. Only specified fields will be updated.
+
+Format: edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]
+
+- INDEX - Position of the application in the list (from list command)
+- c/COMPANY - (Optional) New company name
+- p/POSITION - (Optional) New position title
+- d/DATE - (Optional) New submission date in YYYY-MM-DD format
+- s/STATUS - (Optional) New status
+
+Examples:
+- edit 1 c/Apple - Change company only
+- edit 2 p/Senior Engineer - Change position only
+- edit 3 d/2027-01-09 - Change date only
+- edit 1 c/Google p/SWE d/2024-09-12 s/Offer - Change multiple fields
+
+Example output:
+Updated application:
+Apple | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
+
 ### Deleting an application: `delete`
 Deletes the specified application from JobPilot.
 
