@@ -21,7 +21,7 @@ The `UI` component,
 * reads raw user commands from the console.
 * displays formatted messages, search results, and errors to the user based on command execution.
 * operates passively; it relies on the `JobPilot` main loop and `CommandRunner` to invoke its specific display methods (e.g., `showApplicationAdded`, `showSearchResults`).
-* depends on some classes in the `Model` component, as it displays `Application` and `IndustryTag` objects.
+* depends on some classes in the `task` component, as it displays `Application` and `IndustryTag` objects.
 
 ### Parser Component
 
@@ -428,7 +428,7 @@ Given below is an example usage scenario:
 
 ## Product Scope
 ### Target User Profile
-University students and fresh graduates applying for internships or jobs and want to keep track of their applications.
+Computing students applying for jobs and want to keep track of their applications.
 
 ### Value Proposition
 In the current job market, applying to many roles has become the norm. As such, JobPilot acts a
@@ -438,37 +438,37 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 
 ### Version 1.0 (Core Features)
 
-| Version | As a ... | I want to ... | So that I can ... |
-|---------|----------|---------------|-------------------|
-| v1.0 | user | add a job application with company, position, and date | keep track of where I've applied |
-| v1.0 | user | list all my applications | see a summary of my applications |
-| v1.0 | user | delete an application | remove applications I'm no longer interested in |
+| Version | As a ... | I want to ...                                                     | So that I can ...                      |
+|------|----------|-------------------------------------------------------------------|----------------------------------------|
+| v1.0 | user | add a job application with company, position, and submission date | keep track of where I have applied     |
+| v1.0 | user | list all my applications                                          | see a summary of my applications       |
+| v1.0 | user | delete applications                                               | manage my application list effectively |
+| v1.0 | user | update application status                                         | track my application progress          |
+| v1.0 | user | sort applications by submission date                              | prioritize older applications          |
 
 ### Version 2.0 (Enhanced Features)
 
-| Version | As a ... | I want to ... | So that I can ... |
-|---------|----------|---------------|-------------------|
-| v2.0 | user | store my applications persistently | come back to them at different points in time |
-| v2.0 | user | edit an existing application | update details without deleting and re-adding |
-| v2.0 | user | update application status | track my progress through interviews |
-| v2.0 | user | sort applications by submission date | prioritize older applications |
-| v2.0 | user | search applications by company name | locate applications for specific companies |
-| v2.0 | user | add industry tags to applications | categorize applications by industry |
-| v2.0 | user | filter applications by status | focus on applications at a specific stage |
+| Version | As a ... | I want to ... | So that I can ...                                          |
+|---------|----------|---------------|------------------------------------------------------------|
+| v2.0 | user | store my applications persistently | come back to it at different points in time                |
+| v2.0 | user | edit an existing application | update details without deleting and re-adding applications |
+| v2.0 | user | search applications by company name | locate applications for specific companies                 |
+| v2.0 | user | add industry tags to applications | categorize applications by industry                        |
+| v2.0 | user | filter applications by status | focus on applications at a specific stage                  |
 
 ## Non-Functional Requirements
 
 ### 1. Performance
-- The application shall respond to any command (add, edit, delete, search, sort, tag, status) within 1 second for up to 500 job applications**.
-- Searching, sorting, and filtering operations shall execute in O(n) time complexity or better, where n is the number of applications.
+- The application shall respond to any command (add, edit, delete, search, sort, tag, status) within **1 second** for up to **500 job applications**.
+- Searching, sorting, and filtering operations shall execute in **O(n)** time complexity or better, where n is the number of applications.
 
 ### 2. Usability
 - Command syntax shall remain consistent with clear prefixes (`c/`, `p/`, `d/`, `s/`, `add/`, `remove/`, `note/`) to minimize user errors.
-- Error messages shall be descriptive and actionable**, guiding users to correct input mistakes.
-- Commands shall support partial input where applicable (e.g., partial company names for search).
+- Error messages shall be **descriptive and actionable**, guiding users to correct input mistakes.
+- Commands shall support **partial input** where applicable (e.g., partial company names for search).
 
 ### 3. Accessibility
-- Command-line outputs shall be **readable with standard font sizes, use clear formatting (tables, line breaks), and avoid color dependence.
+- Command-line outputs shall be **readable with standard font sizes**, use clear formatting (tables, line breaks), and avoid color dependence.
 - Messages shall be concise, avoiding technical jargon when addressing end users.
 
 ## Glossary
@@ -521,8 +521,8 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 | Partial match | `filter status/PEND` | Matches "PENDING" successfully |
 | No match | `filter status/REJECTED` | Prints "No applications found for status: REJECTED" |
 | Empty list | `filter status/OFFER` | Prints "There is no application yet." |
-### Delete Feature Testing
 
+### Delete Feature Testing
 
 #### Test case: `delete 1`
 
@@ -571,7 +571,3 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 - `Storage.saveToFile()` is called.
 - `JobPilotData.txt` updated with the latest application list.
 - On next launch, the list reflects all modifications.
-  
-  
-
-
