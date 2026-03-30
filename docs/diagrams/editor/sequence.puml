@@ -1,0 +1,87 @@
+@startuml
+!theme plain
+title Edit Feature - Sequence Diagram
+
+actor User
+participant ":JobPilot" as Main
+participant ":Parser" as Parser
+participant ":EditorParser" as EditorParser
+participant ":CommandRunner" as Runner
+participant ":Editor" as Editor
+participant "applications\n:ArrayList<Application>" as List
+participant ":Ui" as Ui
+
+User -> Main : edit 1 c/Microsoft p/Senior Engineer
+activate Main
+
+Main -> Parser : parse(input)
+activate Parser
+
+Parser -> EditorParser : parse(input)
+activate EditorParser
+
+EditorParser -> EditorParser : normalize whitespace
+note right: replaceAll("\\s+", " ")
+
+EditorParser -> EditorParser : extract index
+note right: parts[1] → 0
+
+EditorParser -> EditorParser : find fieldsStart
+note right: skip "edit INDEX"
+
+EditorParser -> EditorParser : parse fields
+note right
+  find c/, p/, d/, s/ prefixes
+  using findNextPrefix()
+end note
+
+alt newCompany != null
+    EditorParser -> EditorParser : company = "Microsoft"
+end
+alt newPosition != null
+    EditorParser -> EditorParser : position = "Senior Engineer"
+end
+
+EditorParser --> Parser : ParsedCommand(EDIT, 0, "Microsoft", "Senior Engineer", null, null)
+deactivate EditorParser
+
+Parser --> Main : ParsedCommand
+deactivate Parser
+
+Main -> Runner : run(cmd)
+activate Runner
+
+Runner -> Editor : editApplication(index, applications, newCompany, newPosition, newDate, newStatus)
+activate Editor
+
+Editor -> List : get(index)
+activate List
+List --> Editor : target application
+deactivate List
+
+alt newCompany != null
+    Editor -> Editor : target.setCompany("Microsoft")
+end
+
+alt newPosition != null
+    Editor -> Editor : target.setPosition("Senior Engineer")
+end
+
+Editor -> Editor : validateIndex()
+note right: check 0 ≤ index < size
+
+Editor -> Ui : showApplicationEdited(target)
+activate Ui
+Ui --> Editor :
+deactivate Ui
+
+Editor --> Runner :
+deactivate Editor
+
+Runner --> Main :
+deactivate Runner
+
+Main --> User : "Updated application:\nMicrosoft | Senior Engineer | 2024-09-12 | Pending"
+deactivate Main
+
+@enduml

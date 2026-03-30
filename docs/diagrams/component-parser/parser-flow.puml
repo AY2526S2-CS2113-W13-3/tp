@@ -1,0 +1,76 @@
+@startuml
+!theme plain
+title Parser Flow - Edit Command
+
+start
+
+:User enters command;
+:Parser.parse(input);
+
+:Extract first word;
+
+switch (command?)
+case ( "edit" )
+    :EditorParser.parse(input);
+    :Normalize whitespace;
+    :Split by spaces;
+
+    if (parts.length >= 2?) then (yes)
+        :Parse index;
+        note right
+          Integer.parseInt(parts[1]) - 1
+        end note
+    else (no)
+        :Return ERROR with "Missing index";
+        stop
+    endif
+
+    :Find fields start position;
+
+    if (fieldsStart valid?) then (yes)
+        :Parse remaining string;
+        while (pos < remaining.length()) is (yes)
+            if (remaining.startsWith("c/", pos)) then (yes)
+                :Extract company value;
+                :Validate non-empty;
+            elseif (remaining.startsWith("p/", pos)) then (yes)
+                :Extract position value;
+                :Validate non-empty;
+            elseif (remaining.startsWith("d/", pos)) then (yes)
+                :Extract date value;
+                :Validate non-empty;
+                :Validate date format;
+            elseif (remaining.startsWith("s/", pos)) then (yes)
+                :Extract status value;
+                :Validate non-empty;
+            else (no)
+                :pos++;
+            endif
+        endwhile (no)
+
+        if (any fields updated?) then (yes)
+            :Return ParsedCommand(EDIT, index, company, position, date, status);
+        else (no)
+            :Return ERROR with "No valid fields";
+        endif
+    else (no)
+        :Return ERROR with "No fields to update";
+    endif
+
+    stop
+
+case ( "add" )
+    :ApplicationParser.parse(input);
+    stop
+case ( "delete" )
+    :DeleterParser.parse(input);
+    stop
+case ( ... )
+    :Other subparsers;
+    stop
+case ( default )
+    :Return UNKNOWN command;
+    stop
+endswitch
+
+@enduml

@@ -23,7 +23,17 @@ The `UI` component,
 * operates passively; it relies on the `JobPilot` main loop and `CommandRunner` to invoke its specific display methods (e.g., `showApplicationAdded`, `showSearchResults`).
 * depends on some classes in the `Model` component, as it displays `Application` and `IndustryTag` objects.
 
+### Parser Component
 
+The **Parser** component is responsible for interpreting raw user input and converting it into structured `ParsedCommand` objects.
+
+![Parser Architecture](diagrams/component-parser/parser-architecture.png)
+*Figure 1: Parser Component Architecture*
+
+The following diagram illustrates how the parser processes a typical `edit` command:
+
+![Parser Flow](diagrams/component-parser/parser-flow.png)
+*Figure 2: Parser Flow for Edit Command*
 ### Storage Component
 
 The **API** of this component is specified in `Storage.java`.
@@ -40,27 +50,11 @@ The `Storage` component,
 ## Implementation
 
 ### Edit Application Feature
-The Edit feature allows users to modify existing job applications. This feature was implemented by Labelle.
 
-**Command Format**: edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]
+#### Sequence Diagram
 
-All fields after the index are optional. Only specified fields are updated.
-
-Example Usage:
-edit 1 c/Microsoft  (Update company only)
-edit 2 p/Senior Engineer d/2024-12-01  (Update position and date)
-edit 3 s/Interview  (Update status only)
-
-**Implementation Details**
-
-The Edit application feature is implemented through a Edit class:
-1.  Extract index from command
-2.  Validate index (1 ≤ index ≤ list size)
-3.  Retrieve target Add object
-4.  Parse remaining command for c/, p/, d/, s/ prefixes
-5.  For each field: call corresponding setter on target
-6.  Validate date format before setting
-7.  Display updated application
+![Edit Sequence](diagrams/editor/sequence.png)
+*Figure 3: Edit Feature Sequence Diagram*
 
 **Error Handling**
 
@@ -70,17 +64,6 @@ The Edit application feature is implemented through a Edit class:
 | Invalid Index | Index is 0, negative, or exceeds list size | "Invalid application number! You have X application(s)." |
 | No Fields | User provides index but no fields to update | "No valid fields to update! Use: c/, p/, d/, s/" |
 | Invalid Date Format | Date not in `YYYY-MM-DD` format | "Invalid date! Use YYYY-MM-DD (e.g., 2024-09-12)" |
-
-**Sequence Diagram** ![Sequence](diagrams/edit/sequence.png)
-
-**Design Rationale**
-
-| Decision                             | Rationale                                                        |
-|--------------------------------------|------------------------------------------------------------------|
-| Separate Edit class                  | Maintains single responsibility and easier to test independently |
-| Optional fields                      | Allows partial updates                                           |
-| Prefix-based parsing (`c/`, `p/`, `d/`, `s/`) | Consistent with `add` command and easier for users to remember   |
-| Date validation                      | Prevents invalid data from entering the system                   |
 
 ### Delete Application Feature
 
@@ -477,25 +460,39 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 
 ## User Stories
 
-| Version | As a ... | I want to ...                      | So that I can ...                                           |
-|---------|----------|------------------------------------|-------------------------------------------------------------|
-| v1.0    | user     | delete applications                | manage my application list effectively.                     |
-| v2.0    | user     | store my applications persistently | come back to it at different points in time.                |
-| v2.0    | user     | find a to-do item by name          | locate a to-do without having to go through the entire list |
+### Version 1.0 (Core Features)
+
+| Version | As a ... | I want to ... | So that I can ... |
+|---------|----------|---------------|-------------------|
+| v1.0 | user | add a job application with company, position, and date | keep track of where I've applied |
+| v1.0 | user | list all my applications | see a summary of my applications |
+| v1.0 | user | delete an application | remove applications I'm no longer interested in |
+
+### Version 2.0 (Enhanced Features)
+
+| Version | As a ... | I want to ... | So that I can ... |
+|---------|----------|---------------|-------------------|
+| v2.0 | user | store my applications persistently | come back to them at different points in time |
+| v2.0 | user | edit an existing application | update details without deleting and re-adding |
+| v2.0 | user | update application status | track my progress through interviews |
+| v2.0 | user | sort applications by submission date | prioritize older applications |
+| v2.0 | user | search applications by company name | locate applications for specific companies |
+| v2.0 | user | add industry tags to applications | categorize applications by industry |
+| v2.0 | user | filter applications by status | focus on applications at a specific stage |
 
 ## Non-Functional Requirements
 
 ### 1. Performance
-- The application shall respond to any command (add, edit, delete, search, sort, tag, status) within **1 second** for up to **500 job applications**.
-- Searching, sorting, and filtering operations shall execute in **O(n)** time complexity or better, where n is the number of applications.
+- The application shall respond to any command (add, edit, delete, search, sort, tag, status) within 1 second for up to 500 job applications**.
+- Searching, sorting, and filtering operations shall execute in O(n) time complexity or better, where n is the number of applications.
 
 ### 2. Usability
 - Command syntax shall remain consistent with clear prefixes (`c/`, `p/`, `d/`, `s/`, `add/`, `remove/`, `note/`) to minimize user errors.
-- Error messages shall be **descriptive and actionable**, guiding users to correct input mistakes.
-- Commands shall support **partial input** where applicable (e.g., partial company names for search).
+- Error messages shall be descriptive and actionable**, guiding users to correct input mistakes.
+- Commands shall support partial input where applicable (e.g., partial company names for search).
 
 ### 3. Accessibility
-- Command-line outputs shall be **readable with standard font sizes**, use clear formatting (tables, line breaks), and avoid color dependence.
+- Command-line outputs shall be **readable with standard font sizes, use clear formatting (tables, line breaks), and avoid color dependence.
 - Messages shall be concise, avoiding technical jargon when addressing end users.
 
 ## Glossary

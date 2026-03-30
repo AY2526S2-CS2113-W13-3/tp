@@ -1,0 +1,95 @@
+@startuml
+!theme plain
+title Parser Component Architecture
+
+package "parser" {
+    class Parser {
+        +parse(String input) : ParsedCommand
+    }
+
+    class ParsedCommand {
+        +CommandType type
+        +String errorMessage
+        +String company
+        +String position
+        +String date
+        +int index
+        +String newCompany
+        +String newPosition
+        +String newDate
+        +String newStatus
+        +String searchTerm
+        +String statusValue
+        +String note
+        +IndustryTag tag
+        +boolean isAddTag
+    }
+
+    enum CommandType {
+        ADD
+        LIST
+        DELETE
+        EDIT
+        FILTER
+        SORT
+        SEARCH
+        STATUS
+        TAG
+        HELP
+        BYE
+        UNKNOWN
+        ERROR
+    }
+
+    package "subparsers" {
+        class ApplicationParser {
+            +parse(String input) : ParsedCommand
+        }
+
+        class DeleterParser {
+            +parse(String input) : ParsedCommand
+        }
+
+        class EditorParser {
+            +parse(String input) : ParsedCommand
+        }
+
+        class FilterParser {
+            +parse(String input) : ParsedCommand
+        }
+
+        class SearcherParser {
+            +parse(String input) : ParsedCommand
+        }
+
+        class StatusParser {
+            +parse(String input) : ParsedCommand
+        }
+
+        class TaggerParser {
+            +parse(String input) : ParsedCommand
+        }
+    }
+}
+
+Parser --> ParsedCommand : creates
+Parser --> CommandType : uses
+Parser --> ApplicationParser : delegates
+Parser --> DeleterParser : delegates
+Parser --> EditorParser : delegates
+Parser --> FilterParser : delegates
+Parser --> SearcherParser : delegates
+Parser --> StatusParser : delegates
+Parser --> TaggerParser : delegates
+
+note bottom of Parser
+  Routes raw input to appropriate
+  subparser based on first word
+end note
+
+note right of EditorParser
+  Parses: edit INDEX [c/COMPANY]
+  [p/POSITION] [d/DATE] [s/STATUS]
+end note
+
+@enduml
