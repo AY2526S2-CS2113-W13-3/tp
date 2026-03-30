@@ -4,7 +4,7 @@ import app.CommandRunner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import parser.ParsedCommand;
-
+import java.util.Set;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,6 +83,54 @@ class StatusTest {
 
         assertEquals("Pending", testApp.getStatus());
         assertEquals("", testApp.getNotes());
+    }
+
+    // ================= INDUSTRY TAG TESTS =================
+    // @@author Yan Xiangyu
+
+    @Test
+    void addIndustryTag_toApplication_success() {
+        Application app = new Application("Google", "SWE", "2025-01-01");
+        IndustryTag tag = new IndustryTag("tech");
+
+        app.addIndustryTag(tag);
+
+        assertTrue(app.getIndustryTags().contains(tag));
+        assertEquals(1, app.getIndustryTags().size());
+    }
+
+    @Test
+    void removeIndustryTag_fromApplication_success() {
+        Application app = new Application("Google", "SWE", "2025-01-01");
+        IndustryTag tag = new IndustryTag("tech");
+        app.addIndustryTag(tag);
+
+        app.removeIndustryTag(tag);
+
+        assertFalse(app.getIndustryTags().contains(tag));
+        assertTrue(app.getIndustryTags().isEmpty());
+    }
+
+    @Test
+    void getIndustryTags_returnsUnmodifiableSet() {
+        Application app = new Application("Google", "SWE", "2025-01-01");
+        app.addIndustryTag(new IndustryTag("tech"));
+
+        Set<IndustryTag> tags = app.getIndustryTags();
+
+        assertThrows(UnsupportedOperationException.class, () -> tags.clear());
+    }
+
+    @Test
+    void toString_withIndustryTags_displaysTags() {
+        Application app = new Application("Google", "SWE", "2025-01-01");
+        app.addIndustryTag(new IndustryTag("tech"));
+        app.addIndustryTag(new IndustryTag("finance"));
+
+        String output = app.toString();
+
+        assertTrue(output.contains("Tags: [TECH, FINANCE]") ||
+                output.contains("Tags: [FINANCE, TECH]"));
     }
 }
 // @@author

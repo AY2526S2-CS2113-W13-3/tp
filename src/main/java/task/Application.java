@@ -6,17 +6,20 @@ import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 /**
  * Represents a job application and provides methods to manage its data.
  */
 
 public class Application implements Comparable<Application> {
+    private static final Logger logger = Logger.getLogger(Application.class.getName());
     private String company;
     private String position;
     private LocalDate date;
     private String status;
     private String notes;
+    private Set<IndustryTag> industryTags = new HashSet<>();
 
     public Application(String company, String position, String date) throws DateTimeParseException {
         assert company != null: "Company cannot be null" ;
@@ -124,16 +127,17 @@ public class Application implements Comparable<Application> {
 
         return company + " | " + position + " | " + getDate() + " | " + status + noteDisplay + tagDisplay;
     }
-    private Set<IndustryTag> industryTags = new HashSet<>();
 
     public void addIndustryTag(IndustryTag tag) {
         assert tag != null : "Tag cannot be null";
         industryTags.add(tag);
+        logger.info("Added tag " + tag + " to application: " + company + " - " + position);
     }
 
     public void removeIndustryTag(IndustryTag tag) {
         assert tag != null : "Tag cannot be null";
         industryTags.remove(tag);
+        logger.info("Removed tag " + tag + " from application: " + company + " - " + position);
     }
 
     public Set<IndustryTag> getIndustryTags() {
