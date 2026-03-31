@@ -95,6 +95,40 @@ Google | SE manager | 2025-03-10 | INTERVIEW
 You have 4 application(s) left.
 ```
 
+### Listing
+Lists all the applications
+
+Format: `list`
+
+Example: `list`
+
+Example Output:
+```text
+Here are your applications:
+1. Google | SE manager | 2025-03-10 | Pending
+2. Amazon | Data Analyst | 2025-03-08 | Pending
+3. Microsoft | SDE Intern | 2025-03-12 | Pending
+```
+
+### Searching Applications
+Searches job applications by matching a company name
+using a **case-insensitive partial search**.
+
+Format: `search COMPANY_NAME`
+
+Examples:
+- `search Google`
+```text
+Found 1 application(s) matching 'Google':
+1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
+```
+
+- `search micro`
+```text
+Found 1 application(s) matching 'micro':
+1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+```
+
 ### Exiting the program: bye
 
 Exits JobPilot and saves the application data to a readable text file.
