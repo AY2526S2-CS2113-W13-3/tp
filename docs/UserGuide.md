@@ -147,30 +147,24 @@ Bye! You added 4 application(s).
 ## FAQ
 
 **Q**: How do I transfer my data to another computer?
-
 **A**: Copy the application's data file from your current computer to the same file location on the new computer. 
        Make sure the application is closed before copying the file to avoid losing any recent changes.
 
 **Q**: What should I do if I accidentally delete an application entry?
-
 **A**: Deleted entries cannot be restored automatically. To avoid losing important information, consider keeping a backup 
        copy of your data file before making major changes.
 
 **Q**: Why is my command not working?
-
 **A**: Check that your command follows the correct format as provided in the `help` command and includes all required fields.
 
 **Q**: Where is my data stored?
-
 **A**: Your data is stored locally on your computer in the application's data folder. This allows your saved applications 
        to remain available even after you close the app.
 
 **Q**: Can I edit an existing application entry?
-
 **A**: Yes. You can use the edit command to edit details without creating a new entry.
 
 **Q**: Can I use the application on multiple computers at the same time?
-
 **A**: You can use the application on multiple computers, but changes made on one computer will not automatically sync 
        to the other unless you manually transfer the updated data file.
 

@@ -548,8 +548,8 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 ## Initial Launch
 1. Use the provided `JobPilot.jar`.
 2. Place the jar in an empty folder.
-3. **Double-click the jar file**  
-   **Expected:** JobPilot launches. The CLI prompt appears showing either an empty list or existing applications if data file exists.
+   3. **Double-click the jar file**  
+      **Expected:** JobPilot launches. The CLI prompt appears showing the JobPilot logo.
 
 
 ### Edit Feature Testing
