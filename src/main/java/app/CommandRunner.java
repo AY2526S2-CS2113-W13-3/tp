@@ -6,6 +6,7 @@ import parser.CommandType;
 import task.Application;
 import task.Editor;
 import task.Filterer;
+import task.Deleter;
 import task.IndustryTag;
 import ui.Ui;
 
@@ -57,7 +58,7 @@ public class CommandRunner {
 
             case DELETE:
                 try {
-                    Application removed = Editor.deleteApplication(applications, cmd.index);
+                    Application removed = Deleter.deleteApplication(applications, cmd.index);
                     Ui.showApplicationDeleted(removed, applications.size());
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
@@ -66,10 +67,10 @@ public class CommandRunner {
 
             case EDIT:
                 try {
-                    Editor.editApplication(applications, cmd.index,
+                    Editor.editApplication(cmd.index, applications,
                             cmd.newCompany, cmd.newPosition,
                             cmd.newDate, cmd.newStatus);
-                    Ui.showApplicationEdited(applications.get(cmd.index - 1));
+                    Ui.showApplicationEdited(applications.get(cmd.index));
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
                 }
@@ -183,10 +184,27 @@ public class CommandRunner {
 
             case STATUS:
                 try {
-                    Editor.updateStatus(applications, cmd.index, cmd.statusValue, cmd.note);
-                    Ui.showStatusUpdated(applications.get(cmd.index - 1));
-                } catch (JobPilotException e) {
-                    Ui.showError(e.getMessage());
+                    int index = cmd.index;
+                    String newStatus = cmd.statusValue;
+                    String note = cmd.note;
+
+                    if (index < 0 || index >= applications.size()) {
+                        Ui.showError("Invalid application number! You have " + applications.size() + " application(s).");
+                        break;
+                    }
+
+                    Application app = applications.get(index);
+
+                    if (newStatus != null && !newStatus.isEmpty()) {
+                        app.setStatus(newStatus);
+                    }
+                    if (note != null) {
+                        app.setNotes(note);
+                    }
+
+                    Ui.showStatusUpdated(app);
+                } catch (Exception e) {
+                    Ui.showError("Invalid status command! Use: status INDEX set/STATUS note/NOTE");
                 }
                 break;
 
@@ -196,12 +214,12 @@ public class CommandRunner {
                     IndustryTag tag = cmd.tag;
                     boolean isAdd = cmd.isAddTag;
 
-                    if (index < 1 || index > applications.size()) {
+                    if (index < 0 || index >= applications.size()) {
                         Ui.showError("Invalid application number! You have " + applications.size() + " application(s).");
                         break;
                     }
 
-                    Application app = applications.get(index - 1);
+                    Application app = applications.get(index);
 
                     if (isAdd) {
                         app.addIndustryTag(tag);
