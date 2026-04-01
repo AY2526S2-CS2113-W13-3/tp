@@ -30,7 +30,7 @@ public class CommandRunner {
             return true;
         }
 
-        switch (cmd.getType()) {
+        switch (cmd.type) {
 
             case BYE:
                 Ui.showGoodbye(applications.size());
@@ -43,7 +43,7 @@ public class CommandRunner {
 
             case ADD:
                 try {
-                    Application newApp = new Application(cmd.getCompany(), cmd.getPosition(), cmd.getDate());
+                    Application newApp = new Application(cmd.company, cmd.position, cmd.date);
                     applications.add(newApp);
                     Ui.showApplicationAdded(newApp);
                 } catch (DateTimeParseException e) {
@@ -57,7 +57,7 @@ public class CommandRunner {
 
             case DELETE:
                 try {
-                    Application removed = Editor.deleteApplication(applications, cmd.getIndex());
+                    Application removed = Editor.deleteApplication(applications, cmd.index);
                     Ui.showApplicationDeleted(removed, applications.size());
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
@@ -66,10 +66,10 @@ public class CommandRunner {
 
             case EDIT:
                 try {
-                    Editor.editApplication(applications, cmd.getIndex(),
-                            cmd.getNewCompany(), cmd.getNewPosition(),
-                            cmd.getNewDate(), cmd.getNewStatus());
-                    Ui.showApplicationEdited(applications.get(cmd.getIndex() - 1));
+                    Editor.editApplication(applications, cmd.index,
+                            cmd.newCompany, cmd.newPosition,
+                            cmd.newDate, cmd.newStatus);
+                    Ui.showApplicationEdited(applications.get(cmd.index - 1));
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
                 }
@@ -77,7 +77,7 @@ public class CommandRunner {
 
             case FILTER:
                 try {
-                    Filterer.filterByStatus(applications, cmd.getSearchTerm(), Ui.getInstance());
+                    Filterer.filterByStatus(applications, cmd.searchTerm);
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
                 }
@@ -89,7 +89,7 @@ public class CommandRunner {
                     break;
                 }
 
-                String sortType = cmd.getSearchTerm() != null ? cmd.getSearchTerm().trim().toLowerCase() : "";
+                String sortType = cmd.searchTerm != null ? cmd.searchTerm.trim().toLowerCase() : "";
                 boolean reverse = sortType.contains("reverse");
 
                 if (sortType.isEmpty() || sortType.startsWith("date")) {
@@ -125,7 +125,7 @@ public class CommandRunner {
                     break;
                 }
 
-                String rawSearchTerm = cmd.getSearchTerm() != null ? cmd.getSearchTerm().trim() : "";
+                String rawSearchTerm = cmd.searchTerm != null ? cmd.searchTerm.trim() : "";
                 if (rawSearchTerm.isEmpty()) {
                     Ui.showError("Please enter a valid search term.");
                     break;
@@ -183,8 +183,8 @@ public class CommandRunner {
 
             case STATUS:
                 try {
-                    Editor.updateStatus(applications, cmd.getIndex(), cmd.getStatus(), cmd.getNote());
-                    Ui.showStatusUpdated(applications.get(cmd.getIndex() - 1));
+                    Editor.updateStatus(applications, cmd.index, cmd.statusValue, cmd.note);
+                    Ui.showStatusUpdated(applications.get(cmd.index - 1));
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
                 }
@@ -192,9 +192,9 @@ public class CommandRunner {
 
             case TAG:
                 try {
-                    String action = cmd.getAction();
-                    String tagName = cmd.getTag();
-                    int index = cmd.getIndex();
+                    int index = cmd.index;
+                    IndustryTag tag = cmd.tag;
+                    boolean isAdd = cmd.isAddTag;
 
                     if (index < 1 || index > applications.size()) {
                         Ui.showError("Invalid application number! You have " + applications.size() + " application(s).");
@@ -202,16 +202,13 @@ public class CommandRunner {
                     }
 
                     Application app = applications.get(index - 1);
-                    IndustryTag industryTag = new IndustryTag(tagName);
 
-                    if ("add".equals(action)) {
-                        app.addIndustryTag(industryTag);
-                        Ui.showTagAdded(industryTag, app);  // ← 参数顺序正确
-                    } else if ("remove".equals(action)) {
-                        app.removeIndustryTag(industryTag);
-                        Ui.showTagRemoved(industryTag, app);  // ← 参数顺序正确
+                    if (isAdd) {
+                        app.addIndustryTag(tag);
+                        Ui.showTagAdded(tag, app);
                     } else {
-                        Ui.showError("Invalid tag action! Use: add/TAG or remove/TAG");
+                        app.removeIndustryTag(tag);
+                        Ui.showTagRemoved(tag, app);
                     }
                 } catch (AssertionError e) {
                     Ui.showError(e.getMessage());
@@ -225,7 +222,7 @@ public class CommandRunner {
                 break;
 
             case ERROR:
-                Ui.showError(cmd.getErrorMessage());
+                Ui.showError(cmd.errorMessage);
                 break;
 
             default:
