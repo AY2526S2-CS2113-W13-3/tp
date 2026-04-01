@@ -1,8 +1,10 @@
 package app;
 
 import exception.JobPilotException;
-import parser.ParsedCommand;
-import task.*;
+import parser.Parser;
+import task.Application;
+import task.Editor;
+import task.Filterer;
 import ui.Ui;
 
 import java.time.format.DateTimeParseException;
@@ -10,71 +12,68 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Executes parsed commands and applies them to the application list.
+ * Executes parsed commands and manages application flow.
  */
 public class CommandRunner {
 
     private final ArrayList<Application> applications;
 
-    /**
-     * Initializes the command runner with the application list.
-     */
     public CommandRunner(ArrayList<Application> applications) {
         this.applications = applications;
     }
 
-    /**
-     * Runs a parsed command.
-     *
-     * @return true to continue, false to exit the program
-     */
-    public boolean run(ParsedCommand cmd) {
+    public boolean run(Parser.Command cmd) {
         switch (cmd.type) {
 
-        case BYE:
-            Ui.showGoodbye(applications.size());
-            Ui.close();
-            return false;
+            case BYE:
+                Ui.showGoodbye(applications.size());
+                Ui.close();
+                return false;
 
-        case HELP:
-            Ui.showHelp();
-            break;
+            case HELP:
+                Ui.showHelp();
+                break;
 
-        case ADD:
-            try {
-                Application newApp = new Application(cmd.company, cmd.position, cmd.date);
-                applications.add(newApp);
-                Ui.showApplicationAdded(newApp);
-            } catch (DateTimeParseException e) {
-                Ui.showError("Invalid date! Please use YYYY-MM-DD");
-            }
-            break;
+            case ADD:
+                try {
+                    Application newApp = new Application(cmd.company, cmd.position, cmd.date);
+                    applications.add(newApp);
+                    Ui.showApplicationAdded(newApp);
+                } catch (DateTimeParseException e) {
+                    Ui.showError("Invalid date format! Use: yyyy-MM-dd");
+                }
+                break;
 
-        case LIST:
-            Ui.showApplicationList(applications);
-            break;
+            case LIST:
+                Ui.showApplicationList(applications);
+                break;
 
-        case DELETE:
-            try {
-                Application removed = Deleter.deleteApplication(applications, cmd.index);
-                Ui.showApplicationDeleted(removed, applications.size());
-            } catch (JobPilotException e) {
-                Ui.showError(e.getMessage());
-            }
-            break;
+            case DELETE:
+                try {
+                    Application removed = Editor.deleteApplication(applications, cmd.index);
+                    Ui.showApplicationDeleted(removed, applications.size());
+                } catch (JobPilotException e) {
+                    Ui.showError(e.getMessage());
+                }
+                break;
 
-        case EDIT:
-            try {
-                Editor.editApplication(cmd.index, applications,
-                        cmd.newCompany, cmd.newPosition, cmd.newDate, cmd.newStatus);
-            } catch (JobPilotException e) {
-                Ui.showError(e.getMessage());
-            }
-            break;
+            case EDIT:
+                try {
+                    Editor.editApplication(applications, cmd.index, cmd.newCompany,
+                            cmd.newPosition, cmd.newDate, cmd.newStatus);
+                    Ui.showApplicationEdited(applications.get(cmd.index - 1));
+                } catch (JobPilotException e) {
+                    Ui.showError(e.getMessage());
+                }
+                break;
 
-        case FILTER:
-            Filterer.filterByStatus(applications, cmd.searchTerm, null);
-            break;
+            case FILTER:
+                try {
+                    Filterer.filterByStatus(applications, cmd.searchTerm, Ui.getInstance());
+                } catch (JobPilotException e) {
+                    Ui.showError(e.getMessage());
+                }
+                break;
 
             case SORT:
                 if (applications.isEmpty()) {
@@ -88,42 +87,30 @@ public class CommandRunner {
                 if (sortType.isEmpty() || sortType.startsWith("date")) {
                     if (reverse) {
                         applications.sort(Collections.reverseOrder());
-                        Ui.showSortedMessage("date (reverse)");
                     } else {
                         Collections.sort(applications);
-                        Ui.showSortedMessage("date");
                     }
-                }
-
-                // Sort by company name in alphabetical order
-                else if (sortType.startsWith("company")) {
+                } else if (sortType.startsWith("company")) {
                     if (reverse) {
                         applications.sort((a, b) -> b.getCompany().compareTo(a.getCompany()));
                     } else {
                         applications.sort((a, b) -> a.getCompany().compareTo(b.getCompany()));
                     }
-                    Ui.showSortedMessage("company" + (reverse ? " (reverse)" : ""));
-                }
-
-                // Sort by application status in alphabetical order
-                else if (sortType.startsWith("status")) {
+                } else if (sortType.startsWith("status")) {
                     if (reverse) {
                         applications.sort((a, b) -> b.getStatus().compareTo(a.getStatus()));
                     } else {
                         applications.sort((a, b) -> a.getStatus().compareTo(b.getStatus()));
                     }
-                    Ui.showSortedMessage("status" + (reverse ? " (reverse)" : ""));
-                }
-
-                else {
+                } else {
                     Ui.showError("Invalid sort type! Use: sort date/company/status [reverse]");
                     break;
                 }
 
+                Ui.showSortedMessage();
                 Ui.showApplicationList(applications);
                 break;
 
-        case SEARCH:
             case SEARCH:
                 if (applications.isEmpty()) {
                     Ui.showError("No applications to search!");
@@ -132,7 +119,7 @@ public class CommandRunner {
 
                 String rawSearchTerm = cmd.searchTerm.trim();
                 if (rawSearchTerm.isEmpty()) {
-                    Ui.showError("Please provide a company name to search. Example: search google");
+                    Ui.showError("Please enter a valid search term.");
                     break;
                 }
 
@@ -183,42 +170,28 @@ public class CommandRunner {
                 }
 
                 Collections.sort(results);
-
                 Ui.showSearchResults(results, rawSearchTerm);
                 break;
 
-        case STATUS:
-            if (cmd.index < 0 || cmd.index >= applications.size()) {
-                Ui.showError("Invalid index! Application not found.");
+            case STATUS:
+                try {
+                    Editor.updateStatus(applications, cmd.index, cmd.status, cmd.note);
+                    Ui.showStatusUpdated(applications.get(cmd.index - 1));
+                } catch (JobPilotException e) {
+                    Ui.showError(e.getMessage());
+                }
                 break;
-            }
-            Application app = applications.get(cmd.index);
-            app.setStatus(cmd.statusValue);
-            app.setNotes(cmd.note);
-            Ui.showStatusUpdated(app);
-            break;
 
-        case TAG:
-            if (cmd.index < 0 || cmd.index >= applications.size()) {
-                Ui.showError("Invalid index! Application not found.");
+            case TAG:
+                // Handled in Parser + Editor, no logic here
                 break;
-            }
-            Application target = applications.get(cmd.index);
-            if (cmd.isAddTag) {
-                target.addIndustryTag(cmd.tag);
-                Ui.showTagAdded(cmd.tag, target);
-            } else {
-                target.removeIndustryTag(cmd.tag);
-                Ui.showTagRemoved(cmd.tag, target);
-            }
-            break;
 
-        case ERROR:
-            Ui.showError(cmd.errorMessage);
-            break;
+            case ERROR:
+                Ui.showError(cmd.errorMessage);
+                break;
 
-        default:
-            Ui.showError("Unknown command. Type 'help' to see all available commands.");
+            default:
+                Ui.showError("Unknown command. Type 'help' to see available commands.");
         }
 
         return true;
