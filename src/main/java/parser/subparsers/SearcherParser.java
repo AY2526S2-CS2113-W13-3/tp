@@ -20,6 +20,6 @@ public class SearcherParser {
             throw new JobPilotException("Please provide a company name to search. Example: search google");
         }
 
-        return new ParsedCommand(searchTerm);
+        return new ParsedCommand(parser.CommandType.SEARCH, searchTerm);
     }
 }

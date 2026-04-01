@@ -2,111 +2,87 @@ package parser;
 
 import task.IndustryTag;
 
+// @@author Aswin-RajeshKumar
 /**
- * Represents a parsed command with its type and associated data.
+ * Represents a command that has been parsed from raw user input.
+ * It carries the necessary data to the CommandRunner for execution.
  */
 public class ParsedCommand {
-    public final CommandType type;
-    public final String errorMessage;
 
-    // Add command fields
-    public final String company;
-    public final String position;
-    public final String date;
+    // Core Command Identity
+    private final CommandType type;
+    private final String errorMessage;
 
-    // Delete/Edit/Status/Tag command fields
-    public final int index;
+    // Command Data Fields
+    private int index = -1;
+    private String company;
+    private String position;
+    private String date;
 
-    // Edit command fields (all optional)
-    public final String newCompany;
-    public final String newPosition;
-    public final String newDate;
-    public final String newStatus;
+    // Search & Filter Fields
+    private String searchTerm;
 
-    // Search command field
-    public final String searchTerm;
+    // Status & Notes Fields
+    private String statusValue;
+    private String note;
 
-    // Status command fields
-    public final String statusValue;
-    public final String note;
+    // Tag Fields
+    private IndustryTag tag;
+    private boolean isAddTag;
 
-    // Tag command fields
-    public final IndustryTag tag;
-    public final boolean isAddTag;
+    // Edit Fields (Mapped to new values)
+    private String newCompany;
+    private String newPosition;
+    private String newDate;
+    private String newStatus;
 
     // ========== CONSTRUCTORS ==========
 
     /**
-     * General Constructor for commands requiring a Type and a single String argument.
-     * This resolves the conflict between FILTER and ERROR constructors.
+     * Constructor for simple commands (LIST, SORT, HELP, BYE).
+     */
+    public ParsedCommand(CommandType type) {
+        this.type = type;
+        this.errorMessage = null;
+    }
+
+    /**
+     * Constructor for ERROR, FILTER, or SEARCH commands.
      */
     public ParsedCommand(CommandType type, String stringValue) {
         this.type = type;
-        this.index = -1;
-        this.company = null;
-        this.position = null;
-        this.date = null;
-        this.newCompany = null;
-        this.newPosition = null;
-        this.newDate = null;
-        this.newStatus = null;
-        this.statusValue = null;
-        this.note = null;
-        this.tag = null;
-        this.isAddTag = false;
-
-        // Route the string value based on the CommandType
-        if (type == CommandType.FILTER || type == CommandType.SEARCH) {
-            this.searchTerm = stringValue;
-            this.errorMessage = null;
-        } else if (type == CommandType.ERROR) {
+        if (type == CommandType.ERROR) {
             this.errorMessage = stringValue;
             this.searchTerm = null;
         } else {
-            this.searchTerm = stringValue;
             this.errorMessage = null;
+            this.searchTerm = stringValue;
         }
     }
 
-    // Constructor for ADD
+    /**
+     * Constructor for ADD command.
+     */
     public ParsedCommand(String company, String position, String date) {
         this.type = CommandType.ADD;
         this.company = company;
         this.position = position;
         this.date = date;
         this.errorMessage = null;
-        this.index = -1;
-        this.newCompany = null;
-        this.newPosition = null;
-        this.newDate = null;
-        this.newStatus = null;
-        this.searchTerm = null;
-        this.statusValue = null;
-        this.note = null;
-        this.tag = null;
-        this.isAddTag = false;
     }
 
-    // Constructor for DELETE
+    /**
+     * Constructor for DELETE command.
+     */
     public ParsedCommand(int index) {
         this.type = CommandType.DELETE;
         this.index = index;
         this.errorMessage = null;
-        this.company = null;
-        this.position = null;
-        this.date = null;
-        this.newCompany = null;
-        this.newPosition = null;
-        this.newDate = null;
-        this.newStatus = null;
-        this.searchTerm = null;
-        this.statusValue = null;
-        this.note = null;
-        this.tag = null;
-        this.isAddTag = false;
     }
 
-    // Constructor for EDIT
+    /**
+     * Constructor for EDIT command.
+     */
     public ParsedCommand(int index, String company, String position, String date, String status) {
         this.type = CommandType.EDIT;
         this.index = index;
@@ -115,89 +91,90 @@ public class ParsedCommand {
         this.newDate = date;
         this.newStatus = status;
         this.errorMessage = null;
-        this.company = null;
-        this.position = null;
-        this.date = null;
-        this.searchTerm = null;
-        this.statusValue = null;
-        this.note = null;
-        this.tag = null;
-        this.isAddTag = false;
     }
 
-    // Constructor for SEARCH (Legacy support - can also use the general constructor)
-    public ParsedCommand(String searchTerm) {
-        this.type = CommandType.SEARCH;
-        this.searchTerm = searchTerm;
-        this.errorMessage = null;
-        this.index = -1;
-        this.company = null;
-        this.position = null;
-        this.date = null;
-        this.newCompany = null;
-        this.newPosition = null;
-        this.newDate = null;
-        this.newStatus = null;
-        this.statusValue = null;
-        this.note = null;
-        this.tag = null;
-        this.isAddTag = false;
-    }
-
-    // Constructor for STATUS
+    /**
+     * Constructor for STATUS command (Status and Note separation).
+     */
     public ParsedCommand(int index, String status, String note) {
         this.type = CommandType.STATUS;
         this.index = index;
         this.statusValue = status;
         this.note = note;
         this.errorMessage = null;
-        this.company = null;
-        this.position = null;
-        this.date = null;
-        this.newCompany = null;
-        this.newPosition = null;
-        this.newDate = null;
-        this.newStatus = null;
-        this.searchTerm = null;
-        this.tag = null;
-        this.isAddTag = false;
     }
 
-    // Constructor for TAG
+    /**
+     * Constructor for TAG command.
+     */
     public ParsedCommand(int index, IndustryTag tag, boolean isAdd) {
         this.type = CommandType.TAG;
         this.index = index;
         this.tag = tag;
         this.isAddTag = isAdd;
         this.errorMessage = null;
-        this.company = null;
-        this.position = null;
-        this.date = null;
-        this.newCompany = null;
-        this.newPosition = null;
-        this.newDate = null;
-        this.newStatus = null;
-        this.searchTerm = null;
-        this.statusValue = null;
-        this.note = null;
     }
 
-    // Constructor for simple commands (BYE, LIST, SORT, HELP, UNKNOWN)
-    public ParsedCommand(CommandType type) {
-        this.type = type;
-        this.errorMessage = null;
-        this.index = -1;
-        this.company = null;
-        this.position = null;
-        this.date = null;
-        this.newCompany = null;
-        this.newPosition = null;
-        this.newDate = null;
-        this.newStatus = null;
-        this.searchTerm = null;
-        this.statusValue = null;
-        this.note = null;
-        this.tag = null;
-        this.isAddTag = false;
+    // ========== GETTERS ==========
+
+    public CommandType getType() {
+        return type;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getSearchTerm() {
+        return searchTerm;
+    }
+
+    public String getStatusValue() {
+        return statusValue;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public IndustryTag getTag() {
+        return tag;
+    }
+
+    public boolean isAddTag() {
+        return isAddTag;
+    }
+
+    public String getNewCompany() {
+        return newCompany;
+    }
+
+    public String getNewPosition() {
+        return newPosition;
+    }
+
+    public String getNewDate() {
+        return newDate;
+    }
+
+    public String getNewStatus() {
+        return newStatus;
     }
 }
+// @@author

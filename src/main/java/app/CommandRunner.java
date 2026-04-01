@@ -2,7 +2,10 @@ package app;
 
 import exception.JobPilotException;
 import parser.ParsedCommand;
-import task.*;
+import task.Application;
+import task.Deleter;
+import task.Editor;
+import task.Filterer;
 import ui.Ui;
 
 import java.time.format.DateTimeParseException;
@@ -29,7 +32,8 @@ public class CommandRunner {
      * @return true to continue, false to exit the program
      */
     public boolean run(ParsedCommand cmd) {
-        switch (cmd.type) {
+        // Updated to use Getter: getType()
+        switch (cmd.getType()) {
 
         case BYE:
             Ui.showGoodbye(applications.size());
@@ -42,7 +46,8 @@ public class CommandRunner {
 
         case ADD:
             try {
-                Application newApp = new Application(cmd.company, cmd.position, cmd.date);
+                // Updated to use Getters: getCompany(), getPosition(), getDate()
+                Application newApp = new Application(cmd.getCompany(), cmd.getPosition(), cmd.getDate());
                 applications.add(newApp);
                 Ui.showApplicationAdded(newApp);
             } catch (DateTimeParseException e) {
@@ -56,7 +61,8 @@ public class CommandRunner {
 
         case DELETE:
             try {
-                Application removed = Deleter.deleteApplication(applications, cmd.index);
+                // Updated to use Getter: getIndex()
+                Application removed = Deleter.deleteApplication(applications, cmd.getIndex());
                 Ui.showApplicationDeleted(removed, applications.size());
             } catch (JobPilotException e) {
                 Ui.showError(e.getMessage());
@@ -65,15 +71,17 @@ public class CommandRunner {
 
         case EDIT:
             try {
-                Editor.editApplication(cmd.index, applications,
-                        cmd.newCompany, cmd.newPosition, cmd.newDate, cmd.newStatus);
+                // Updated to use Getters for Edit fields
+                Editor.editApplication(cmd.getIndex(), applications,
+                        cmd.getNewCompany(), cmd.getNewPosition(), cmd.getNewDate(), cmd.getNewStatus());
             } catch (JobPilotException e) {
                 Ui.showError(e.getMessage());
             }
             break;
 
         case FILTER:
-            Filterer.filterByStatus(applications, cmd.searchTerm, null);
+            // Updated to use Getter: getSearchTerm()
+            Filterer.filterByStatus(applications, cmd.getSearchTerm(), null);
             break;
 
         case SORT:
@@ -83,48 +91,20 @@ public class CommandRunner {
             break;
 
         case SEARCH:
-            if (applications.isEmpty()) {
-                Ui.showError("No applications to search!");
-                break;
-            }
-
-            ArrayList<Application> results = new ArrayList<>();
-            for (Application app : applications) {
-                if (app.getCompany().toLowerCase().contains(cmd.searchTerm.toLowerCase())) {
-                    results.add(app);
-                }
-            }
-            Ui.showSearchResults(results, cmd.searchTerm);
+            handleSearch(cmd.getSearchTerm());
             break;
 
         case STATUS:
-            if (cmd.index < 0 || cmd.index >= applications.size()) {
-                Ui.showError("Invalid index! Application not found.");
-                break;
-            }
-            Application app = applications.get(cmd.index);
-            app.setStatus(cmd.statusValue);
-            app.setNotes(cmd.note);
-            Ui.showStatusUpdated(app);
+            handleStatusUpdate(cmd);
             break;
 
         case TAG:
-            if (cmd.index < 0 || cmd.index >= applications.size()) {
-                Ui.showError("Invalid index! Application not found.");
-                break;
-            }
-            Application target = applications.get(cmd.index);
-            if (cmd.isAddTag) {
-                target.addIndustryTag(cmd.tag);
-                Ui.showTagAdded(cmd.tag, target);
-            } else {
-                target.removeIndustryTag(cmd.tag);
-                Ui.showTagRemoved(cmd.tag, target);
-            }
+            handleTagUpdate(cmd);
             break;
 
         case ERROR:
-            Ui.showError(cmd.errorMessage);
+            // Updated to use Getter: getErrorMessage()
+            Ui.showError(cmd.getErrorMessage());
             break;
 
         default:
@@ -132,5 +112,66 @@ public class CommandRunner {
         }
 
         return true;
+    }
+
+    /**
+     * Handles Status and Notes updates with defensive null checks.
+     */
+    private void handleStatusUpdate(ParsedCommand cmd) {
+        int idx = cmd.getIndex();
+        if (idx < 0 || idx >= applications.size()) {
+            Ui.showError("Invalid index! Application not found.");
+            return;
+        }
+
+        Application app = applications.get(idx);
+
+        // Defensive check: Only update if the specific field was provided in the command
+        if (cmd.getStatusValue() != null) {
+            app.setStatus(cmd.getStatusValue());
+        }
+        if (cmd.getNote() != null) {
+            app.setNotes(cmd.getNote());
+        }
+
+        Ui.showStatusUpdated(app);
+    }
+
+    /**
+     * Handles searching with a safety check for empty lists.
+     */
+    private void handleSearch(String query) {
+        if (applications.isEmpty()) {
+            Ui.showError("No applications to search!");
+            return;
+        }
+
+        ArrayList<Application> results = new ArrayList<>();
+        for (Application app : applications) {
+            if (app.getCompany().toLowerCase().contains(query.toLowerCase())) {
+                results.add(app);
+            }
+        }
+        Ui.showSearchResults(results, query);
+    }
+
+    /**
+     * Handles Tag additions and removals.
+     */
+    private void handleTagUpdate(ParsedCommand cmd) {
+        int idx = cmd.getIndex();
+        if (idx < 0 || idx >= applications.size()) {
+            Ui.showError("Invalid index! Application not found.");
+            return;
+        }
+
+        Application target = applications.get(idx);
+        if (cmd.isAddTag()) {
+            target.addIndustryTag(cmd.getTag());
+            Ui.showTagAdded(cmd.getTag(), target);
+        } else {
+            target.removeIndustryTag(cmd.getTag());
+            Ui.showTagRemoved(cmd.getTag(), target);
+        }
     }
 }

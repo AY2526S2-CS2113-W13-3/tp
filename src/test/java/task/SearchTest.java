@@ -1,6 +1,7 @@
 package task;
 
 import app.CommandRunner;
+import parser.CommandType;
 import parser.ParsedCommand;
 
 import org.junit.jupiter.api.*;
@@ -10,6 +11,10 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the search functionality.
+ * Verifies case-insensitivity and partial matching logic.
+ */
 public class SearchTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -20,6 +25,7 @@ public class SearchTest {
 
     @BeforeEach
     void setUp() {
+        // Redirect System.out to capture console output for verification
         System.setOut(new PrintStream(outContent));
         applications = new ArrayList<>();
         runner = new CommandRunner(applications);
@@ -27,37 +33,42 @@ public class SearchTest {
 
     @AfterEach
     void tearDown() {
+        // Restore original System.out
         System.setOut(originalOut);
         outContent.reset();
     }
 
     @Test
-    void search_noMatches() {
+    void search_noMatches_displaysErrorMessage() {
         applications.add(new Application("Google", "SE", "2025-01-10"));
 
-        runner.run(new ParsedCommand("Microsoft"));
+        // Fixed: Use the (CommandType, String) constructor
+        runner.run(new ParsedCommand(CommandType.SEARCH, "Microsoft"));
 
-        assertTrue(outContent.toString().contains("No applications found"));
+        String output = outContent.toString();
+        assertTrue(output.contains("No applications found"), "Should notify user when no match exists");
     }
 
     @Test
-    void search_partialMatch() {
+    void search_partialMatch_findsRelevantApplications() {
         applications.add(new Application("Google", "SE", "2025-01-10"));
         applications.add(new Application("GoGo", "PM", "2025-02-10"));
 
-        runner.run(new ParsedCommand("Go"));
+        // Fixed: Use the (CommandType, String) constructor
+        runner.run(new ParsedCommand(CommandType.SEARCH, "Go"));
 
         String output = outContent.toString();
-        assertTrue(output.contains("Google"));
-        assertTrue(output.contains("GoGo"));
+        assertTrue(output.contains("Google"), "Should find Google for query 'Go'");
+        assertTrue(output.contains("GoGo"), "Should find GoGo for query 'Go'");
     }
 
     @Test
-    void search_caseInsensitive() {
+    void search_caseInsensitive_ignoresCasing() {
         applications.add(new Application("Google", "SE", "2025-01-10"));
 
-        runner.run(new ParsedCommand("GOOGLE"));
+        runner.run(new ParsedCommand(CommandType.SEARCH, "GOOGLE"));
 
-        assertTrue(outContent.toString().contains("Google"));
+        String output = outContent.toString();
+        assertTrue(output.contains("Google"), "Search should be case-insensitive");
     }
 }

@@ -2,34 +2,115 @@ package parser.subparsers;
 
 import exception.JobPilotException;
 import parser.ParsedCommand;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // @@author Aswin-RajeshKumar
 /**
- * Parses the status command.
- * Format: status INDEX set/STATUS note/NOTE
+ * Advanced parser for the 'status' command.
+ * Supports flexible ordering: status INDEX [set/STATUS] [note/NOTE]
  */
 public class StatusParser {
 
+    private static final Logger LOGGER = Logger.getLogger(StatusParser.class.getName());
+
+    // Command and Prefix Constants
+    private static final String COMMAND_WORD = "status";
+    private static final String PREFIX_SET = "set/";
+    private static final String PREFIX_NOTE = "note/";
+
+    /**
+     * Parses the raw user input into a ParsedCommand object.
+     * * @param input The full raw command string.
+     * @return A structured command for the CommandRunner.
+     * @throws JobPilotException if syntax is invalid or index is non-numeric.
+     */
     public static ParsedCommand parse(String input) throws JobPilotException {
-        int setIndex = input.indexOf("set/");
-        int noteIndex = input.indexOf("note/");
+        String trimmed = input.trim();
 
-        if (setIndex == -1 || noteIndex == -1) {
-            throw new JobPilotException("Invalid format! Use: status INDEX set/STATUS note/NOTE");
+        // 1. Basic format check
+        if (!trimmed.startsWith(COMMAND_WORD)) {
+            throw new JobPilotException("Invalid command start! Use: status INDEX set/STATUS note/NOTE");
         }
 
-        String indexStr = input.substring("status".length(), setIndex).trim();
-        int listIndex;
+        // 2. Extract the index part
+        String[] tokens = trimmed.split("\\s+");
+        if (tokens.length < 2) {
+            throw new JobPilotException("Please provide an index. Example: status 1 set/OFFER");
+        }
+
+        int index;
         try {
-            listIndex = Integer.parseInt(indexStr) - 1;
+            index = Integer.parseInt(tokens[1]) - 1;
         } catch (NumberFormatException e) {
-            throw new JobPilotException("Invalid index! Use a number.");
+            LOGGER.log(Level.WARNING, "User provided non-numeric index: " + tokens[1]);
+            throw new JobPilotException("Invalid index! Use a number: status 1 set/OFFER");
         }
 
-        String newStatus = input.substring(setIndex + 4, noteIndex).trim().toUpperCase();
-        String note = input.substring(noteIndex + 5).trim();
+        // 3. Locate where the prefixes (set/ or note/) start
+        int firstPrefixPos = findFirstPrefixPos(trimmed);
+        if (firstPrefixPos == -1) {
+            throw new JobPilotException("No status or note provided! Use set/ or note/.");
+        }
 
-        return new ParsedCommand(listIndex, newStatus, note);
+        String remaining = trimmed.substring(firstPrefixPos);
+
+        // 4. State-based parsing loop (The "Inflator")
+        String newStatus = null;
+        String newNote = null;
+        int currentPos = 0;
+
+        while (currentPos < remaining.length()) {
+            if (remaining.startsWith(PREFIX_SET, currentPos)) {
+                int nextPrefix = findNextPrefix(remaining, currentPos + PREFIX_SET.length());
+                newStatus = remaining.substring(currentPos + PREFIX_SET.length(), nextPrefix).trim();
+
+                if (newStatus.isEmpty()) {
+                    throw new JobPilotException("Status value cannot be empty!");
+                }
+                currentPos = nextPrefix;
+
+            } else if (remaining.startsWith(PREFIX_NOTE, currentPos)) {
+                int nextPrefix = findNextPrefix(remaining, currentPos + PREFIX_NOTE.length());
+                newNote = remaining.substring(currentPos + PREFIX_NOTE.length(), nextPrefix).trim();
+
+                // Note: We allow empty notes, but you could add a check here if needed
+                currentPos = nextPrefix;
+
+            } else {
+                currentPos++; // Skip characters until we hit a prefix
+            }
+        }
+
+        LOGGER.log(Level.INFO, "Parsed status update for index: " + index);
+        return new ParsedCommand(index, newStatus, newNote);
+    }
+
+    /**
+     * Helper to find the very first occurrence of any valid prefix.
+     */
+    private static int findFirstPrefixPos(String input) {
+        int setIdx = input.indexOf(PREFIX_SET);
+        int noteIdx = input.indexOf(PREFIX_NOTE);
+
+        if (setIdx == -1) return noteIdx;
+        if (noteIdx == -1) return setIdx;
+        return Math.min(setIdx, noteIdx);
+    }
+
+    /**
+     * Finds the next prefix boundary in the remaining string.
+     * This is crucial for splitting "set/OFFER note/Interview" correctly.
+     */
+    private static int findNextPrefix(String str, int start) {
+        int nextSet = str.indexOf(PREFIX_SET, start);
+        int nextNote = str.indexOf(PREFIX_NOTE, start);
+
+        int minIndex = str.length();
+        if (nextSet != -1 && nextSet < minIndex) minIndex = nextSet;
+        if (nextNote != -1 && nextNote < minIndex) minIndex = nextNote;
+
+        return minIndex;
     }
 }
 // @@author
