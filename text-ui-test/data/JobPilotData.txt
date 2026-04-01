@@ -1,2 +1,7 @@
-Apple | SE manager | 2027-01-09 | OFFER | Negotiate salary | TECH
+Apple | SE manager | 2027-01-09 | Pending |  | 
+Microsoft | SDE Intern | 2025-03-12 | OFFER | Negotiate salary | TECH,INTERN
+Microsoft | SDE Intern | 2025-03-12 | INTERVIEW | Case study prep | FINANCE,DATA
 Microsoft | SDE Intern | 2025-03-12 | PENDING | Waiting for reply | TECH,INTERN
+Microsoft | SDE Intern | 2025-03-12 | Pending |  | 
+Microsoft | SDE Intern | 2025-03-12 | Pending |  | 
+Microsoft | SDE Intern | 2025-03-12 | Pending |  | 

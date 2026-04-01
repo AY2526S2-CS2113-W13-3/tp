@@ -208,6 +208,6 @@ public class Ui {
     }
 
     public static void showLineSeparator() {
-        System.out.println("────────────────────────────────────────");
+        System.out.println("----------------------------------------");
     }
 }
