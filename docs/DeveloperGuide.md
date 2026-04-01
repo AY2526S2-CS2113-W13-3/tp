@@ -44,7 +44,7 @@ The **API** of this component is specified in `Storage.java`.
 
 The `Storage` component,
 
-* can save job application data in a text format (`.txt`), separated by '|', and read them back into corresponding `Application` objects.
+* can save job application data in a text format (`.txt`), separated by '\|', and read them back into corresponding `Application` objects.
 * handles missing directories or files automatically by creating the necessary `data/JobPilotData.txt` file upon initialization if it does not exist.
 * parses the text file, actively invalidating corrupted or invalid lines during the loading process to ensure the application does not crash upon startup.
 * depends on some classes in the `task` component, because the `Storage` component's primary job is to serialize and deserialize `Application` and `IndustryTag` objects.
