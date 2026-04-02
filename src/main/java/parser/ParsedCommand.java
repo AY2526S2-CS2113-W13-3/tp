@@ -46,13 +46,6 @@ public class ParsedCommand {
         this.searchType = null;
     }
 
-    /** ERROR command */
-    public ParsedCommand(String errorMessage, boolean isError) {
-        this.type = CommandType.ERROR;
-        this.errorMessage = errorMessage;
-        this.searchType = null;
-    }
-
     /** FILTER command */
     public ParsedCommand(CommandType type, String searchTerm) {
         this.type = type;
