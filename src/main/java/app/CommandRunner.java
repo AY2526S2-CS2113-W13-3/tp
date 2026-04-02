@@ -7,7 +7,6 @@ import task.Application;
 import task.Deleter;
 import task.Editor;
 import task.Filterer;
-import task.IndustryTag;
 import ui.Ui;
 
 import java.time.format.DateTimeParseException;
@@ -17,7 +16,6 @@ import java.util.Comparator;
 
 /**
  * Executes parsed commands and manages application flow.
- * Synchronized with v2.0 advanced search and status logic.
  */
 public class CommandRunner {
 
@@ -27,70 +25,37 @@ public class CommandRunner {
         this.applications = applications;
     }
 
-    /**
-     * Main execution loop for commands.
-     * @param cmd The parsed command to execute.
-     * @return false if the command is BYE, true otherwise.
-     */
     public boolean run(ParsedCommand cmd) {
         if (cmd == null) {
             return true;
         }
 
         switch (cmd.getType()) {
-
         case BYE:
-            try {
-                Ui.showGoodbye(applications.size());
-                Ui.close();
-            } catch (IllegalStateException e) {
-                Ui.showError("Scanner was already closed.");
-            }
-            return false;
+            return handleBye();
 
         case HELP:
-            Ui.showHelp();
+            handleHelp();
             break;
 
         case ADD:
-            try {
-                Application newApp = new Application(cmd.getCompany(), cmd.getPosition(), cmd.getDate());
-                applications.add(newApp);
-                Ui.showApplicationAdded(newApp);
-            } catch (DateTimeParseException e) {
-                Ui.showError("Invalid date! Please use YYYY-MM-DD");
-            }
+            handleAdd(cmd);
             break;
 
         case LIST:
-            Ui.showApplicationList(applications);
+            handleList();
             break;
 
         case DELETE:
-            try {
-                Application removed = Deleter.deleteApplication(applications, cmd.getIndex());
-                Ui.showApplicationDeleted(removed, applications.size());
-            } catch (JobPilotException e) {
-                Ui.showError(e.getMessage());
-            }
+            handleDelete(cmd);
             break;
 
         case EDIT:
-            try {
-                Editor.editApplication(cmd.getIndex(), applications,
-                        cmd.getNewCompany(), cmd.getNewPosition(), cmd.getNewDate(), cmd.getNewStatus());
-                Ui.showApplicationEdited(applications.get(cmd.getIndex()));
-            } catch (JobPilotException e) {
-                Ui.showError(e.getMessage());
-            }
+            handleEdit(cmd);
             break;
 
         case FILTER:
-            try {
-                Filterer.filterByStatus(applications, cmd.getSearchTerm());
-            } catch (JobPilotException e) {
-                Ui.showError(e.getMessage());
-            }
+            handleFilter(cmd);
             break;
 
         case SORT:
@@ -120,9 +85,67 @@ public class CommandRunner {
         return true;
     }
 
-    /**
-     * Handles advanced sorting by date, company, or status with optional reverse flag.
-     */
+    // ===================== BASIC COMMANDS =====================
+
+    private boolean handleBye() {
+        try {
+            Ui.showGoodbye(applications.size());
+            Ui.close();
+        } catch (IllegalStateException e) {
+            Ui.showError("Scanner was already closed.");
+        }
+        return false;
+    }
+
+    private void handleHelp() {
+        Ui.showHelp();
+    }
+
+    private void handleAdd(ParsedCommand cmd) {
+        try {
+            Application newApp = new Application(
+                    cmd.getCompany(), cmd.getPosition(), cmd.getDate());
+            applications.add(newApp);
+            Ui.showApplicationAdded(newApp);
+        } catch (DateTimeParseException e) {
+            Ui.showError("Invalid date! Please use YYYY-MM-DD");
+        }
+    }
+
+    private void handleList() {
+        Ui.showApplicationList(applications);
+    }
+
+    private void handleDelete(ParsedCommand cmd) {
+        try {
+            Application removed = Deleter.deleteApplication(applications, cmd.getIndex());
+            Ui.showApplicationDeleted(removed, applications.size());
+        } catch (JobPilotException e) {
+            Ui.showError(e.getMessage());
+        }
+    }
+
+    private void handleEdit(ParsedCommand cmd) {
+        try {
+            Editor.editApplication(cmd.getIndex(), applications,
+                    cmd.getNewCompany(), cmd.getNewPosition(),
+                    cmd.getNewDate(), cmd.getNewStatus());
+            Ui.showApplicationEdited(applications.get(cmd.getIndex()));
+        } catch (JobPilotException e) {
+            Ui.showError(e.getMessage());
+        }
+    }
+
+    private void handleFilter(ParsedCommand cmd) {
+        try {
+            Filterer.filterByStatus(applications, cmd.getSearchTerm());
+        } catch (JobPilotException e) {
+            Ui.showError(e.getMessage());
+        }
+    }
+
+    // ===================== SORT =====================
+
     private void handleSort(String rawSortTerm) {
         if (applications.isEmpty()) {
             Ui.showError("There is no application yet.");
@@ -132,15 +155,7 @@ public class CommandRunner {
         String sortType = rawSortTerm != null ? rawSortTerm.trim().toLowerCase() : "";
         boolean reverse = sortType.contains("reverse");
 
-        Comparator<Application> comparator;
-        if (sortType.startsWith("company")) {
-            comparator = Comparator.comparing(a -> a.getCompany().toLowerCase());
-        } else if (sortType.startsWith("status")) {
-            comparator = Comparator.comparing(a -> a.getStatus().toLowerCase());
-        } else {
-            // Default to sorting by Date
-            comparator = Comparator.naturalOrder();
-        }
+        Comparator<Application> comparator = getComparator(sortType);
 
         if (reverse) {
             applications.sort(Collections.reverseOrder(comparator));
@@ -152,17 +167,70 @@ public class CommandRunner {
         Ui.showApplicationList(applications);
     }
 
-    /**
-     * Handles Status and Notes updates with defensive index checks.
-     */
+    private Comparator<Application> getComparator(String sortType) {
+        if (sortType.startsWith("company")) {
+            return Comparator.comparing(a -> a.getCompany().toLowerCase());
+        } else if (sortType.startsWith("status")) {
+            return Comparator.comparing(a -> a.getStatus().toLowerCase());
+        } else {
+            return Comparator.naturalOrder();
+        }
+    }
+
+    // ===================== SEARCH =====================
+
+    private void handleSearch(String type, String query) {
+        if (applications.isEmpty()) {
+            Ui.showError("Application list is empty!");
+            return;
+        }
+
+        ArrayList<Application> results = findMatches(type, query);
+
+        String label = (type != null ? type : "c") + "/" + query;
+        Ui.showSearchResults(results, label);
+    }
+
+    private ArrayList<Application> findMatches(String type, String query) {
+        ArrayList<Application> results = new ArrayList<>();
+        String lowerQuery = query != null ? query.toLowerCase() : "";
+
+        for (Application app : applications) {
+            if (matches(app, type, lowerQuery)) {
+                results.add(app);
+            }
+        }
+
+        Collections.sort(results);
+        return results;
+    }
+
+    private boolean matches(Application app, String type, String query) {
+        String searchType = (type != null) ? type : "c";
+
+        switch (searchType) {
+        case "c":
+            return app.getCompany().toLowerCase().contains(query);
+        case "p":
+            return app.getPosition().toLowerCase().contains(query);
+        case "s":
+            return app.getStatus().toLowerCase().contains(query);
+        default:
+            return false;
+        }
+    }
+
+    // ===================== STATUS =====================
+
     private void handleStatusUpdate(ParsedCommand cmd) {
         int idx = cmd.getIndex();
-        if (idx < 0 || idx >= applications.size()) {
+        if (!isValidIndex(idx)) {
             Ui.showError("Invalid index! Application not found.");
             return;
         }
 
         Application app = applications.get(idx);
+
         if (cmd.getStatusValue() != null) {
             app.setStatus(cmd.getStatusValue());
         }
@@ -173,59 +241,17 @@ public class CommandRunner {
         Ui.showStatusUpdated(app);
     }
 
-    /**
-     * Handles searching with a safety check for empty lists.
-     * Synchronized with team prefix requirements (c/, p/, s/).
-     */
-    private void handleSearch(String type, String query) {
-        if (applications.isEmpty()) {
-            Ui.showError("Application list is empty!");
-            return;
-        }
+    // ===================== TAG =====================
 
-        ArrayList<Application> results = new ArrayList<>();
-        String lowerQuery = (query != null) ? query.toLowerCase() : "";
-
-        for (Application app : applications) {
-            boolean isMatch = false;
-            String searchType = (type != null) ? type : "c";
-
-            switch (searchType) {
-            case "c":
-                isMatch = app.getCompany().toLowerCase().contains(lowerQuery);
-                break;
-            case "p":
-                isMatch = app.getPosition().toLowerCase().contains(lowerQuery);
-                break;
-            case "s":
-                isMatch = app.getStatus().toLowerCase().contains(lowerQuery);
-                break;
-            default:
-                isMatch = app.getCompany().toLowerCase().contains(lowerQuery);
-            }
-
-            if (isMatch) {
-                results.add(app);
-            }
-        }
-
-        Collections.sort(results);
-        // Formatting search result output string to match EXPECTED.TXT requirements
-        String searchLabel = (type != null ? type : "c") + "/" + query;
-        Ui.showSearchResults(results, searchLabel);
-    }
-
-    /**
-     * Handles Tag additions and removals.
-     */
     private void handleTagUpdate(ParsedCommand cmd) {
         int idx = cmd.getIndex();
-        if (idx < 0 || idx >= applications.size()) {
+        if (!isValidIndex(idx)) {
             Ui.showError("Invalid index! Application not found.");
             return;
         }
 
         Application target = applications.get(idx);
+
         try {
             if (cmd.isAddTag()) {
                 target.addIndustryTag(cmd.getTag());
@@ -237,5 +263,11 @@ public class CommandRunner {
         } catch (Exception e) {
             Ui.showError(e.getMessage());
         }
+    }
+
+    // ===================== HELPER =====================
+
+    private boolean isValidIndex(int idx) {
+        return idx >= 0 && idx < applications.size();
     }
 }
