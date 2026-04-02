@@ -1,19 +1,21 @@
 @startuml
 actor User
 participant JobPilot
-participant "ArrayList<Add>" as AppList
-participant Add
-
-User -> JobPilot : input "search google"
-JobPilot -> JobPilot : searchByCompany(applications, input)
-
-JobPilot -> JobPilot : extract searchTerm
-
+User -> JobPilot : input "search c/google" (or p/xxx, s/xxx)
+JobPilot -> JobPilot : search(type, query)
+JobPilot -> JobPilot : findMatches(applications, type, query)
 loop for each application
-    JobPilot -> Add : getCompany()
-    Add --> JobPilot : company
-    JobPilot -> JobPilot : contains(searchTerm)
+    alt type=c
+        JobPilot -> Application : getCompany()
+        Application --> JobPilot : company
+    else type=p
+        JobPilot -> Application : getPosition()
+        Application --> JobPilot : position
+    else type=s
+        JobPilot -> Application : getStatus()
+        Application --> JobPilot : status
+    end
+    JobPilot -> JobPilot : contains(query)?
 end
-
 JobPilot -> User : display matching results
 @enduml

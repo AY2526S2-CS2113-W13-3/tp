@@ -1,13 +1,9 @@
 @startuml
 actor User
 participant JobPilot
-
-User -> JobPilot : input "search"
-JobPilot -> JobPilot : searchByCompany(applications, input)
-
-JobPilot -> JobPilot : extract searchTerm
-
+User -> JobPilot : input "search c/" (or p/ /s/)
+JobPilot -> JobPilot : search(type, query="")
 alt searchTerm is empty
-    JobPilot -> User : show error message
+    JobPilot -> User : show error message "Search value cannot be empty!"
 end
 @enduml
