@@ -5,7 +5,6 @@ import parser.ParsedCommand;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-// @@author Aswin-RajeshKumar
 /**
  * Advanced parser for the 'status' command.
  * Supports flexible ordering: status INDEX [set/STATUS] [note/NOTE]
@@ -115,4 +114,3 @@ public class StatusParser {
         return minIndex;
     }
 }
-// @@author
