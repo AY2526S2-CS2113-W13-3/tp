@@ -4,9 +4,6 @@
 **JobPilot** is a command-line application designed to help
 computing students efficiently manage their job applications.
 
-Users can add, edit, delete, tag, and search applications,
-while ensuring persistent storage and a clean CLI interface.
-
 ## Summary of Contributions
 
 ### Code Contributed
@@ -14,48 +11,40 @@ while ensuring persistent storage and a clean CLI interface.
 
 ### Enhancements Implemented
 #### List All Applications Feature
-- Implemented the functionality to list all stored job applications in a readable and organized format.
-- Added handling for empty application lists to avoid crashes and provide informative messages to the user.
-- Implementation was moderately challenging because it required integrating with persistent storage and ensuring formatting consistency.
+- Lists all stored job applications in a clear format.
+- Handles empty lists safely with informative messages.
 #### Search Feature
-- Implemented search functionality that supports queries by company name, position, and optional tag filtering.
-- Added partial match support and case-insensitive search for better user experience.
-- Ensured proper handling of edge cases, such as empty lists and queries with no matches.
-- This feature is complete as it allows users to efficiently locate applications and supports all valid search scenarios.
+- Searches applications by company, position, or tag with partial and case-insensitive matching.
+- Handles empty lists and no-match queries.
+- Supports all valid search scenarios.
 #### CommandRunner
-- Designed and implemented the main command execution engine that delegates commands to corresponding feature classes.
-- Handles parsing validation, coordination between backend components, and sending results to `UI`.
-- Implementation ensures separation of concerns: CommandRunner does not directly handle UI formatting or storage logic.
-- This component is critical for modularity and scalability, as all new commands interact through this centralized handler.
+- Central command engine delegating to feature classes.
+- Validates input and coordinates backend components without handling UI or storage.
 #### List Tests
-- Created unit tests for the list feature, covering both normal and edge cases (e.g., empty lists, multiple applications).
-- Verified that the output matches expected formatting and includes all application data.
+- Unit tests for normal and edge cases, verifying correct formatting and complete output.
 #### Search Tests
-- Designed comprehensive tests for the search functionality to cover partial matches, case insensitivity, and tag filters.
-- Included scenarios with empty application lists and queries with no matching results.
-#### Refactoring of ParsedCommand
-- Refactored the `ParsedCommand` class to better align with Java coding conventions and improve maintainability.
-- Simplified field access, improved encapsulation, and added clear documentation for constructors and methods.
-- Refactoring made it easier to integrate with CommandRunner and reduced potential bugs in command delegation.
+- Tests partial matches, case-insensitivity, tag filters, empty lists, and no-match queries.
+#### ParsedCommand Refactoring
+- Aligned with Java conventions, improved encapsulation and documentation.
+- Simplified integration with CommandRunner and reduced potential bugs.
 
 ### User Guide Contributions
 - Add documentation, format and examples for `list` and `search`.
 
 ### Developer Guide Contributions
 #### Multi-Type Search Feature Documentation
-- Documented architecture, methods, and responsibilities for searching applications by company, position, or status.
+- Documented architecture, methods, and responsibilities for search by company, position, or status.
 - Illustrated step-by-step usage scenario of `JobPilot#search()` method, including parsing input, performing the search, and displaying results.
 - Included sequence diagrams for normal flow, empty search, and no matches.
-- Covered error handling: empty input, no applications, invalid format, no matches.
-- Explained rationale: multiple search types, partial matching, direct result printing, linear search on `ArrayList`.
-- Mentioned future improvements: multi-field search, fuzzy search, indexing, modularizing search logic.
+- Covered error handling and design rationale (partial match, multiple types, linear search).
+- Noted future improvements: multi-field search, fuzzy search, indexing, modularization.
 
 ### Contributions to team-based tasks
 - New issues for v1.0, v2.0 and make sure issues are completed by deadline
 - Help add `sort` feature to UG and DG
 - Revise the input.txt and EXPECTED.txt to make sure the snapshot test pass
-- Help reconstruct the overall code structure by splitting the code into Ui, CommandRunner, and Parser classes
-- Extract `CommandRunner` from the previous version of our code
+- Reorganized code structure by separating into Ui, CommandRunner, and Parser classes.
+- Extracted and implemented `CommandRunner` from previous code version.
 
 ### Review/Mentoring contributions:
 - Help teammates merge pull requests
