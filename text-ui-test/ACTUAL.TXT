@@ -43,28 +43,22 @@ Added tag: TECH -> Microsoft | SDE Intern | 2025-03-12 | Pending | Tags: [TECH]
 ___________________________________________________________________
 Added tag: INTERN -> Microsoft | SDE Intern | 2025-03-12 | Pending | Tags: [TECH, INTERN]
 ___________________________________________________________________
-Apr 02, 2026 8:54:57 AM parser.subparsers.StatusParser parse
-INFO: Parsed status update for index: 0
 Updated Status: Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
 ___________________________________________________________________
-Apr 02, 2026 8:54:57 AM parser.subparsers.StatusParser parse
-INFO: Parsed status update for index: 1
 Updated Status: Amazon | Data Analyst | 2025-03-08 | Interview (Note: Case study prep) | Tags: [FINANCE, DATA]
 ___________________________________________________________________
-Apr 02, 2026 8:54:57 AM parser.subparsers.StatusParser parse
-INFO: Parsed status update for index: 2
 Updated Status: Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
-Found 1 application(s) matching 'google':
+Found 1 application(s) matching 'c/google':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
 ___________________________________________________________________
-Found 1 application(s) matching 'micro':
+Found 1 application(s) matching 'c/micro':
 1. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
-Found 1 application(s) matching 'intern':
+Found 1 application(s) matching 'p/intern':
 1. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
-Found 1 application(s) matching 'offer':
+Found 1 application(s) matching 's/offer':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
 ___________________________________________________________________
 Sorted by submission date!
