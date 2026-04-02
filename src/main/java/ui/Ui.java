@@ -11,6 +11,8 @@ import java.util.Scanner;
  */
 public class Ui {
     private static final Scanner scanner = new Scanner(System.in);
+    private static final String HORIZONTAL_LINE =
+            "___________________________________________________________________";
 
     /**
      * Reads a command entered by the user from the console.
@@ -35,6 +37,7 @@ public class Ui {
         System.out.println("Hello from\n" + logo);
         System.out.println("Welcome to JobPilot!");
         System.out.println("Type 'help' to see all available commands!");
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -44,6 +47,7 @@ public class Ui {
      */
     public static void showGoodbye(int count) {
         System.out.println("Bye! You added " + count + " application(s).");
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -53,6 +57,7 @@ public class Ui {
      */
     public static void showError(String error) {
         System.out.println(error);
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -62,6 +67,7 @@ public class Ui {
      */
     public static void showApplicationAdded(Application app) {
         System.out.println("Added: " + app);
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -74,6 +80,7 @@ public class Ui {
         System.out.println("Deleted application:");
         System.out.println(app);
         System.out.println("You have " + remainingSize + " application(s) left.");
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -84,6 +91,7 @@ public class Ui {
     public static void showApplicationEdited(Application app) {
         System.out.println("Updated application:");
         System.out.println(app);
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -104,6 +112,7 @@ public class Ui {
                 System.out.println((i + 1) + ". " + applications.get(i));
             }
         }
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -121,6 +130,7 @@ public class Ui {
                 System.out.println((i + 1) + ". " + results.get(i));
             }
         }
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -132,12 +142,15 @@ public class Ui {
      * @param status The status string used for the filter.
      */
     public static void showFilterResults(ArrayList<Application> results, String status) {
+        System.out.println("Filtered by status: " + status);
+
         if (results.isEmpty()) {
             System.out.println("No applications found with status: " + status);
         } else {
             System.out.println("Found " + results.size() + " application(s) with status '" + status + "':");
             showApplicationList(results);
         }
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -154,6 +167,7 @@ public class Ui {
      */
     public static void showStatusUpdated(Application app) {
         System.out.println("Updated Status: " + app);
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -164,6 +178,7 @@ public class Ui {
      */
     public static void showTagAdded(IndustryTag tag, Application app) {
         System.out.println("Added tag: " + tag + " -> " + app);
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -174,6 +189,7 @@ public class Ui {
      */
     public static void showTagRemoved(IndustryTag tag, Application app) {
         System.out.println("Removed tag: " + tag + " -> " + app);
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
@@ -185,29 +201,24 @@ public class Ui {
                 add c/COMPANY p/POSITION d/DATE                             Add a new job application
                 edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]     Edit existing application
                 delete INDEX                                                Delete an application
-                status INDEX set/STATUS note/NOTE                           Update  application status and add a note
-                filter status/STATUS                                        Filter applications by status
+                status INDEX set/STATUS note/NOTE                           Update application status and add a note
+                filter s/STATUS                                             Filter applications by status
                 tag INDEX add/TAG                                           Add a tag to an application
                 tag INDEX remove/TAG                                        Remove a tag from an application
                 list                                                        List all job applications
                 sort                                                        Sort applications by date
-                search c/COMPANY | p/POSITION | s/STATUS                    Search applications
+                search [c/COMPANY] [p/POSITION] [s/STATUS]                  Search applications
                 help                                                        Show this message
-                bye                                                         Exit the application
-                """;
+                bye                                                         Exit the application""";
+
         System.out.println(helpMessage);
+        System.out.println(HORIZONTAL_LINE);
     }
 
     /**
      * Closes the scanner used for reading user input.
-     *
-     * @throws IllegalStateException if the scanner is already closed.
      */
     public static void close() {
         scanner.close();
-    }
-
-    public static void showLineSeparator() {
-        System.out.println("----------------------------------------");
     }
 }

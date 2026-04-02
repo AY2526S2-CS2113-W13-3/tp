@@ -29,15 +29,16 @@ Available Commands:
 add c/COMPANY p/POSITION d/DATE                             Add a new job application
 edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]     Edit existing application
 delete INDEX                                                Delete an application
-status INDEX set/STATUS note/NOTE                           Update  application status and add a note
-filter status/STATUS                                        Filter applications by status
+status INDEX set/STATUS note/NOTE                           Update application status and add a note
+filter s/STATUS                                             Filter applications by status
 tag INDEX add/TAG                                           Add a tag to an application
 tag INDEX remove/TAG                                        Remove a tag from an application
 list                                                        List all job applications
 sort                                                        Sort applications by date
-search COMPANY_NAME                                         Search applications by company name
+search [c/COMPANY] [p/POSITION] [s/STATUS]                  Search applications
 help                                                        Show this message
 bye                                                         Exit the application
+___________________________________________________________________
 ```
 
 ### Adding an application: add
@@ -93,6 +94,7 @@ Example output:
 Deleted application:
 Google | SE manager | 2025-03-10 | INTERVIEW
 You have 4 application(s) left.
+___________________________________________________________________
 ```
 
 ### Updating application status: 'status'
@@ -155,6 +157,7 @@ Here are your applications:
 1. Google | SE manager | 2025-03-10 | Pending
 2. Amazon | Data Analyst | 2025-03-08 | Pending
 3. Microsoft | SDE Intern | 2025-03-12 | Pending
+___________________________________________________________________
 ```
 
 ### Searching Applications
@@ -172,24 +175,29 @@ Examples:
 ```text
 Found 1 application(s) matching 'c/google':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
+___________________________________________________________________
+
 ```
 
 - `search c/micro`
 ```text
 Found 1 application(s) matching 'c/micro':
 1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+___________________________________________________________________
 ```
 
 - `search p/intern`
 ```text
 Found 1 application(s) matching 'p/intern':
 1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+___________________________________________________________________
 ```
 
 - `search s/offer`
 ```text
 Found 1 application(s) matching 's/offer':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
+___________________________________________________________________
 ```
 
 ### Exiting the program: bye
@@ -198,13 +206,11 @@ Exits JobPilot and saves the application data to a readable text file.
 
 Format: `bye`
 
-Examples:
-- `bye`
-
 Example output:
 
 ```text
-Bye! You added 4 application(s).
+Bye! You added 5 application(s).
+___________________________________________________________________
 ```
 
 ## FAQ
@@ -239,17 +245,17 @@ Bye! You added 4 application(s).
 
 ## Command Summary
 
-| Action | Format, Examples                                                                                                      |
-|--------|-----------------------------------------------------------------------------------------------------------------------|
-| Add | `add c/COMPANY p/POSITION d/DATE` <br> e.g., `add c/Google p/Software Engineer d/2026-03-29`                          |
-| Edit | `edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]` <br> e.g., `edit 2 c/Google p/Backend Engineer s/Interview` |
-| Delete | `delete INDEX` <br> e.g., `delete 1`                                                                                  |
-| Status | `status INDEX set/STATUS [note/NOTE]` <br> e.g., `status 1 set/Interview note/Phone screening completed`              |
-| Filter | `filter status/STATUS` <br> e.g., `filter status/Applied`                                                             |
-| Tag Add | `tag INDEX add/TAG` <br> e.g., `tag 1 add/Tech`                                                                       |
-| Tag Remove | `tag INDEX remove/TAG` <br> e.g., `tag 1 remove/Tech`                                                                 |
-| List | `list`                                                                                                                |
-| Sort | `sort`                                                                                                                |
-| Search | `search COMPANY_NAME` <br> e.g., `search Google`                                                                      |
-| Help | `help`                                                                                                                |
-| Exit | `bye`                                                                                                                 |
+| Action | Format, Examples|
+|--------|--------------------------------------------------------------------------------------------------|
+| Add | `add c/COMPANY p/POSITION d/DATE` <br> e.g., `add c/Google p/Software Engineer d/2026-03-29`|
+| Edit | `edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]` <br> e.g., `edit 2 c/Google p/Backend Engineer s/Interview`|
+| Delete | `delete INDEX` <br> e.g., `delete 1`|
+| Status | `status INDEX set/STATUS note/NOTE` <br> e.g., `status 1 set/Interview note/Phone screening completed`|
+| Filter | `filter s/STATUS` <br> e.g., `filter s/Applied`|
+| Tag Add | `tag INDEX add/TAG` <br> e.g., `tag 1 add/Tech`|
+| Tag Remove | `tag INDEX remove/TAG` <br> e.g., `tag 1 remove/Tech`|
+| List | `list`|
+| Sort | `sort`|
+| Search | `search [c/company] [p/position] [s/status]` <br> e.g., `search c/Google`|
+| Help | `help`|
+| Exit | `bye`|

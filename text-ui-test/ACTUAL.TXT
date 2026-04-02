@@ -7,76 +7,98 @@ Hello from
 
 Welcome to JobPilot!
 Type 'help' to see all available commands!
+___________________________________________________________________
 Available Commands:
 add c/COMPANY p/POSITION d/DATE                             Add a new job application
 edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]     Edit existing application
 delete INDEX                                                Delete an application
-status INDEX set/STATUS note/NOTE                           Update  application status and add a note
-filter status/STATUS                                        Filter applications by status
+status INDEX set/STATUS note/NOTE                           Update application status and add a note
+filter s/STATUS                                             Filter applications by status
 tag INDEX add/TAG                                           Add a tag to an application
 tag INDEX remove/TAG                                        Remove a tag from an application
 list                                                        List all job applications
 sort                                                        Sort applications by date
-search c/COMPANY | p/POSITION | s/STATUS                    Search applications
+search [c/COMPANY] [p/POSITION] [s/STATUS]                  Search applications
 help                                                        Show this message
 bye                                                         Exit the application
-
+___________________________________________________________________
 Added: Google | SE manager | 2025-03-10 | Pending
+___________________________________________________________________
 Added: Amazon | Data Analyst | 2025-03-08 | Pending
+___________________________________________________________________
 Added: Microsoft | SDE Intern | 2025-03-12 | Pending
+___________________________________________________________________
 Here are your applications:
 1. Google | SE manager | 2025-03-10 | Pending
 2. Amazon | Data Analyst | 2025-03-08 | Pending
 3. Microsoft | SDE Intern | 2025-03-12 | Pending
+___________________________________________________________________
 Added tag: TECH -> Google | SE manager | 2025-03-10 | Pending | Tags: [TECH]
+___________________________________________________________________
 Added tag: FINANCE -> Amazon | Data Analyst | 2025-03-08 | Pending | Tags: [FINANCE]
+___________________________________________________________________
 Added tag: DATA -> Amazon | Data Analyst | 2025-03-08 | Pending | Tags: [FINANCE, DATA]
+___________________________________________________________________
 Added tag: TECH -> Microsoft | SDE Intern | 2025-03-12 | Pending | Tags: [TECH]
+___________________________________________________________________
 Added tag: INTERN -> Microsoft | SDE Intern | 2025-03-12 | Pending | Tags: [TECH, INTERN]
-Apr 02, 2026 8:18:35 AM parser.subparsers.StatusParser parse
-INFO: Parsed status update for index: 0
+___________________________________________________________________
 Updated Status: Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-Apr 02, 2026 8:18:35 AM parser.subparsers.StatusParser parse
-INFO: Parsed status update for index: 1
-Updated Status: Amazon | Data Analyst | 2025-03-08 | Interview (Note: Case study prep) | Tags: [FINANCE, DATA]
-Apr 02, 2026 8:18:35 AM parser.subparsers.StatusParser parse
-INFO: Parsed status update for index: 2
-Updated Status: Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
-Found 1 application(s) matching 'google':
+___________________________________________________________________
+Updated Status: Amazon | Data Analyst | 2025-03-08 | INTERVIEW (Note: Case study prep) | Tags: [FINANCE, DATA]
+___________________________________________________________________
+Updated Status: Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+___________________________________________________________________
+Found 1 application(s) matching 'c/google':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-Found 1 application(s) matching 'micro':
-1. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
-Found 1 application(s) matching 'intern':
-1. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
-Found 1 application(s) matching 'offer':
+___________________________________________________________________
+Found 1 application(s) matching 'c/micro':
+1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+___________________________________________________________________
+Found 1 application(s) matching 'p/intern':
+1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+___________________________________________________________________
+Found 1 application(s) matching 's/offer':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
+___________________________________________________________________
 Sorted by submission date!
 Here are your applications:
 1. Amazon | Data Analyst | 2025-03-08 | Interview (Note: Case study prep) | Tags: [FINANCE, DATA]
 2. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-3. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+3. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+___________________________________________________________________
 Here are your applications:
 1. Amazon | Data Analyst | 2025-03-08 | Interview (Note: Case study prep) | Tags: [FINANCE, DATA]
 2. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-3. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+3. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+___________________________________________________________________
 Removed tag: /FINANCE -> Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
+___________________________________________________________________
 Deleted application:
 Amazon | Data Analyst | 2025-03-08 | Interview (Note: Case study prep) | Tags: [FINANCE, DATA]
 You have 2 application(s) left.
+___________________________________________________________________
 Here are your applications:
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-2. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+2. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+___________________________________________________________________
 Updated application:
 Apple | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
+___________________________________________________________________
 Updated application:
 Apple | SE manager | 2027-01-09 | OFFER (Note: Negotiate salary) | Tags: [TECH]
+___________________________________________________________________
 Here are your applications:
 1. Apple | SE manager | 2027-01-09 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-2. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+2. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
+___________________________________________________________________
 Deleted application:
 Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
 You have 1 application(s) left.
+___________________________________________________________________
 Deleted application:
 Apple | SE manager | 2027-01-09 | OFFER (Note: Negotiate salary) | Tags: [TECH]
 You have 0 application(s) left.
+___________________________________________________________________
 Bye! You added 0 application(s).
+___________________________________________________________________

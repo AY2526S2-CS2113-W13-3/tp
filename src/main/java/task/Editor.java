@@ -104,8 +104,7 @@ public class Editor {
             throws JobPilotException {
 
         if (index < 0 || index >= applications.size()) {
-            throw new JobPilotException(
-                    "Invalid application number! You have " +
+            throw new JobPilotException("Invalid application number! You have " +
                             applications.size() + " application(s).");
         }
 
@@ -124,8 +123,7 @@ public class Editor {
             try {
                 LocalDate.parse(newDate);
             } catch (DateTimeParseException e) {
-                throw new JobPilotException(
-                        "Invalid date! Use YYYY-MM-DD format (e.g., 2024-09-12)");
+                throw new JobPilotException("Invalid date! Use YYYY-MM-DD format (e.g., 2024-09-12)");
             }
             target.setDate(newDate);
             updated = true;
@@ -136,11 +134,8 @@ public class Editor {
         }
 
         if (!updated) {
-            throw new JobPilotException(
-                    "No valid fields to update! Use: c/COMPANY, p/POSITION, d/DATE, or s/STATUS");
+            throw new JobPilotException("No valid fields to update! Use: c/COMPANY, p/POSITION, d/DATE, or s/STATUS");
         }
-
-        Ui.showApplicationEdited(target);
     }
 
     /**
@@ -153,10 +148,21 @@ public class Editor {
         int sIndex = str.indexOf("s/", start);
 
         int next = str.length();
-        if (cIndex != -1 && cIndex < next) next = cIndex;
-        if (pIndex != -1 && pIndex < next) next = pIndex;
-        if (dIndex != -1 && dIndex < next) next = dIndex;
-        if (sIndex != -1 && sIndex < next) next = sIndex;
+
+        if (cIndex != -1 && cIndex < next) {
+            next = cIndex;
+        }
+
+        if (pIndex != -1 && pIndex < next) {
+            next = pIndex;
+        }
+        if (dIndex != -1 && dIndex < next) {
+            next = dIndex;
+        }
+
+        if (sIndex != -1 && sIndex < next) {
+            next = sIndex;
+        }
 
         return next;
     }

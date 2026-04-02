@@ -1,46 +1,44 @@
 @echo off
-setlocal enabledelayedexpansion
+ setlocal enabledelayedexpansion
 
-REM go to script directory
-cd /d %~dp0
-cd ..
+ REM change to script directory
+ cd /d %~dp0
 
-REM build jar
-call gradlew clean shadowJar
+ REM go to project root
+ cd ..
 
-REM go to test folder
-cd text-ui-test || exit /b 1
+ REM build jar
+ call gradlew clean shadowJar
 
-REM reset storage: completely empty
-cd ..
-if exist data\JobPilotData.txt del data\JobPilotData.txt
-break>data\JobPilotData.txt
-cd text-ui-test
+ REM go to test folder
+ cd text-ui-test || exit /b 1
 
-REM clean old files
-if exist ACTUAL.TXT del ACTUAL.TXT
-if exist EXPECTED-UNIX.TXT del EXPECTED-UNIX.TXT
+ REM clean old files
+ if exist ACTUAL.TXT del ACTUAL.TXT
+ if exist EXPECTED-UNIX.TXT del EXPECTED-UNIX.TXT
 
-REM find jar file
-cd ..\build\libs
-for %%f in (*.jar) do (
-    set "JAR=%%f"
-)
-cd ..\..\text-ui-test
+ REM find jar file
+ cd ..\build\libs
+ for %%f in (*.jar) do (
+     set "JAR=%%f"
+ )
 
-REM run program
-java -jar ..\build\libs\%JAR% < input.txt > ACTUAL.TXT 2>&1
+ REM go back to test folder
+ cd ..\..\text-ui-test
 
-REM normalize line endings
-type EXPECTED.TXT > EXPECTED-UNIX.TXT
+ REM run program
+ java -jar ..\build\libs\%JAR% < input.txt > ACTUAL.TXT 2>&1
 
-REM compare files
-FC EXPECTED-UNIX.TXT ACTUAL.TXT >nul
+ REM normalize line endings (basic Windows-safe way)
+ type EXPECTED.TXT > EXPECTED-UNIX.TXT
 
-if %errorlevel%==0 (
-    echo Test passed!
-    exit /b 0
-) else (
-    echo Test failed!
-    exit /b 1
-)
+ REM compare files
+ FC EXPECTED-UNIX.TXT ACTUAL.TXT >nul
+
+ if %errorlevel%==0 (
+     echo Test passed!
+     exit /b 0
+ ) else (
+     echo Test failed!
+     exit /b 1
+ )

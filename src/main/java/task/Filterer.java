@@ -59,17 +59,8 @@ public class Filterer {
     /**
      * Displays formatted filter results with a summary header.
      */
-    private static void showFilterResults(ArrayList<Application> results, String query) {
-        Ui.showLineSeparator();
-        System.out.println("Filtered by status: " + query);
-        System.out.println("Matching applications: " + results.size());
-        Ui.showLineSeparator();
-
-        if (results.isEmpty()) {
-            System.out.println("No applications matched the given status.");
-        } else {
-            Ui.showApplicationList(results);
-        }
+    private static void showFilterResults(ArrayList<Application> results, String status) {
+        Ui.showFilterResults(results, status);
     }
 }
 // @@author
