@@ -1,20 +1,17 @@
 @startuml
 actor User
 participant JobPilot
-participant "ArrayList<Add>" as AppList
-participant Add
-
-User -> JobPilot : input "search google"
-JobPilot -> JobPilot : searchByCompany(applications, input)
-
+participant "ArrayList<Application>" as AppList
+participant Application
+User -> JobPilot : input "search p/nonexistent"
+JobPilot -> JobPilot : search(type="p", query="nonexistent")
 loop for each application
-    JobPilot -> Add : getCompany()
-    Add --> JobPilot : company
-    JobPilot -> JobPilot : compare
+    JobPilot -> Application : getPosition()
+    Application --> JobPilot : position
+    JobPilot -> JobPilot : contains(query)?
 end
-
 alt no matches found
-    JobPilot -> User : "No applications found"
+    JobPilot -> User : "No applications found for position: nonexistent"
 else matches found
     JobPilot -> User : display results
 end

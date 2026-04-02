@@ -167,38 +167,57 @@ The following sequence diagram shows the flow of deleting an application:
   * *Pros:* Less boilerplate code and fewer method hand-offs in the `CommandRunner`.
   * *Cons:* Violates the Single Responsibility Principle (SRP) by mixing domain logic with presentation logic, making automated testing difficult and UI migrations (e.g., moving to a GUI) nearly impossible.
 
-### Search by Company Feature
+### Multi-Type Search Feature
 
 #### Implementation Details
 
-The **Search by Company** feature allows users to retrieve job applications by matching a company name using a **case-insensitive partial search**. This feature is implemented directly within the `JobPilot` class through the method:
+The **Multi-Type Search** feature allows users to retrieve job applications by matching **company name, position, or status** using a **case-insensitive partial search**. This feature is implemented directly within the `JobPilot` class through the method:
 
-* `JobPilot#searchByCompany(ArrayList<Application>, String)`
+* `JobPilot#search(ArrayList<Application>, String type, String query)`
 
 The application's data is stored in a central `ArrayList<Application>` named `applications`, where each `Application` object represents a job application.
 
-The search operation works by iterating through the list and checking whether each application's company name contains the user-provided search keyword.
+The search operation works by iterating through the list and checking whether each application's relevant field contains the user-provided search keyword:
+
+* Type `"c"` → company name
+* Type `"p"` → position
+* Type `"s"` → status
 
 ---
 
 Given below is an example usage scenario demonstrating how the search mechanism behaves at each step.
 
-**Step 1.** The user executes `search google`. The `Scanner` inside the `JobPilot.main()` loop reads the raw input string.
+**Step 1.** The user executes one of the following commands:
 
-**Step 2.** The `if-else` execution block in `JobPilot.main()` recognizes the `search` command and routes execution to the `JobPilot#searchByCompany()` method.
+```text
+search c/google
+search p/software engineer
+search s/interviewed
+```
 
-**Step 3.** Inside `searchByCompany`, the system extracts the search keyword using:
-`String searchTerm = input.substring("search ".length()).trim();`
-If the search term is empty, an error message is shown. If the application list is empty, the system informs the user that there are no applications to search.
+The Scanner inside the JobPilot.main() loop reads the raw input string.
+
+**Step 2.** The if-else execution block in JobPilot.main() recognizes the search command and routes execution to the JobPilot#search() method.
+
+**Step 3.** Inside search, the system extracts the search type and keyword:
+```text
+String type = input.substring("search ".length(), input.indexOf("/")).trim();
+String query = input.substring(input.indexOf("/") + 1).trim();
+```
+If the search type or query is empty, an error message is shown. If the application list is empty, the system informs the user that there are no applications to search.
 
 **Step 4.** The method iterates through all applications and performs a case-insensitive partial match:
+```text
 for (Application application : applications) {
-if (application.getCompany().toLowerCase().contains(searchTerm.toLowerCase())) {
-results.add(application);
+    if (matches(application, type, query.toLowerCase())) {
+        results.add(application);
+    }
 }
-}
-
-
+```
+`matches()` checks the corresponding field:
+- `"c"` → `application.getCompany().toLowerCase().contains(query)`
+- `"p"`→ `application.getPosition().toLowerCase().contains(query)`
+- `s` → `application.getStatus().toLowerCase().contains(query)`
 
 **Step 5.** The results are displayed to the user. If no matches are found, the system prints a corresponding message. Otherwise, all matching applications are listed.
 
@@ -216,58 +235,59 @@ The following diagram illustrates the case where no applications match the searc
 ![search_nomatch.png](diagrams/search/search_nomatch.png)
 
 ---
-
 **Error Handling**
 
-| Error Scenario | Condition | User Response |
-|----------------|-----------|---------------|
-| Empty Search Term | User enters `search` without keyword | "Please provide a company name to search. Example: search google" |
-| No Applications | Application list is empty | "No applications to search!" |
-| No Match Found | No company matches the keyword | "No applications found for company: [keyword]" |
-| Invalid Format | Input parsing fails unexpectedly | "Invalid search format! Use: search COMPANY_NAME" |
+| Error Scenario       | Condition                                      | User Response                                                |
+|---------------------|-----------------------------------------------|-------------------------------------------------------------|
+| Empty Search Term     | User enters `search c/`, `p/`, or `s/` without keyword | "Search value cannot be empty!"                              |
+| No Applications       | Application list is empty                     | "No applications to search!"                                 |
+| No Match Found        | No application matches the keyword           | "No applications found for [type]: [keyword]"               |
+| Invalid Format        | Input does not follow `search c/xxx`, `p/xxx`, or `s/xxx` | "Invalid search format! Use: search c/xxx or p/xxx or s/xxx"|
+| Invalid Search Type   | Type is not `c`, `p`, or `s`                 | "Invalid search type! Use c/, p/, or s/"                     |
 
 ---
 
 **Design Rationale**
 
-| Decision | Rationale |
-|----------|----------|
-| Implement search in `JobPilot` | Keeps implementation simple and avoids unnecessary abstraction |
-| Case-insensitive matching | Improves usability by allowing flexible input |
-| Partial matching using `contains()` | Allows users to search with incomplete company names |
-| Linear search on `ArrayList` | Sufficient for small datasets and easy to implement |
-| Direct result printing | Simplifies control flow without introducing additional layers |
+| Decision                            | Rationale                                                                 |
+|------------------------------------|---------------------------------------------------------------------------|
+| Implement search in `JobPilot`      | Keeps implementation simple and avoids unnecessary abstraction           |
+| Support multiple search types       | Improves usability by allowing field-specific searches                  |
+| Case-insensitive matching           | Flexible input, user-friendly                                           |
+| Partial matching using `contains()` | Allows users to search with incomplete input                             |
+| Linear search on `ArrayList`        | Adequate for small datasets, simple to implement                         |
+| Direct result printing               | Simplifies control flow without extra layers                             |
+
+---
 
 #### Design Considerations
 
 **Aspect: Search logic placement**
 
 * **Current Implementation:** The search logic is implemented directly inside the `JobPilot` class.
-  * *Pros:* Simple and straightforward, easy to integrate with the main command loop.
-  * *Cons:* Mixes UI logic and business logic, making the method harder to test and reuse.
+    * *Pros:* Simple and straightforward, easy to integrate with the main command loop.
+    * *Cons:* Mixes UI and business logic, harder to test in isolation.
 
 ---
 
 **Aspect: Matching strategy**
 
-* **Current Implementation:** Uses case-insensitive partial matching via `toLowerCase().contains()`.
-  * *Pros:* Flexible and user-friendly, supports partial input (e.g., "goo" matches "Google").
-  * *Cons:* Less efficient for large datasets and limited to simple substring matching.
+* **Current Implementation:** Case-insensitive partial matching via `toLowerCase().contains()`.
+    * *Pros:* Flexible, supports partial input (e.g., "goo" matches "Google").
+    * *Cons:* Less efficient for large datasets, limited to substring matching.
 
-* **Alternative:** Use exact matching with `equalsIgnoreCase()`.
-  * *Pros:* More precise and slightly more efficient.
-  * *Cons:* Too strict for user input, reduces usability.
+* **Alternative:** Exact match using `equalsIgnoreCase()`.
+    * *Pros:* More precise, slightly more efficient.
+    * *Cons:* Too strict, reduces usability.
 
 ---
 
 #### Future Improvements
 
-- Support multi-field search (e.g., company + position)
-- Implement fuzzy search to handle typos
-- Introduce indexing for faster lookup in large datasets
-- Separate search logic into its own component for better modularity
-
----
+- Support multi-field search (e.g., `search c/google p/developer`)
+- Implement fuzzy search for typo tolerance
+- Introduce indexing for faster lookups in large datasets
+- Extract search logic into a separate class for better modularity
 
 ### Sort Application Feature
 
