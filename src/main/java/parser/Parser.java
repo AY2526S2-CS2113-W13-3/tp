@@ -40,12 +40,14 @@ public class Parser {
                     return ApplicationParser.parse(trimmed);
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
+                    break;
                 }
             case "filter":
                 try {
                     return FilterParser.parse(trimmed);
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
+                    break;
                 }
 
             case "delete":
@@ -53,6 +55,7 @@ public class Parser {
                     return DeleterParser.parse(trimmed);
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
+                    break;
                 }
 
             case "edit":
@@ -60,6 +63,7 @@ public class Parser {
                     return EditorParser.parse(trimmed);
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
+                    break;
                 }
 
             case "search":
@@ -67,6 +71,7 @@ public class Parser {
                     return SearcherParser.parse(trimmed);
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
+                    break;
                 }
 
             case "status":
@@ -74,6 +79,7 @@ public class Parser {
                     return StatusParser.parse(trimmed);
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
+                    break;
                 }
 
             case "tag":
@@ -81,10 +87,12 @@ public class Parser {
                     return TaggerParser.parse(trimmed);
                 } catch (JobPilotException e) {
                     Ui.showError(e.getMessage());
+                    break;
                 }
 
             default:
                 return new ParsedCommand(CommandType.UNKNOWN);
         }
+        return null;
     }
 }
