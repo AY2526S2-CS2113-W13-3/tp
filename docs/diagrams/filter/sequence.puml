@@ -7,9 +7,9 @@ participant Filterer
 participant "ArrayList<Application>" as AppList
 participant Application
 
-User -> Ui : "filter status/OFFER"
+User -> Ui : "filter s/OFFER"
 Ui -> CommandRunner : run(command)
-CommandRunner -> FilterParser : parse("filter status/OFFER")
+CommandRunner -> FilterParser : parse("filter s/OFFER")
 FilterParser --> CommandRunner : ParsedCommand(type=FILTER, searchTerm="OFFER")
 CommandRunner -> Filterer : filterByStatus(applications, "OFFER")
 Filterer -> AppList : iterate through list

@@ -401,16 +401,16 @@ The following sequence diagram illustrates the flow of adding a tag to an applic
 The **Filter by Status** mechanism allows users to retrieve a subset of applications matching a specific status (e.g., "OFFER"). This is implemented via a dedicated `Filterer` utility class and a `FilterParser` sub-parser, following the **Separation of Concerns** principle used in the `Delete` and `Edit` features.
 
 The operations are handled via the following methods:
-* `FilterParser#parse(String)` — Extracts the status query from the raw input (e.g., extracts "OFFER" from `filter status/OFFER`).
+* `FilterParser#parse(String)` — Extracts the status query from the raw input (e.g., extracts "OFFER" from `filter s/OFFER`).
 * `Filterer#filterByStatus(ArrayList<Application>, String, Ui)` — Iterates through the list, performs the logical match, and delegates the display to the `Ui` class.
 
 **Execution Scenario**
 
-**Step 1.** The user executes `filter status/OFFER`. The `Scanner` in `JobPilot.main()` reads the input string.
+**Step 1.** The user executes `filter s/OFFER`. The `Scanner` in `JobPilot.main()` reads the input string.
 
-**Step 2.** The `Parser` identifies the `filter` keyword and routes execution to `FilterParser.parse("filter status/OFFER")`.
+**Step 2.** The `Parser` identifies the `filter` keyword and routes execution to `FilterParser.parse("filter s/OFFER")`.
 
-**Step 3.** `FilterParser` validates the `status/` prefix, extracts the string `"OFFER"`, and returns a `ParsedCommand` object with `type = FILTER` and `searchTerm = "OFFER"`.
+**Step 3.** `FilterParser` validates the `s/` prefix, extracts the string `"OFFER"`, and returns a `ParsedCommand` object with `type = FILTER` and `searchTerm = "OFFER"`.
 
 **Step 4.** The `switch` block in `JobPilot.main()` catches the `FILTER` case and calls `Filterer.filterByStatus(applications, cmd.searchTerm, ui)`.
 
@@ -440,18 +440,18 @@ The following sequence diagram illustrates the flow of filtering applications by
 |----------------|-----------|---------------|
 | Missing Arguments | User enters `filter` alone | "Filter command is missing arguments! Use: filter status/STATUS" |
 | Missing Prefix | User enters `filter PENDING` | "Invalid filter format! Expected: filter status/STATUS" |
-| Empty Value | User enters `filter status/` | "Status value cannot be empty!" |
+| Empty Value | User enters `filter s/` | "Status value cannot be empty!" |
 ### Separate Notes from Status Feature
 
 #### Implementation Details
 
 This feature separates the original `status` field into two independent fields: `status` (application progress) and `notes` (user comments). This allows users to update status and notes independently without overwriting the other.
 
-**Command Format**: `status INDEX set/STATUS note/NOTES`
+**Command Format**: `status INDEX s/STATUS note/NOTES`
 
 **Example Usage**:
-- `status 1 set/OFFER note/Negotiate salary` — Update both status and notes
-- `status 2 set/INTERVIEW` — Update status only (notes unchanged)
+- `status 1 s/OFFER note/Negotiate salary` — Update both status and notes
+- `status 2 s/INTERVIEW` — Update status only (notes unchanged)
 - `status 3 note/Follow up next week` — Update notes only (status unchanged)
 
 The feature is implemented using the following components:
@@ -461,11 +461,11 @@ The feature is implemented using the following components:
 
 Given below is an example usage scenario demonstrating how the Status mechanism behaves at each step.
 
-**Step 1.** The user executes `status 1 set/OFFER note/Negotiate salary`. The command is read by `Ui` and passed to `Parser`.
+**Step 1.** The user executes `status 1 s/OFFER note/Negotiate salary`. The command is read by `Ui` and passed to `Parser`.
 
 **Step 2.** `Parser` identifies the `status` keyword and delegates to `StatusParser.parse()`.
 
-**Step 3.** `StatusParser` extracts the index `1`, status value `OFFER` (after `set/`), and notes `Negotiate salary` (after `note/`). It returns a `ParsedCommand` object with type `STATUS`, index, status, and notes.
+**Step 3.** `StatusParser` extracts the index `1`, status value `OFFER` (after `s/`), and notes `Negotiate salary` (after `note/`). It returns a `ParsedCommand` object with type `STATUS`, index, status, and notes.
 
 **Step 4.** `CommandRunner` validates the index is within bounds and retrieves the target `Application`.
 
@@ -481,23 +481,23 @@ The following sequence diagram illustrates the flow of updating status and notes
 
 #### Error Handling
 
-| Error Scenario | Condition | User Response |
-|----------------|-----------|---------------|
-| Missing index | User enters `status set/OFFER` without index | "Please provide an index. Example: status 1 set/OFFER" |
-| Invalid index | Index out of range | "Invalid application number! You have X application(s)." |
-| Invalid format | Missing `set/` or incorrectly formatted | "Invalid status format! Use: status INDEX set/STATUS note/NOTE" |
-| Empty status | User enters `status 1 set/` | "Status cannot be empty!" |
-| Both fields missing | User enters `status 1` | "No valid fields to update! Use: set/STATUS and/or note/NOTE" |
+| Error Scenario | Condition                              | User Response |
+|----------------|----------------------------------------|---------------|
+| Missing index | User enters `status s/OFFER` without index | "Please provide an index. Example: status 1 set/OFFER" |
+| Invalid index | Index out of range                     | "Invalid application number! You have X application(s)." |
+| Invalid format | Missing `s/` or incorrectly formatted  | "Invalid status format! Use: status INDEX set/STATUS note/NOTE" |
+| Empty status | User enters `status 1 s/`              | "Status cannot be empty!" |
+| Both fields missing | User enters `status 1`                 | "No valid fields to update! Use: set/STATUS and/or note/NOTE" |
 
 #### Design Rationale
 
-| Decision | Rationale |
-|----------|----------|
+| Decision                            | Rationale |
+|-------------------------------------|----------|
 | Separate `status` and `notes` fields | Improves data clarity and allows independent updates |
-| Optional `note/` field | Supports updating status without overwriting existing notes |
-| Backward compatibility | Existing applications with combined format are migrated correctly |
-| Dedicated `StatusParser` | Maintains separation of concerns and simplifies testing |
-| `set/` and `note/` prefixes | Consistent with existing command patterns (`c/`, `p/`, `d/`) |
+| Optional `note/` field              | Supports updating status without overwriting existing notes |
+| Backward compatibility              | Existing applications with combined format are migrated correctly |
+| Dedicated `StatusParser`            | Maintains separation of concerns and simplifies testing |
+| `s/` and `note/` prefixes           | Consistent with existing command patterns (`c/`, `p/`, `d/`) |
 
 ## Product Scope
 ### Target User Profile

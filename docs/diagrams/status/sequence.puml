@@ -5,9 +5,9 @@ participant CommandRunner
 participant StatusParser
 participant Application
 
-User -> Ui : "status 1 set/OFFER note/Negotiate salary"
+User -> Ui : "status 1 s/OFFER note/Negotiate salary"
 Ui -> CommandRunner : run(command)
-CommandRunner -> StatusParser : parse("status 1 set/OFFER note/Negotiate salary")
+CommandRunner -> StatusParser : parse("status 1 s/OFFER note/Negotiate salary")
 StatusParser --> CommandRunner : ParsedCommand(index=1, status="OFFER", notes="Negotiate salary")
 CommandRunner -> Application : getApplication(0)
 Application --> CommandRunner : app
