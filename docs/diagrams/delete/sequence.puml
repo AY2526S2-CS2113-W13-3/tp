@@ -7,47 +7,48 @@ skinparam ArrowColor #black
 skinparam SequenceMessageAlign center
 
 actor User as user
-participant ":JobPilot" as jp
-participant "Deleter:Deleter" as del <<static>>
-participant "applications:ArrayList<Application>" as apps
-participant "removed:Application" as removed
-participant "System.out:PrintStream" as sysout
+participant ":Ui" as ui
+participant ":Parser" as parser
+participant ":DeleterParser" as delParser
+participant ":CommandRunner" as runner
+participant ":Deleter" as del
+participant "applications\n:ArrayList" as apps
 
-user -> jp : "delete 2"
-activate jp
-
-jp -> jp : deleteApplication("delete 2", applications)
-activate jp #darkgrey
-
-jp -> del : deleteApplication("delete 2", applications)
-activate del
-
-note right of del
-    1. splits input: parts = ["delete", "2"]
-    2. parses parts[1]: index = 2
-    3. validates: deleteIndex = 1
+note right of user
+    Note: arrows pointing
+    towards the left edge
+    point to app.JobPilot.
 end note
+
+user -> ui : "delete 2"
+activate ui
+return input
+
+-> parser : parse("delete 2")
+activate parser
+
+parser -> delParser : parse("delete 2")
+activate delParser
+return cmd:ParsedCommand
+
+return cmd:ParsedCommand
+
+-> runner : run(cmd)
+activate runner
+
+runner -> del : deleteApplication(applications, 1)
+activate del
 
 del -> apps : remove(1)
 activate apps
 return removed:Application
 
-del -> removed : toString()
-activate removed
-return "Amazon | Data Analyst | ..."
+return removed:Application
 
-del -> sysout : println("Deleted application:")
-activate sysout
-return
-del -> sysout : println("Amazon | Data Analyst | ...")
-activate sysout
-return
-del -> sysout : println("You have 1 application(s) left.")
-activate sysout
+runner -> ui : showApplicationDeleted(removed, size)
+activate ui
+ui --> user : prints confirmation message
 return
 
-deactivate del
-deactivate jp
-jp --> user : wait for input
-deactivate jp
+return continueFlag:boolean
 @enduml

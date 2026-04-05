@@ -10,17 +10,19 @@ package "System Memory State (Steps 1 to 4)" {
     object "<u>app1:Application</u>" as app1 {
         company = "Google"
         position = "Software Engineer"
-        date = "01/01/2026"
-        status = "PENDING"
-        tags = "TECH"
+        date = "2026-01-01"
+        status = "Pending"
+        notes = ""
+        industryTags = [TECH]
     }
 
     object "<u>app2:Application</u>" as app2 {
         company = "Amazon"
         position = "Data Analyst"
-        date = "01/01/2026"
-        status = "PENDING"
-        tags = "TECH"
+        date = "2026-01-01"
+        status = "Pending"
+        notes = ""
+        industryTags = [TECH]
     }
 
     apps --> app1 : index 0

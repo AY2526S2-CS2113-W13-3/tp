@@ -10,16 +10,17 @@ package "System Memory State (Step 5)" {
     object "<u>app1:Application</u>" as app1 {
         company = "Google"
         position = "Software Engineer"
-        date = "01/01/2026"
-        status = "PENDING"
-        tags = "TECH"
+        date = "2026-01-01"
+        status = "Pending"
+        notes = ""
+        industryTags = [TECH]
     }
 }
 
 apps --> app1 : index 0
 
 note right of apps
-  "app2" reference is removed.
-  Details of the deleted application are printed.
+  "app2" reference is removed from the ArrayList.
+  The Deleter returns the removed application to the CommandRunner.
 end note
 @enduml

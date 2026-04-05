@@ -4,7 +4,7 @@
 
 This project was guided by the [SE-EDU initiative's](https://se-education.org) AddressBook-Level3 (AB3). We took guidance from its core architecture., parser design, 
 and command execution flow to better suit JobPilot.
-
+  
 ## Design
 
 ### UI Component
@@ -150,7 +150,7 @@ Given below is an example usage scenario demonstrating how the Delete mechanism 
 
 **Step 6.** `CommandRunner` receives the deleted `Application` and passes it to `Ui.showApplicationDeleted(removed, applications.size())`, which safely prints the confirmation message to the console.
 
-*Note: If the user inputs a non-numeric index (e.g., `delete abc`), a `NumberFormatException` is caught internally by the `DeleterParser`, which then throws a custom `JobPilotException`. This exception is caught in `Parser`, returning an `ERROR` type `ParsedCommand` that the `Ui` displays.*
+*Note: If the user inputs a non-numeric index (e.g., `delete abc`), a `NumberFormatException` is caught internally by the `DeleterParser`, which then throws a custom `JobPilotException`. This exception is caught in `Parser`, which directly calls `Ui.showError()` to display the message to the user, and returns null to safely bypass the `CommandRunner` execution.
 
 The following sequence diagram shows the flow of deleting an application:
 

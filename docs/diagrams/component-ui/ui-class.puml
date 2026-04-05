@@ -19,19 +19,29 @@ package "UI Component" {
     }
 }
 
-package "App Component" as Logic #FFFFFF {
+package "App Component" as AppLogic #FFFFFF {
     class "CommandRunner" as CommandRunner #EEEEEE
     class "JobPilot" as JobPilot #EEEEEE
+}
+
+package "Parser Component" as ParserLogic #FFFFFF {
+    class "Parser" as Parser #EEEEEE
 }
 
 package "Task Component" as Model #FFFFFF {
     class "Application" as Application #EEEEEE
     class "IndustryTag" as IndustryTag #EEEEEE
+    class "Filterer" as Filterer #EEEEEE
 }
 
+' Incoming dependencies to UI
 JobPilot .down.> Ui : reads input via >
 CommandRunner .right.> Ui : invokes display methods >
-Ui .down.> Application : reads data for output >
-Ui .down.> IndustryTag : reads data for output >
+Parser .down.> Ui : invokes showError() >
+Filterer .up.> Ui : invokes showFilterResults() >
+
+' Outgoing dependencies from UI
+Ui .down.> Application : formats data for output >
+Ui .down.> IndustryTag : formats data for output >
 
 @enduml
