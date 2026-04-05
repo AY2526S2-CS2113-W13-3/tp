@@ -9,35 +9,28 @@ import task.IndustryTag;
  */
 public class ParsedCommand {
 
-    // Core Command Identity
     private final CommandType type;
     private final String errorMessage;
 
-    // Command Data Fields
     private int index = -1;
     private String company;
     private String position;
     private String date;
 
-    // Search & Filter Fields
     private String searchTerm;
     private final String searchType;
 
-    // Status & Notes Fields
     private String statusValue;
     private String note;
 
-    // Tag Fields
     private IndustryTag tag;
     private boolean isAddTag;
 
-    // Edit Fields
     private String newCompany;
     private String newPosition;
     private String newDate;
     private String newStatus;
 
-    // ================== CONSTRUCTORS ==================
 
     /** Simple commands (LIST, SORT, HELP, BYE) */
     public ParsedCommand(CommandType type) {
@@ -102,7 +95,6 @@ public class ParsedCommand {
         this.isAddTag = isAdd;
     }
 
-    // ================== GETTERS ==================
 
     public CommandType getType() {
         return type;

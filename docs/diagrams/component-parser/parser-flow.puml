@@ -1,76 +1,193 @@
 @startuml
 !theme plain
-title Parser Flow - Edit Command
+title Updated Parser Flow - Complete Command Processing
 
 start
 
 :User enters command;
-:Parser.parse(input);
+:Ui.readCommand() returns String input;
 
-:Extract first word;
+:JobPilot receives input;
+:Parser.parse(input) called;
+
+:Trim whitespace;
+:Extract first word as command;
 
 switch (command?)
+
+case ( "bye" )
+    :new ParsedCommand(BYE);
+case ( "list" )
+    :new ParsedCommand(LIST);
+case ( "help" )
+    :new ParsedCommand(HELP);
+case ( "sort" )
+    :new ParsedCommand(SORT);
+
+case ( "add" )
+    :Call ApplicationParser.parse();
+    :Validate c/, p/, d/ order;
+    :Extract company, position, date;
+    :Validate non-empty fields;
+    :Return ParsedCommand(ADD);
+
 case ( "edit" )
-    :EditorParser.parse(input);
+    :Call EditorParser.parse();
     :Normalize whitespace;
     :Split by spaces;
 
     if (parts.length >= 2?) then (yes)
-        :Parse index;
+        :Parse index (1-based → 0-based);
         note right
           Integer.parseInt(parts[1]) - 1
         end note
     else (no)
-        :Return ERROR with "Missing index";
-        stop
+        #FF9999:Ui.showError("Please provide an index");
+        --> end;
     endif
 
     :Find fields start position;
 
     if (fieldsStart valid?) then (yes)
-        :Parse remaining string;
+        :Extract remaining string;
+
         while (pos < remaining.length()) is (yes)
             if (remaining.startsWith("c/", pos)) then (yes)
                 :Extract company value;
                 :Validate non-empty;
+                :Store as newCompany;
             elseif (remaining.startsWith("p/", pos)) then (yes)
                 :Extract position value;
                 :Validate non-empty;
+                :Store as newPosition;
             elseif (remaining.startsWith("d/", pos)) then (yes)
                 :Extract date value;
                 :Validate non-empty;
-                :Validate date format;
+                :Validate YYYY-MM-DD format;
+                :Store as newDate;
             elseif (remaining.startsWith("s/", pos)) then (yes)
                 :Extract status value;
                 :Validate non-empty;
+                :Store as newStatus;
             else (no)
                 :pos++;
             endif
         endwhile (no)
 
         if (any fields updated?) then (yes)
-            :Return ParsedCommand(EDIT, index, company, position, date, status);
+            :Return ParsedCommand(EDIT, index, newCompany, newPosition, newDate, newStatus);
         else (no)
-            :Return ERROR with "No valid fields";
+            #FF9999:Ui.showError("No valid fields to update");
+            --> end;
         endif
     else (no)
-        :Return ERROR with "No fields to update";
+        #FF9999:Ui.showError("No fields to update");
+        --> end;
     endif
 
-    stop
-
-case ( "add" )
-    :ApplicationParser.parse(input);
-    stop
 case ( "delete" )
-    :DeleterParser.parse(input);
-    stop
-case ( ... )
-    :Other subparsers;
-    stop
+    :Call DeleterParser.parse();
+    :Extract index;
+    :Return ParsedCommand(DELETE, index);
+
+case ( "search" )
+    :Call SearcherParser.parse();
+    :Extract search type (c/, p/, s/);
+    :Extract search term;
+    :Return ParsedCommand(SEARCH, type, term);
+
+case ( "status" )
+    :Call StatusParser.parse();
+    :Extract index;
+    :Extract status (s/);
+    :Extract note (note/);
+    :Return ParsedCommand(STATUS, index, status, note);
+
+case ( "tag" )
+    :Call TaggerParser.parse();
+    :Determine add or remove;
+    :Extract index;
+    :Extract tag name;
+    :Return ParsedCommand(TAG, index, tag, isAdd);
+
+case ( "filter" )
+    :Call FilterParser.parse();
+    :Extract status query (s/);
+    :Return ParsedCommand(FILTER, statusQuery);
+
 case ( default )
-    :Return UNKNOWN command;
-    stop
+    :Return ParsedCommand(UNKNOWN);
 endswitch
+
+:Parser returns ParsedCommand to JobPilot;
+
+:JobPilot passes to CommandRunner.run(cmd);
+
+switch (cmd.getType())
+
+case ( EDIT )
+    :handleEdit(cmd);
+    :Editor.editApplication(index, applications, newCompany, newPosition, newDate, newStatus);
+    :Ui.showApplicationEdited(app);
+
+case ( ADD )
+    :handleAdd(cmd);
+    :Create new Application;
+    :applications.add(app);
+    :Ui.showApplicationAdded(app);
+
+case ( DELETE )
+    :handleDelete(cmd);
+    :Deleter.deleteApplication(applications, index);
+    :Ui.showApplicationDeleted(removed, size);
+
+case ( SEARCH )
+    :handleSearch(type, query);
+    :Find matching applications;
+    :Ui.showSearchResults(results, label);
+
+case ( STATUS )
+    :handleStatusUpdate(cmd);
+    :Update app status and notes;
+    :Ui.showStatusUpdated(app);
+
+case ( TAG )
+    :handleTagUpdate(cmd);
+    :Add or remove tag;
+    :Ui.showTagAdded/Removed(tag, app);
+
+case ( FILTER )
+    :handleFilter(cmd);
+    :Filterer.filterByStatus(applications, statusQuery);
+    :Ui.showFilterResults(results, status);
+
+case ( SORT )
+    :handleSort(cmd.getSearchTerm());
+    :applications.sort(comparator);
+    :Ui.showSortedMessage();
+    :Ui.showApplicationList(applications);
+
+case ( LIST )
+    :handleList();
+    :Ui.showApplicationList(applications);
+
+case ( HELP )
+    :handleHelp();
+    :Ui.showHelp();
+
+case ( BYE )
+    :Ui.showGoodbye(count);
+    :Ui.close();
+    :Exit application;
+
+case ( UNKNOWN )
+    :Ui.showError("Unknown command");
+
+endswitch
+
+:Storage.saveToFile(applications);
+:Continue loop;
+
+stop
 
 @enduml

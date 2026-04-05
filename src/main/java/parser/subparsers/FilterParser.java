@@ -17,11 +17,9 @@ public class FilterParser {
 
     private static final Logger LOGGER = Logger.getLogger(FilterParser.class.getName());
 
-    // Command and Prefix Constants
     private static final String COMMAND_WORD = "filter";
     private static final String PREFIX_STATUS = "s/"; // Updated to match team master
 
-    // Error Messages
     private static final String ERROR_INVALID_FORMAT = "Invalid filter format! Expected: filter s/STATUS";
     private static final String ERROR_MISSING_ARGS = "Filter command is missing arguments! Use: filter s/STATUS";
     private static final String ERROR_EMPTY_VALUE = "The filter value cannot be empty! Please provide a status after 's/'.";
@@ -37,13 +35,11 @@ public class FilterParser {
 
         String argumentBlock = extractArgumentBlock(trimmedInput);
 
-        // Check for the 's/' prefix to match the team's new standard
         if (!argumentBlock.contains(PREFIX_STATUS)) {
             LOGGER.log(Level.WARNING, "Filter command missing required prefix 's/': " + argumentBlock);
             throw new JobPilotException(ERROR_INVALID_FORMAT);
         }
 
-        // Extract the value after s/
         String statusQuery = extractStatusQuery(argumentBlock);
 
         if (statusQuery.isEmpty()) {

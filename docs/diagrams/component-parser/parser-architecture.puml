@@ -1,6 +1,26 @@
 @startuml
 !theme plain
-title Parser Component Architecture
+title Updated Parser Component Architecture
+
+package "app" {
+    class JobPilot {
+        +main(String[] args)
+    }
+
+    class CommandRunner {
+        -ArrayList<Application> applications
+        +CommandRunner(ArrayList<Application> applications)
+        +run(ParsedCommand cmd) : boolean
+        -handleEdit(ParsedCommand cmd)
+        -handleAdd(ParsedCommand cmd)
+        -handleDelete(ParsedCommand cmd)
+        -handleSearch(String type, String query)
+        -handleSort(String rawSortTerm)
+        -handleStatusUpdate(ParsedCommand cmd)
+        -handleTagUpdate(ParsedCommand cmd)
+        -handleFilter(ParsedCommand cmd)
+    }
+}
 
 package "parser" {
     class Parser {
@@ -8,21 +28,28 @@ package "parser" {
     }
 
     class ParsedCommand {
-        +CommandType type
-        +String errorMessage
-        +String company
-        +String position
-        +String date
-        +int index
-        +String newCompany
-        +String newPosition
-        +String newDate
-        +String newStatus
-        +String searchTerm
-        +String statusValue
-        +String note
-        +IndustryTag tag
-        +boolean isAddTag
+        -CommandType type
+        -String errorMessage
+        -String company
+        -String position
+        -String date
+        -int index
+        -String newCompany
+        -String newPosition
+        -String newDate
+        -String newStatus
+        -String searchTerm
+        -String searchType
+        -String statusValue
+        -String note
+        -IndustryTag tag
+        -boolean isAddTag
+        +getType() : CommandType
+        +getIndex() : int
+        +getNewCompany() : String
+        +getNewPosition() : String
+        +getNewDate() : String
+        +getNewStatus() : String
     }
 
     enum CommandType {
@@ -38,7 +65,6 @@ package "parser" {
         HELP
         BYE
         UNKNOWN
-        ERROR
     }
 
     package "subparsers" {
@@ -52,10 +78,14 @@ package "parser" {
 
         class EditorParser {
             +parse(String input) : ParsedCommand
+            -findNextPrefix(String str, int start) : int
         }
 
         class FilterParser {
             +parse(String input) : ParsedCommand
+            -validateCommandStart(String input)
+            -extractArgumentBlock(String input) : String
+            -extractStatusQuery(String argumentBlock) : String
         }
 
         class SearcherParser {
@@ -64,6 +94,8 @@ package "parser" {
 
         class StatusParser {
             +parse(String input) : ParsedCommand
+            -findFirstPrefixPos(String input) : int
+            -findNextPrefix(String str, int start) : int
         }
 
         class TaggerParser {
@@ -72,6 +104,89 @@ package "parser" {
     }
 }
 
+package "storage" {
+    class Storage {
+        +Storage()
+        +loadFromFile() : ArrayList<Application>
+        +saveToFile(ArrayList<Application> applications)
+    }
+}
+
+package "task" {
+    class Application {
+        -String company
+        -String position
+        -LocalDate date
+        -String status
+        -String notes
+        -Set<IndustryTag> industryTags
+        +Application(String company, String position, String date)
+        +setCompany(String company)
+        +setPosition(String position)
+        +setDate(String date)
+        +setStatus(String status)
+        +setNotes(String notes)
+        +addIndustryTag(IndustryTag tag)
+        +removeIndustryTag(IndustryTag tag)
+    }
+
+    class Editor {
+        +editApplication(int index, ArrayList<Application> applications, String newCompany, String newPosition, String newDate, String newStatus)
+        +editApplication(String input, ArrayList<Application> applications)
+        -findNextPrefix(String str, int start) : int
+    }
+
+    class Deleter {
+        +deleteApplication(ArrayList<Application> applications, int deleteIndex) : Application
+    }
+
+    class Filterer {
+        +filterByStatus(ArrayList<Application> applications, String statusQuery)
+    }
+
+    class IndustryTag {
+        -String tagName
+        +IndustryTag(String tagName)
+        +getTagName() : String
+    }
+}
+
+package "ui" {
+    class Ui {
+        +readCommand() : String
+        +showWelcome()
+        +showGoodbye(int count)
+        +showError(String error)
+        +showApplicationAdded(Application app)
+        +showApplicationDeleted(Application app, int remainingSize)
+        +showApplicationEdited(Application app)
+        +showApplicationList(ArrayList<Application> applications)
+        +showSearchResults(ArrayList<Application> results, String searchTerm)
+        +showFilterResults(ArrayList<Application> results, String status)
+        +showSortedMessage()
+        +showStatusUpdated(Application app)
+        +showTagAdded(IndustryTag tag, Application app)
+        +showTagRemoved(IndustryTag tag, Application app)
+        +showHelp()
+        +close()
+    }
+}
+
+package "exception" {
+    class JobPilotException {
+        +JobPilotException(String description)
+    }
+}
+
+' ===================== CONNECTIONS =====================
+
+' Main flow
+JobPilot --> Ui : uses
+JobPilot --> Parser : uses
+JobPilot --> CommandRunner : creates
+JobPilot --> Storage : uses
+
+' Parser layer
 Parser --> ParsedCommand : creates
 Parser --> CommandType : uses
 Parser --> ApplicationParser : delegates
@@ -82,14 +197,39 @@ Parser --> SearcherParser : delegates
 Parser --> StatusParser : delegates
 Parser --> TaggerParser : delegates
 
+' Command execution
+CommandRunner --> Application : modifies
+CommandRunner --> Editor : calls
+CommandRunner --> Deleter : calls
+CommandRunner --> Filterer : calls
+CommandRunner --> Ui : displays
+CommandRunner --> JobPilotException : catches
+
+' Storage
+Storage --> Application : reads/writes
+Storage --> IndustryTag : uses
+
+' Exceptions
+Parser ..> JobPilotException : throws
+EditorParser ..> JobPilotException : throws
+Editor ..> JobPilotException : throws
+Deleter ..> JobPilotException : throws
+
 note bottom of Parser
   Routes raw input to appropriate
   subparser based on first word
 end note
 
 note right of EditorParser
-  Parses: edit INDEX [c/COMPANY]
-  [p/POSITION] [d/DATE] [s/STATUS]
+  YOUR FEATURE
+  Parses: edit INDEX
+  [c/COMPANY] [p/POSITION]
+  [d/DATE] [s/STATUS]
+end note
+
+note right of CommandRunner
+  Executes parsed commands
+  and manages application flow
 end note
 
 @enduml

@@ -1,0 +1,6 @@
+dso | manager | 1999-01-01 | OFFer |  | 
+google | intern | 2000-01-12 | Pending |  | 
+google | hr | 2001-10-10 | Pending |  | 
+amd | engineer | 2020-10-22 | Pending |  | 
+google | intern | 2026-12-11 | Pending |  | 
+government | software engineer | 2027-10-11 | Pending |  | 

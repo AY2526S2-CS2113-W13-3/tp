@@ -10,7 +10,6 @@ import parser.ParsedCommand;
 public class EditorParser {
 
     public static ParsedCommand parse(String input) throws JobPilotException {
-        // Normalize whitespace
         String normalized = input.trim().replaceAll("\\s+", " ");
         String[] parts = normalized.split(" ");
 
@@ -25,7 +24,6 @@ public class EditorParser {
             throw new JobPilotException("Invalid index! Use a number: edit 1 c/Google");
         }
 
-        // Find the start of fields (skip "edit INDEX")
         int fieldsStart = normalized.indexOf(" ", normalized.indexOf(" ") + 1) + 1;
         if (fieldsStart <= 0 || fieldsStart >= normalized.length()) {
             throw new JobPilotException("No valid fields to update! Use: c/COMPANY, p/POSITION, d/DATE, or s/STATUS");
@@ -33,7 +31,6 @@ public class EditorParser {
 
         String remaining = normalized.substring(fieldsStart);
 
-        // Parse each field
         String company = null;
         String position = null;
         String date = null;

@@ -1,4 +1,4 @@
-# JobPilot- Project Portfolio Page
+# Labelle's Project Portfolio Page
 
 ## Overview
 JobPilot is a CLI application for job seekers to track applications efficiently. Users can add, edit, delete, search, and sort applications with status tracking and industry tags.
@@ -6,7 +6,8 @@ JobPilot is a CLI application for job seekers to track applications efficiently.
 I led the implementation of the editor feature, designed and built the modular parser system, and enhanced the application model to support mutable fields.
 
 ### Summary of Contributions
-https://nus-cs2113-ay2526-s2.github.io/tp-dashboard/?search=lab3ll3&sort=groupTitle&sortWithin=title&timeframe=commit&mergegroup=&groupSelect=groupByRepos&breakdown=true&checkedFileTypes=docs~functional-code~test-code~other&since=2026-02-20T00%3A00%3A00&filteredFileName=&tabOpen=true&tabType=authorship&tabAuthor=lab3ll3&tabRepo=AY2526S2-CS2113-W13-3%2Ftp%5Bmaster%5D&authorshipIsMergeGroup=false&authorshipFileTypes=docs~functional-code~test-code~other&authorshipIsBinaryFileTypeChecked=false&authorshipIsIgnoredFilesChecked=false
+*[Link to code on tP Code Dashboard.](https://nus-cs2113-ay2526-s2.github.io/tp-dashboard/?search=lab3ll3&sort=groupTitle&sortWithin=title&timeframe=commit&mergegroup=&groupSelect=groupByRepos&breakdown=true&checkedFileTypes=docs~functional-code~test-code~other&since=2026-02-20T00%3A00%3A00&filteredFileName=&tabOpen=true&tabType=authorship&tabAuthor=lab3ll3&tabRepo=AY2526S2-CS2113-W13-3%2Ftp%5Bmaster%5D&authorshipIsMergeGroup=false&authorshipFileTypes=docs~functional-code~test-code~other&authorshipIsBinaryFileTypeChecked=false&authorshipIsIgnoredFilesChecked=false)
+
 
 ### Enhancements Implemented
 #### Application Model Enhancement
@@ -71,19 +72,19 @@ Implementation complexity:
 
 The **Parser** component is responsible for interpreting raw user input and converting it into structured `ParsedCommand` objects.
 
-![Parser Architecture](diagrams/component-parser/parser-architecture.png)
+![Parser Architecture](../diagrams/component-parser/parser-architecture.png)
 *Figure 1: Parser Component Architecture*
 
 The following diagram illustrates how the parser processes a typical `edit` command:
 
-![Parser Flow](diagrams/component-parser/parser-flow.png)
+![Parser Flow](../diagrams/component-parser/parser-flow.png)
 *Figure 2: Parser Flow for Edit Command*
 
 ### Edit Application Feature
 
 #### Sequence Diagram
 
-![Edit Sequence](diagrams/editor/sequence.png)
+![Edit Sequence](../diagrams/editor/sequence.png)
 *Figure 3: Edit Feature Sequence Diagram*
 
 **Error Handling**

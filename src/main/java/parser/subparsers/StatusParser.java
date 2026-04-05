@@ -15,7 +15,6 @@ public class StatusParser {
     }
     private static final Logger LOGGER = Logger.getLogger(StatusParser.class.getName());
 
-    // Command and Prefix Constants
     private static final String COMMAND_WORD = "status";
     private static final String PREFIX_SET = "s/";
     private static final String PREFIX_NOTE = "note/";
@@ -29,12 +28,10 @@ public class StatusParser {
     public static ParsedCommand parse(String input) throws JobPilotException {
         String trimmed = input.trim();
 
-        // 1. Basic format check
         if (!trimmed.startsWith(COMMAND_WORD)) {
             throw new JobPilotException("Invalid command start! Use: status INDEX set/STATUS note/NOTE");
         }
 
-        // 2. Extract the index part
         String[] tokens = trimmed.split("\\s+");
         if (tokens.length < 2) {
             throw new JobPilotException("Please provide an index. Example: status 1 set/OFFER");
@@ -48,7 +45,6 @@ public class StatusParser {
             throw new JobPilotException("Invalid index! Use a number: status 1 s/OFFER");
         }
 
-        // 3. Locate where the prefixes (set/ or note/) start
         int firstPrefixPos = findFirstPrefixPos(trimmed);
         if (firstPrefixPos == -1) {
             throw new JobPilotException("No status or note provided! Use s/ or note/.");
@@ -56,7 +52,6 @@ public class StatusParser {
 
         String remaining = trimmed.substring(firstPrefixPos);
 
-        // 4. State-based parsing loop (The "Inflator")
         String newStatus = null;
         String newNote = null;
         int currentPos = 0;
@@ -75,11 +70,10 @@ public class StatusParser {
                 int nextPrefix = findNextPrefix(remaining, currentPos + PREFIX_NOTE.length());
                 newNote = remaining.substring(currentPos + PREFIX_NOTE.length(), nextPrefix).trim();
 
-                // Note: We allow empty notes, but you could add a check here if needed
                 currentPos = nextPrefix;
 
             } else {
-                currentPos++; // Skip characters until we hit a prefix
+                currentPos++;
             }
         }
 
