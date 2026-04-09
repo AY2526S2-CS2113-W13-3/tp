@@ -12,6 +12,10 @@ import java.util.logging.Level;
  */
 public class Filterer {
 
+    static {
+        Logger.getLogger(Filterer.class.getName()).setLevel(Level.OFF);
+    }
+
     private static final Logger LOGGER = Logger.getLogger(Filterer.class.getName());
 
     /**
@@ -21,8 +25,8 @@ public class Filterer {
      * @param statusQuery  The status to search for (e.g., "OFFER").
      * @throws JobPilotException if input is invalid
      */
-    public static void filterByStatus(ArrayList<Application> applications, String statusQuery) throws JobPilotException {
-        // V2.0 REQUIREMENT: Assertions
+    public static ArrayList<Application> filterByStatus(ArrayList<Application> applications, String statusQuery) throws JobPilotException {
+
         assert applications != null : "The applications list should not be null";
 
         if (statusQuery == null || statusQuery.isBlank()) {
@@ -53,6 +57,7 @@ public class Filterer {
         }
 
         showFilterResults(filteredResults, normalizedQuery);
+        return filteredResults;
     }
 
     /**

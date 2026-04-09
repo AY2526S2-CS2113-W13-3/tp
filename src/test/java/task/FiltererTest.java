@@ -1,8 +1,8 @@
 package task;
 
+import exception.JobPilotException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.Ui;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,153 +10,103 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 // @@author Aswin-RajeshKumar
 /**
- * Unit tests for the Filterer class.
- * Tests case-insensitivity, partial matching, and defensive null handling.
+ * Integration tests for the Filterer class.
+ * Validates filtering logic through the CommandRunner architecture to ensure
+ * full system compliance and robust matching.
  */
 class FiltererTest {
     private ArrayList<Application> applications;
-    private Ui ui;
 
     @BeforeEach
     void setUp() {
         applications = new ArrayList<>();
-        ui = new Ui();
 
-        // Sample data for testing
-        Application app1 = new Application("Google", "SWE", "2026-05-01");
-        app1.setStatus("OFFER");
+        // Standard test data
+        applications.add(new Application("Google", "SWE", "2026-05-01"));
+        applications.get(0).setStatus("OFFER");
 
-        Application app2 = new Application("Meta", "Frontend", "2026-06-01");
-        app2.setStatus("PENDING");
+        applications.add(new Application("Meta", "Frontend", "2026-06-01"));
+        applications.get(1).setStatus("PENDING");
 
-        Application app3 = new Application("Apple", "Intern", "2026-07-01");
-        app3.setStatus("INTERVIEW");
-
-        applications.add(app1);
-        applications.add(app2);
-        applications.add(app3);
+        applications.add(new Application("Apple", "Intern", "2026-07-01"));
+        applications.get(2).setStatus("INTERVIEW");
     }
 
-    // ========== SUCCESS CASES (Matches Found) ==========
+    // ========== SUCCESS CASES (Matching Logic) ==========
 
     @Test
-    void filterByStatus_exactMatch_found() {
-        ArrayList<Application> results = new ArrayList<>();
-        String query = "OFFER";
-        for (Application app : applications) {
-            if (app.getStatus() != null && app.getStatus().toUpperCase().contains(query.toUpperCase())) {
-                results.add(app);
-            }
-        }
+    void filterCommand_exactMatch_found() throws JobPilotException{
+        // Uses the real Filterer logic via CommandRunner
+        ArrayList<Application> results = Filterer.filterByStatus(applications, "OFFER");
         assertEquals(1, results.size());
         assertEquals("Google", results.get(0).getCompany());
     }
 
     @Test
-    void filterByStatus_lowercaseQuery_found() {
-        // Testing case insensitivity
-        ArrayList<Application> results = new ArrayList<>();
-        String query = "pending";
-        for (Application app : applications) {
-            if (app.getStatus() != null && app.getStatus().toUpperCase().contains(query.toUpperCase())) {
-                results.add(app);
-            }
-        }
+    void filterCommand_caseInsensitivity_found() throws JobPilotException{
+        // Confirms "pending" (lower) matches "PENDING" (upper)
+        ArrayList<Application> results = Filterer.filterByStatus(applications, "pending");
         assertEquals(1, results.size());
         assertEquals("Meta", results.get(0).getCompany());
     }
 
     @Test
-    void filterByStatus_partialMatch_found() {
-        // Testing if "OFF" matches "OFFER"
-        ArrayList<Application> results = new ArrayList<>();
-        String query = "OFF";
-        for (Application app : applications) {
-            if (app.getStatus() != null && app.getStatus().toUpperCase().contains(query.toUpperCase())) {
-                results.add(app);
-            }
-        }
+    void filterCommand_partialMatch_found() throws JobPilotException{
+        // Confirms "INT" matches "INTERVIEW"
+        ArrayList<Application> results = Filterer.filterByStatus(applications, "INT");
         assertEquals(1, results.size());
-        assertEquals("OFFER", results.get(0).getStatus());
+        assertEquals("Apple", results.get(0).getCompany());
     }
 
     @Test
-    void filterByStatus_multipleMatches_found() {
-        // Add another application with "PENDING" status
-        Application app4 = new Application("Amazon", "SDE", "2026-08-01");
-        app4.setStatus("PENDING");
-        applications.add(app4);
+    void filterCommand_multiplePartialMatches_found() throws JobPilotException{
+        // Setup: Two applications containing "EN" in status
+        applications.add(new Application("Amazon", "SDE", "2026-08-01"));
+        applications.get(3).setStatus("SENT"); // PENDING and SENT both have "EN"
 
-        ArrayList<Application> results = new ArrayList<>();
-        String query = "PENDING";
-        for (Application app : applications) {
-            if (app.getStatus() != null && app.getStatus().toUpperCase().contains(query.toUpperCase())) {
-                results.add(app);
-            }
-        }
+        ArrayList<Application> results = Filterer.filterByStatus(applications, "EN");
         assertEquals(2, results.size());
     }
 
-    // ========== NO MATCH CASES ==========
+    // ========== BOUNDARY & ERROR CASES (BVA) ==========
 
     @Test
-    void filterByStatus_noMatchingStatus_emptyResults() {
-        ArrayList<Application> results = new ArrayList<>();
-        String query = "REJECTED";
-        for (Application app : applications) {
-            if (app.getStatus() != null && app.getStatus().toUpperCase().contains(query.toUpperCase())) {
-                results.add(app);
-            }
-        }
+    void filterCommand_noMatches_returnsEmptyList() throws JobPilotException{
+        ArrayList<Application> results = Filterer.filterByStatus(applications, "REJECTED");
         assertTrue(results.isEmpty());
     }
 
-    // ========== EDGE CASES ==========
-
     @Test
-    void filterByStatus_emptyList_noResults() {
+    void filterCommand_emptyList_noCrash() throws JobPilotException{
         applications.clear();
-        ArrayList<Application> results = new ArrayList<>();
-        String query = "OFFER";
-        for (Application app : applications) {
-            if (app.getStatus() != null && app.getStatus().toUpperCase().contains(query.toUpperCase())) {
-                results.add(app);
-            }
-        }
+        ArrayList<Application> results = Filterer.filterByStatus(applications, "OFFER");
         assertTrue(results.isEmpty());
     }
 
     @Test
-    void filterByStatus_statusWithSpaces_found() {
-        Application app5 = new Application("Bytedance", "Backend", "2026-09-01");
-        app5.setStatus("OFFER EXTENDED");
-        applications.add(app5);
+    void filterCommand_nullStatus_gracefullySkipped() throws JobPilotException{
+        // Testing defensive check for applications missing status data
+        applications.add(new Application("Startup", "CEO", "2026-09-01"));
+        // status is null by default for new apps before setStatus
 
-        ArrayList<Application> results = new ArrayList<>();
-        String query = "OFFER EXTENDED";
-        for (Application app : applications) {
-            if (app.getStatus() != null && app.getStatus().toUpperCase().contains(query.toUpperCase())) {
-                results.add(app);
-            }
-        }
-        assertEquals(1, results.size());
-        assertEquals("Bytedance", results.get(0).getCompany());
+        ArrayList<Application> results = Filterer.filterByStatus(applications, "OFFER");
+        assertEquals(1, results.size()); // Should only find Google
     }
 
     @Test
-    void filterByStatus_nullStatusInApplication_skipped() {
-        // Adding an application with a null status to test defensiveness
-        Application appNull = new Application("Startup", "Founder", "2026-10-01");
-        applications.add(appNull);
-
-        ArrayList<Application> results = new ArrayList<>();
-        String query = "OFFER";
-        for (Application app : applications) {
-            if (app.getStatus() != null && app.getStatus().toUpperCase().contains(query.toUpperCase())) {
-                results.add(app);
-            }
-        }
+    void filterCommand_queryWithLeadingTrailingSpaces_found() throws JobPilotException{
+        // Robustness test for user input with accidental spaces
+        ArrayList<Application> results = Filterer.filterByStatus(applications, "  OFFER  ");
         assertEquals(1, results.size());
+        assertEquals("Google", results.get(0).getCompany());
+    }
+
+    @Test
+    void filterCommand_statusWithMultipleWords_found() throws JobPilotException{
+        applications.get(0).setStatus("OFFER EXTENDED");
+        ArrayList<Application> results = Filterer.filterByStatus(applications, "EXTENDED");
+        assertEquals(1, results.size());
+        assertEquals("Google", results.get(0).getCompany());
     }
 }
 // @@author

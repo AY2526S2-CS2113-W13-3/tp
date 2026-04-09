@@ -15,6 +15,10 @@ import java.util.logging.Logger;
  */
 public class FilterParser {
 
+    static {
+        java.util.logging.Logger.getLogger(FilterParser.class.getName()).setLevel(java.util.logging.Level.OFF);
+    }
+
     private static final Logger LOGGER = Logger.getLogger(FilterParser.class.getName());
 
     private static final String COMMAND_WORD = "filter";

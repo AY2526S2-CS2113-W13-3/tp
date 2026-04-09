@@ -40,7 +40,7 @@ class ApplicationTest {
         assertEquals("Google", added.getCompany());
         assertEquals("Software Engineer", added.getPosition());
         assertEquals("2024-09-12", added.getDate());
-        assertEquals("Pending", added.getStatus());
+        assertEquals("PENDING", added.getStatus());
     }
 
     @Test
@@ -143,7 +143,7 @@ class ApplicationTest {
         runner.run(cmd);
 
         Application app = applications.get(0);
-        String expectedString = "Google | SWE | 2024-09-12 | Pending";
+        String expectedString = "Google | SWE | 2024-09-12 | PENDING";
         assertEquals(expectedString, app.toString());
     }
 
@@ -153,6 +153,6 @@ class ApplicationTest {
         runner.run(cmd);
 
         Application app = applications.get(0);
-        assertEquals("Pending", app.getStatus());
+        assertEquals("PENDING", app.getStatus());
     }
 }

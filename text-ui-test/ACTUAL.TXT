@@ -22,81 +22,81 @@ search [c/COMPANY] [p/POSITION] [s/STATUS]                  Search applications
 help                                                        Show this message
 bye                                                         Exit the application
 ___________________________________________________________________
-Added: Google | SE manager | 2025-03-10 | Pending
+Added: Google | SE manager | 2025-03-10 | PENDING
 ___________________________________________________________________
-Added: Amazon | Data Analyst | 2025-03-08 | Pending
+Added: Amazon | Data Analyst | 2025-03-08 | PENDING
 ___________________________________________________________________
-Added: Microsoft | SDE Intern | 2025-03-12 | Pending
+Added: Microsoft | SDE Intern | 2025-03-12 | PENDING
 ___________________________________________________________________
 Here are your applications:
-1. Google | SE manager | 2025-03-10 | Pending
-2. Amazon | Data Analyst | 2025-03-08 | Pending
-3. Microsoft | SDE Intern | 2025-03-12 | Pending
+1. Google | SE manager | 2025-03-10 | PENDING
+2. Amazon | Data Analyst | 2025-03-08 | PENDING
+3. Microsoft | SDE Intern | 2025-03-12 | PENDING
 ___________________________________________________________________
-Added tag: TECH -> Google | SE manager | 2025-03-10 | Pending | Tags: [TECH]
+Added tag: TECH -> Google | SE manager | 2025-03-10 | PENDING | Tags: [TECH]
 ___________________________________________________________________
-Added tag: FINANCE -> Amazon | Data Analyst | 2025-03-08 | Pending | Tags: [FINANCE]
+Added tag: FINANCE -> Amazon | Data Analyst | 2025-03-08 | PENDING | Tags: [FINANCE]
 ___________________________________________________________________
-Added tag: DATA -> Amazon | Data Analyst | 2025-03-08 | Pending | Tags: [FINANCE, DATA]
+Added tag: DATA -> Amazon | Data Analyst | 2025-03-08 | PENDING | Tags: [FINANCE, DATA]
 ___________________________________________________________________
-Added tag: TECH -> Microsoft | SDE Intern | 2025-03-12 | Pending | Tags: [TECH]
+Added tag: TECH -> Microsoft | SDE Intern | 2025-03-12 | PENDING | Tags: [TECH]
 ___________________________________________________________________
-Added tag: INTERN -> Microsoft | SDE Intern | 2025-03-12 | Pending | Tags: [TECH, INTERN]
+Added tag: INTERN -> Microsoft | SDE Intern | 2025-03-12 | PENDING | Tags: [TECH, INTERN]
 ___________________________________________________________________
-Updated Status: Google | SE manager | 2025-03-10 | Pending (Note: Negotiate salary) | Tags: [TECH]
+Updated Status: Google | SE manager | 2025-03-10 | PENDING (Note: Negotiate salary) | Tags: [TECH]
 ___________________________________________________________________
-Updated Status: Amazon | Data Analyst | 2025-03-08 | Pending (Note: Case study prep) | Tags: [FINANCE, DATA]
+Updated Status: Amazon | Data Analyst | 2025-03-08 | PENDING (Note: Case study prep) | Tags: [FINANCE, DATA]
 ___________________________________________________________________
-Updated Status: Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+Updated Status: Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
 Found 1 application(s) matching 'c/google':
-1. Google | SE manager | 2025-03-10 | Pending (Note: Negotiate salary) | Tags: [TECH]
+1. Google | SE manager | 2025-03-10 | PENDING (Note: Negotiate salary) | Tags: [TECH]
 ___________________________________________________________________
 Found 1 application(s) matching 'c/micro':
-1. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
 Found 1 application(s) matching 'p/intern':
-1. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
 No applications found for company: s/offer
 ___________________________________________________________________
 Sorted by submission date!
 Here are your applications:
-1. Amazon | Data Analyst | 2025-03-08 | Pending (Note: Case study prep) | Tags: [FINANCE, DATA]
-2. Google | SE manager | 2025-03-10 | Pending (Note: Negotiate salary) | Tags: [TECH]
-3. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+1. Amazon | Data Analyst | 2025-03-08 | PENDING (Note: Case study prep) | Tags: [FINANCE, DATA]
+2. Google | SE manager | 2025-03-10 | PENDING (Note: Negotiate salary) | Tags: [TECH]
+3. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
 Here are your applications:
-1. Amazon | Data Analyst | 2025-03-08 | Pending (Note: Case study prep) | Tags: [FINANCE, DATA]
-2. Google | SE manager | 2025-03-10 | Pending (Note: Negotiate salary) | Tags: [TECH]
-3. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+1. Amazon | Data Analyst | 2025-03-08 | PENDING (Note: Case study prep) | Tags: [FINANCE, DATA]
+2. Google | SE manager | 2025-03-10 | PENDING (Note: Negotiate salary) | Tags: [TECH]
+3. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
-Removed tag: /FINANCE -> Google | SE manager | 2025-03-10 | Pending (Note: Negotiate salary) | Tags: [TECH]
+Removed tag: /FINANCE -> Google | SE manager | 2025-03-10 | PENDING (Note: Negotiate salary) | Tags: [TECH]
 ___________________________________________________________________
 Deleted application:
-Amazon | Data Analyst | 2025-03-08 | Pending (Note: Case study prep) | Tags: [FINANCE, DATA]
+Amazon | Data Analyst | 2025-03-08 | PENDING (Note: Case study prep) | Tags: [FINANCE, DATA]
 You have 2 application(s) left.
 ___________________________________________________________________
 Here are your applications:
-1. Google | SE manager | 2025-03-10 | Pending (Note: Negotiate salary) | Tags: [TECH]
-2. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+1. Google | SE manager | 2025-03-10 | PENDING (Note: Negotiate salary) | Tags: [TECH]
+2. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
 Updated application:
-Apple | SE manager | 2025-03-10 | Pending (Note: Negotiate salary) | Tags: [TECH]
+Apple | SE manager | 2025-03-10 | PENDING (Note: Negotiate salary) | Tags: [TECH]
 ___________________________________________________________________
 Updated application:
-Apple | SE manager | 2027-01-09 | Pending (Note: Negotiate salary) | Tags: [TECH]
+Apple | SE manager | 2027-01-09 | PENDING (Note: Negotiate salary) | Tags: [TECH]
 ___________________________________________________________________
 Here are your applications:
-1. Apple | SE manager | 2027-01-09 | Pending (Note: Negotiate salary) | Tags: [TECH]
-2. Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+1. Apple | SE manager | 2027-01-09 | PENDING (Note: Negotiate salary) | Tags: [TECH]
+2. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
 Deleted application:
-Microsoft | SDE Intern | 2025-03-12 | Pending (Note: Waiting for reply) | Tags: [TECH, INTERN]
+Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 You have 1 application(s) left.
 ___________________________________________________________________
 Deleted application:
-Apple | SE manager | 2027-01-09 | Pending (Note: Negotiate salary) | Tags: [TECH]
+Apple | SE manager | 2027-01-09 | PENDING (Note: Negotiate salary) | Tags: [TECH]
 You have 0 application(s) left.
 ___________________________________________________________________
 Bye! You added 0 application(s).

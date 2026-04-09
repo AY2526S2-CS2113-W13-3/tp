@@ -32,7 +32,7 @@ class EditorTest {
         assertEquals("Microsoft", testApp.getCompany());
         assertEquals("Software Engineer", testApp.getPosition());
         assertEquals("2024-09-12", testApp.getDate());
-        assertEquals("Pending", testApp.getStatus());
+        assertEquals("PENDING", testApp.getStatus());
     }
 
     @Test
@@ -41,7 +41,7 @@ class EditorTest {
         assertEquals("Google", testApp.getCompany());
         assertEquals("Senior Engineer", testApp.getPosition());
         assertEquals("2024-09-12", testApp.getDate());
-        assertEquals("Pending", testApp.getStatus());
+        assertEquals("PENDING", testApp.getStatus());
     }
 
     @Test
@@ -50,25 +50,25 @@ class EditorTest {
         assertEquals("Google", testApp.getCompany());
         assertEquals("Software Engineer", testApp.getPosition());
         assertEquals("2024-12-01", testApp.getDate());
-        assertEquals("Pending", testApp.getStatus());
+        assertEquals("PENDING", testApp.getStatus());
     }
 
     @Test
     void editApplication_updateStatusOnly_success() throws JobPilotException {
-        Editor.editApplication("edit 1 s/Interview", applications);
+        Editor.editApplication("edit 1 s/INTERVIEW", applications);
         assertEquals("Google", testApp.getCompany());
         assertEquals("Software Engineer", testApp.getPosition());
         assertEquals("2024-09-12", testApp.getDate());
-        assertEquals("Interview", testApp.getStatus());
+        assertEquals("INTERVIEW", testApp.getStatus());
     }
 
     @Test
     void editApplication_updateMultipleFields_success() throws JobPilotException {
-        Editor.editApplication("edit 1 c/Microsoft p/Senior Engineer d/2024-12-01 s/Offer", applications);
+        Editor.editApplication("edit 1 c/Microsoft p/Senior Engineer d/2024-12-01 s/OFFER", applications);
         assertEquals("Microsoft", testApp.getCompany());
         assertEquals("Senior Engineer", testApp.getPosition());
         assertEquals("2024-12-01", testApp.getDate());
-        assertEquals("Offer", testApp.getStatus());
+        assertEquals("OFFER", testApp.getStatus());
     }
 
     @Test

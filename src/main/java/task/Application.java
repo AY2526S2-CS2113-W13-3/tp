@@ -18,7 +18,7 @@ public class Application implements Comparable<Application> {
     private LocalDate date;
     private String status;
     private String notes;
-    private Set<IndustryTag> industryTags = new HashSet<>();
+    private final Set<IndustryTag> industryTags = new HashSet<>();
 
     public Application(String company, String position, String date) throws DateTimeParseException {
         assert company != null: "Company cannot be null" ;
@@ -32,7 +32,7 @@ public class Application implements Comparable<Application> {
         this.company = company;
         this.position = position;
         this.date = LocalDate.parse(date);
-        this.status = "Pending";
+        this.status = "PENDING";
         this.notes = "";
     }
 
@@ -62,7 +62,7 @@ public class Application implements Comparable<Application> {
     public void setStatus(String status) {
         assert status != null: "Status should not be null";
         assert !status.trim().isEmpty() : "Status cannot be empty";
-        this.status = status;
+        this.status = status.trim().toUpperCase();
     }
 
     public String getStatus() {
