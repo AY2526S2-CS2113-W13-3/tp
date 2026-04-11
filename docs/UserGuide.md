@@ -33,7 +33,7 @@ tag INDEX add/TAG                                           Add a tag to an appl
 tag INDEX remove/TAG                                        Remove a tag from an application
 list                                                        List all job applications
 sort                                                        Sort applications by date
-search [c/COMPANY] [p/POSITION] [s/STATUS]                  Search applications
+search [c/COMPANY] / [p/POSITION] / [s/STATUS]              Search applications
 help                                                        Show this message
 bye                                                         Exit the application
 ___________________________________________________________________
@@ -282,6 +282,6 @@ ___________________________________________________________________
 | Tag Remove | `tag INDEX remove/TAG` <br> e.g., `tag 1 remove/Tech`                                                                 |
 | List | `list`                                                                                                                |
 | Sort | `sort`                                                                                                                |
-| Search | `search [c/company] [p/position] [s/status]` <br> e.g., `search c/Google`                                             |
+| Search | `search [c/company] / [p/position] / [s/status]` <br> e.g., `search c/Google`                                         |
 | Help | `help`                                                                                                                |
 | Exit | `bye`                                                                                                                 |
