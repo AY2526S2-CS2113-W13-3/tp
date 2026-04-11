@@ -16,6 +16,19 @@ import ui.Ui;
  */
 public class Parser {
 
+    /**
+     * Commands that must be a single word with no trailing arguments.
+     */
+    private static boolean isLoneCommand(String trimmed, String commandWord) {
+        String[] parts = trimmed.split("\\s+");
+        return parts.length == 1 && parts[0].equals(commandWord);
+    }
+
+    private static ParsedCommand rejectExtraArgs(String commandWord) {
+        Ui.showError("The '" + commandWord + "' command does not take any arguments.");
+        return null;
+    }
+
     public static ParsedCommand parse(String input) {
         String trimmed = input.trim();
 
@@ -24,15 +37,27 @@ public class Parser {
 
         switch (command) {
             case "bye":
+                if (!isLoneCommand(trimmed, "bye")) {
+                    return rejectExtraArgs("bye");
+                }
                 return new ParsedCommand(CommandType.BYE);
 
             case "list":
+                if (!isLoneCommand(trimmed, "list")) {
+                    return rejectExtraArgs("list");
+                }
                 return new ParsedCommand(CommandType.LIST);
 
             case "sort":
+                if (!isLoneCommand(trimmed, "sort")) {
+                    return rejectExtraArgs("sort");
+                }
                 return new ParsedCommand(CommandType.SORT);
 
             case "help":
+                if (!isLoneCommand(trimmed, "help")) {
+                    return rejectExtraArgs("help");
+                }
                 return new ParsedCommand(CommandType.HELP);
 
             case "add":
