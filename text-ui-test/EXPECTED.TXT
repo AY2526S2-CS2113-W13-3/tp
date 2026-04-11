@@ -58,7 +58,7 @@ ___________________________________________________________________
 Found 1 application(s) matching 'p/intern':
 1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
-No applications found for company: s/offer
+No applications found matching 's/offer'.
 ___________________________________________________________________
 Sorted by submission date!
 Here are your applications:

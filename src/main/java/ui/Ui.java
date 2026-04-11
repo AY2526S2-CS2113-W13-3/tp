@@ -2,6 +2,7 @@ package ui;
 
 import task.Application;
 import task.IndustryTag;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -28,12 +29,12 @@ public class Ui {
      */
     public static void showWelcome() {
         String logo = """
-                 _   ___   ____   ____   ___  _       ___   _____
-                | | / _ \\ | __ ) |  _ \\ |_ _|| |     / _ \\ |_   _|
-             _  | || | | ||  _ \\ | |_) | | | | |    | | | |  | |
-            | |_| || |_| || |_) ||  __/  | | | |___ | |_| |  | |
-             \\___/  \\___/ |____/ |_|    |___||_____| \\___/   |_|
-            """;
+                     _   ___   ____   ____   ___  _       ___   _____
+                    | | / _ \\ | __ ) |  _ \\ |_ _|| |     / _ \\ |_   _|
+                 _  | || | | ||  _ \\ | |_) | | | | |    | | | |  | |
+                | |_| || |_| || |_) ||  __/  | | | |___ | |_| |  | |
+                 \\___/  \\___/ |____/ |_|    |___||_____| \\___/   |_|
+                """;
         System.out.println("Hello from\n" + logo);
         System.out.println("Welcome to JobPilot!");
         System.out.println("Type 'help' to see all available commands!");
@@ -73,7 +74,7 @@ public class Ui {
     /**
      * Displays a message indicating that an application has been deleted.
      *
-     * @param app The application that was deleted.
+     * @param app           The application that was deleted.
      * @param remainingSize The number of applications remaining.
      */
     public static void showApplicationDeleted(Application app, int remainingSize) {
@@ -119,12 +120,12 @@ public class Ui {
     /**
      * Displays search results for applications based on a search term.
      *
-     * @param results The list of matching applications.
+     * @param results    The list of matching applications.
      * @param searchTerm The company name or keyword used for the search.
      */
     public static void showSearchResults(ArrayList<Application> results, String searchTerm) {
         if (results.isEmpty()) {
-            System.out.println("No applications found for company: " + searchTerm);
+            System.out.println("No applications found matching '" + searchTerm + "'.");
         } else {
             System.out.println("Found " + results.size() + " application(s) matching '" + searchTerm + "':");
             for (int i = 0; i < results.size(); i++) {
@@ -140,7 +141,7 @@ public class Ui {
      * the count and delegates to showApplicationList to display the details.
      *
      * @param results The list of applications matching the filter criteria.
-     * @param status The status string used for the filter.
+     * @param status  The status string used for the filter.
      */
     public static void showFilterResults(ArrayList<Application> results, String status) {
         System.out.println("Filtered by status: " + status);
