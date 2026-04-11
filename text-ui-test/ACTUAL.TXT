@@ -18,7 +18,9 @@ tag INDEX add/TAG                                           Add a tag to an appl
 tag INDEX remove/TAG                                        Remove a tag from an application
 list                                                        List all job applications
 sort                                                        Sort applications by date
-search [c/COMPANY] [p/POSITION] [s/STATUS]                  Search applications
+search c/COMPANY                                            Search applications by company
+search p/POSITION                                           Search applications by position
+search s/STATUS                                              Search applications by status
 help                                                        Show this message
 bye                                                         Exit the application
 ___________________________________________________________________
@@ -58,7 +60,7 @@ ___________________________________________________________________
 Found 1 application(s) matching 'p/intern':
 1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 ___________________________________________________________________
-No applications found for company: s/offer
+No applications found matching 's/offer'.
 ___________________________________________________________________
 Sorted by submission date!
 Here are your applications:
