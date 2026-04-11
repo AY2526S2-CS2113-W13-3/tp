@@ -211,7 +211,7 @@ public class Ui {
                 sort                                                        Sort applications by date
                 search c/COMPANY                                            Search applications by company
                 search p/POSITION                                           Search applications by position
-                search s/STATUS                                              Search applications by status
+                search s/STATUS                                             Search applications by status
                 help                                                        Show this message
                 bye                                                         Exit the application""";
 
