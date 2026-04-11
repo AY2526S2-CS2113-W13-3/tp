@@ -17,7 +17,6 @@ public class Deleter {
      */
     public static Application deleteApplication(ArrayList<Application> applications, int deleteIndex)
             throws JobPilotException {
-        try {
             if (deleteIndex < 0 || deleteIndex >= applications.size()) {
                 throw new JobPilotException("Invalid application number!");
             }
@@ -26,8 +25,5 @@ public class Deleter {
             assert removed != null : "The application was not successfully deleted. Please try again!";
 
             return removed;
-        } catch (NumberFormatException e) {
-            throw new JobPilotException("Invalid format! Use: delete INDEX");
-        }
     }
 }
