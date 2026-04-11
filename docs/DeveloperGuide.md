@@ -570,9 +570,9 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 ## Instructions for manual testing
 
 ## Initial Launch
-1. Use the `JobPilot.jar`.
-2. Place the jar in an empty folder.
-   3. **Double-click the jar file**  
+1. Download the `JobPilot.jar` file.
+2. Place the jar in an empty folder. 
+3. Open a terminal in that folder and run the app with the following command: `java -jar JobPilot.jar`
       **Expected:** JobPilot launches. The CLI prompt appears showing the JobPilot logo.
 
 
