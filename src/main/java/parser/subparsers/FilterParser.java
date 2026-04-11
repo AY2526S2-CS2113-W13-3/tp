@@ -15,14 +15,15 @@ import java.util.logging.Logger;
  */
 public class FilterParser {
 
-    static {
-        java.util.logging.Logger.getLogger(FilterParser.class.getName()).setLevel(java.util.logging.Level.OFF);
-    }
-
     private static final Logger LOGGER = Logger.getLogger(FilterParser.class.getName());
 
+    static {
+        LOGGER.setLevel(Level.OFF);
+        LOGGER.setUseParentHandlers(false);
+    }
+
     private static final String COMMAND_WORD = "filter";
-    private static final String PREFIX_STATUS = "s/"; // Updated to match team master
+    private static final String PREFIX_STATUS = "s/";
 
     private static final String ERROR_INVALID_FORMAT = "Invalid filter format! Expected: filter s/STATUS";
     private static final String ERROR_MISSING_ARGS = "Filter command is missing arguments! Use: filter s/STATUS";
@@ -30,6 +31,10 @@ public class FilterParser {
 
     /**
      * Parses the 'filter' command input string into a ParsedCommand object.
+     * Validates that the input strictly follows the 'filter s/STATUS' format.
+     * * @param input The raw arguments after the command word 'filter'
+     * @return A ParsedCommand ready for execution
+     * @throws JobPilotException if the format is invalid or contains junk text before the prefix
      */
     public static ParsedCommand parse(String input) throws JobPilotException {
         LOGGER.log(Level.INFO, "Initiating parsing for filter command: " + input);
@@ -39,8 +44,8 @@ public class FilterParser {
 
         String argumentBlock = extractArgumentBlock(trimmedInput);
 
-        if (!argumentBlock.contains(PREFIX_STATUS)) {
-            LOGGER.log(Level.WARNING, "Filter command missing required prefix 's/': " + argumentBlock);
+        if (!argumentBlock.startsWith(PREFIX_STATUS)) {
+            LOGGER.log(Level.WARNING, "Filter command has invalid text before prefix: " + argumentBlock);
             throw new JobPilotException(ERROR_INVALID_FORMAT);
         }
 
@@ -61,6 +66,7 @@ public class FilterParser {
     }
 
     private static String extractArgumentBlock(String input) throws JobPilotException {
+        // Ensure there is at least one space or character after "filter"
         if (input.length() <= COMMAND_WORD.length()) {
             throw new JobPilotException(ERROR_MISSING_ARGS);
         }
@@ -68,7 +74,7 @@ public class FilterParser {
     }
 
     private static String extractStatusQuery(String argumentBlock) {
-        int startIndex = argumentBlock.indexOf(PREFIX_STATUS) + PREFIX_STATUS.length();
+        int startIndex = PREFIX_STATUS.length();
         String query = argumentBlock.substring(startIndex).trim();
         return query.replaceAll("\\s+", " ");
     }
