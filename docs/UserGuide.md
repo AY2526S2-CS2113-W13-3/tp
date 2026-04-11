@@ -102,7 +102,7 @@ s/STATUS: The current stage (e.g., Invited, Rejected, Offer).
 
 note/NOTE: (Optional) Additional context, comments, or interview feedback.
 
-Flexibility: You can update both fields at once, or just one. If a field is omitted, the existing value is preserved. The order of set/ and note/ does not matter.
+Flexibility: You can update both fields at once, or just one. If a field is omitted, the existing value is preserved. The order of s/ and note/ does not matter.
 
 Examples:
 
@@ -134,7 +134,7 @@ filter s/pending
 Example Output:
 
 Plaintext
-Found 2 application(s) with status matching 'OFFER':
+Found 2 application(s) with status 'OFFER':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Salary negotiation)
 2. Shopee | Backend Intern | 2025-03-15 | OFFER (Note: Pending acceptance)
 
@@ -267,17 +267,17 @@ ___________________________________________________________________
 
 ## Command Summary
 
-| Action | Format, Examples                                                                                                    |
-|--------|---------------------------------------------------------------------------------------------------------------------|
-| Add | `add c/COMPANY p/POSITION d/DATE` <br> e.g., `add c/Google p/Software Engineer d/2026-03-29`                        |
+| Action | Format, Examples                                                                                                  |
+|--------|-------------------------------------------------------------------------------------------------------------------|
+| Add | `add c/COMPANY p/POSITION d/DATE` <br> e.g., `add c/Google p/Software Engineer d/2026-03-29`                      |
 | Edit | `edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]` <br> e.g., `edit 2 c/Google p/Backend Engineer s/Interview` |
-| Delete | `delete INDEX` <br> e.g., `delete 1`                                                                                |
-| Status | `status INDEX [s/STATUS] [note/NOTE]` <br> e.g., `status 1 set/Interview note/Phone screening completed`            |
-| Filter | `filter s/STATUS` <br> e.g., `filter s/Applied`                                                                     |
-| Tag Add | `tag INDEX add/TAG` <br> e.g., `tag 1 add/Tech`                                                                     |
-| Tag Remove | `tag INDEX remove/TAG` <br> e.g., `tag 1 remove/Tech`                                                               |
-| List | `list`                                                                                                              |
-| Sort | `sort`                                                                                                              |
+| Delete | `delete INDEX` <br> e.g., `delete 1`                                                                              |
+| Status | `status INDEX [s/STATUS] [note/NOTE]` <br> e.g., `status 1 s/Interview note/Phone screening completed`            |
+| Filter | `filter s/STATUS` <br> e.g., `filter s/Applied`                                                                   |
+| Tag Add | `tag INDEX add/TAG` <br> e.g., `tag 1 add/Tech`                                                                   |
+| Tag Remove | `tag INDEX remove/TAG` <br> e.g., `tag 1 remove/Tech`                                                             |
+| List | `list`                                                                                                            |
+| Sort | `sort`                                                                                                            |
 | Search | `search c/COMPANY` <br> `search p/POSITION` <br> `search s/STATUS` <br> e.g., `search c/Google` |
-| Help | `help`                                                                                                              |
-| Exit | `bye`                                                                                                               |
+| Help | `help`                                                                                                            |
+| Exit | `bye`                                                                                                             |

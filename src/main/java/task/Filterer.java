@@ -36,8 +36,8 @@ public class Filterer {
 
         String normalizedQuery = statusQuery.trim().toUpperCase();
 
-        if (normalizedQuery.length() < 2) {
-            throw new JobPilotException("Status keyword is too short! Minimum 2 characters required.");
+        if (normalizedQuery.isEmpty()) {
+            throw new JobPilotException("Status keyword cannot be empty!");
         }
 
         LOGGER.log(Level.INFO, "Filtering applications for status: " + normalizedQuery);
@@ -45,7 +45,6 @@ public class Filterer {
         ArrayList<Application> filteredResults = new ArrayList<>();
 
         for (Application app : applications) {
-            // Defensive check: ensure the app and its status aren't null
             if (app != null && app.getStatus() != null) {
                 if (app.getStatus().toUpperCase().contains(normalizedQuery)) {
                     filteredResults.add(app);

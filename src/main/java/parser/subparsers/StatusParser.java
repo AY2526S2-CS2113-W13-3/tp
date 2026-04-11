@@ -15,7 +15,7 @@ public class StatusParser {
     }
 
     private static final String COMMAND_WORD = "status";
-    private static final String PREFIX_SET = "set/";
+    private static final String PREFIX_SET = "s/";
     private static final String PREFIX_NOTE = "note/";
 
     public static ParsedCommand parse(String input) throws JobPilotException {
@@ -27,19 +27,19 @@ public class StatusParser {
 
         String[] tokens = trimmed.split("\\s+");
         if (tokens.length < 2) {
-            throw new JobPilotException("Please provide an index. Example: status 1 set/OFFER");
+            throw new JobPilotException("Please provide an index. Example: status 1 s/OFFER");
         }
 
         int index;
         try {
             index = Integer.parseInt(tokens[1]) - 1;
         } catch (NumberFormatException e) {
-            throw new JobPilotException("Invalid index! Use a number: status 1 set/OFFER");
+            throw new JobPilotException("Invalid index! Use a number: status 1 s/OFFER");
         }
 
         int firstPrefixPos = findFirstPrefixPos(trimmed);
         if (firstPrefixPos == -1) {
-            throw new JobPilotException("No status or note provided! Use set/ or note/.");
+            throw new JobPilotException("No status or note provided! Use s/ or note/.");
         }
 
         // Junk Zone Check
@@ -81,7 +81,7 @@ public class StatusParser {
 
     /**
      * Finds the next prefix only if it is preceded by whitespace.
-     * This prevents "set/set/" from breaking the parser.
+     * This prevents "s/s/" from breaking the parser.
      */
     private static int findNextPrefix(String str, int start) {
         int nextSet = findPrefixWithSpace(str, PREFIX_SET, start);

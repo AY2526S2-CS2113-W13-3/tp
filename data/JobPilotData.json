@@ -3,7 +3,23 @@
     "company": "Acme",
     "position": "Dev",
     "date": "2026-01-01",
-    "status": "OFFER",
+    "status": "PENDING",
+    "notes": "Balh",
+    "industryTags": []
+  },
+  {
+    "company": "AMD",
+    "position": "engineer",
+    "date": "2026-01-10",
+    "status": "PENDING",
+    "notes": "",
+    "industryTags": []
+  },
+  {
+    "company": "Google",
+    "position": "Dev",
+    "date": "2025-01-01",
+    "status": "PENDING",
     "notes": "",
     "industryTags": []
   }

@@ -20,4 +20,11 @@ class FilterParserTest {
     void parse_junkBeforePrefix_throwsException() {
         assertThrows(JobPilotException.class, () -> FilterParser.parse("filter abc s/Pending"));
     }
+
+    @Test
+    void parse_singleCharFilter_success() throws JobPilotException {
+        // Verifies the fix for the 'Status keyword too short' bug
+        ParsedCommand command = FilterParser.parse("filter s/X");
+        assertEquals("X", command.getSearchTerm());
+    }
 }
