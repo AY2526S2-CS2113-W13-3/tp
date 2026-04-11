@@ -74,7 +74,7 @@ public class Ui {
     /**
      * Displays a message indicating that an application has been deleted.
      *
-     * @param app           The application that was deleted.
+     * @param app The application that was deleted.
      * @param remainingSize The number of applications remaining.
      */
     public static void showApplicationDeleted(Application app, int remainingSize) {
@@ -120,7 +120,7 @@ public class Ui {
     /**
      * Displays search results for applications based on a search term.
      *
-     * @param results    The list of matching applications.
+     * @param results The list of matching applications.
      * @param searchTerm The company name or keyword used for the search.
      */
     public static void showSearchResults(ArrayList<Application> results, String searchTerm) {
@@ -141,7 +141,7 @@ public class Ui {
      * the count and delegates to showApplicationList to display the details.
      *
      * @param results The list of applications matching the filter criteria.
-     * @param status  The status string used for the filter.
+     * @param status The status string used for the filter.
      */
     public static void showFilterResults(ArrayList<Application> results, String status) {
         System.out.println("Filtered by status: " + status);
@@ -209,7 +209,9 @@ public class Ui {
                 tag INDEX remove/TAG                                        Remove a tag from an application
                 list                                                        List all job applications
                 sort                                                        Sort applications by date
-                search [c/COMPANY] / [p/POSITION] / [s/STATUS]              Search applications
+                search c/COMPANY                                            Search applications by company
+                search p/POSITION                                           Search applications by position
+                search s/STATUS                                             Search applications by status
                 help                                                        Show this message
                 bye                                                         Exit the application""";
 

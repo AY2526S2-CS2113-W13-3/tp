@@ -10,8 +10,8 @@ By using JobPilot, users can track application progress and important details wi
 1. **Install Java 17+:** Verify that your computer has Java `17` or a newer version installed. <br>
    *Mac users:* Please follow the specific JDK installation guide [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 2. **Download the App:** Grab the latest `.jar` release file from [here](https://github.com/AY2526S2-CS2113-W13-3/tp/releases).
-3. **Set Up Your Directory:** Move the downloaded file into a dedicated new folder. (Note: Running the app for the first time will automatically generate a `data/JobPilotData.txt` file in this directory to save your tasks).
-4. **Launch JobPilot** Open your terminal and run the app with the following command: `java -jar <release-name>.jar`
+3. **Set Up Your Directory:** Move the downloaded file into a dedicated new folder. (Note: Running the app for the first time will automatically generate a `data/JobPilotData.json` file in this directory to save your applications).
+4. **Launch JobPilot:** Open your terminal, navigate to the folder, and run the following command: `java -jar JobPilot.jar`
 
 ## Features
 
@@ -22,21 +22,17 @@ Format: `help`
 
 Example output:
 
+Note: only a portion of the message is shown for brevity.
+
 ```text
 Available Commands:
-add c/COMPANY p/POSITION d/DATE                             Add a new job application
-edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]     Edit existing application
-delete INDEX                                                Delete an application
-status INDEX [s/STATUS] [note/NOTE]                         Update application status and add a note
-filter s/STATUS                                             Filter applications by status
-tag INDEX add/TAG                                           Add a tag to an application
-tag INDEX remove/TAG                                        Remove a tag from an application
-list                                                        List all job applications
-sort                                                        Sort applications by date
-search [c/COMPANY] / [p/POSITION] / [s/STATUS]              Search applications
-help                                                        Show this message
-bye                                                         Exit the application
-___________________________________________________________________
+add c/COMPANY p/POSITION d/DATE         Add a new job application
+edit INDEX [...]                        Edit existing application
+delete INDEX                            Delete an application
+...
+help                                    Show this message
+bye                                     Exit the application
+____________________________________________________
 ```
 
 ### Adding an application: add
@@ -271,17 +267,17 @@ ___________________________________________________________________
 
 ## Command Summary
 
-| Action | Format, Examples                                                                                                      |
-|--------|-----------------------------------------------------------------------------------------------------------------------|
-| Add | `add c/COMPANY p/POSITION d/DATE` <br> e.g., `add c/Google p/Software Engineer d/2026-03-29`                          |
+| Action | Format, Examples                                                                                                    |
+|--------|---------------------------------------------------------------------------------------------------------------------|
+| Add | `add c/COMPANY p/POSITION d/DATE` <br> e.g., `add c/Google p/Software Engineer d/2026-03-29`                        |
 | Edit | `edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]` <br> e.g., `edit 2 c/Google p/Backend Engineer s/Interview` |
-| Delete | `delete INDEX` <br> e.g., `delete 1`                                                                                  |
-| Status | `status INDEX [s/STATUS] [note/NOTE]` <br> e.g., `status 1 set/Interview note/Phone screening completed`              |
-| Filter | `filter s/STATUS` <br> e.g., `filter s/Applied`                                                                       |
-| Tag Add | `tag INDEX add/TAG` <br> e.g., `tag 1 add/Tech`                                                                       |
-| Tag Remove | `tag INDEX remove/TAG` <br> e.g., `tag 1 remove/Tech`                                                                 |
-| List | `list`                                                                                                                |
-| Sort | `sort`                                                                                                                |
-| Search | `search [c/company] / [p/position] / [s/status]` <br> e.g., `search c/Google`                                         |
-| Help | `help`                                                                                                                |
-| Exit | `bye`                                                                                                                 |
+| Delete | `delete INDEX` <br> e.g., `delete 1`                                                                                |
+| Status | `status INDEX [s/STATUS] [note/NOTE]` <br> e.g., `status 1 set/Interview note/Phone screening completed`            |
+| Filter | `filter s/STATUS` <br> e.g., `filter s/Applied`                                                                     |
+| Tag Add | `tag INDEX add/TAG` <br> e.g., `tag 1 add/Tech`                                                                     |
+| Tag Remove | `tag INDEX remove/TAG` <br> e.g., `tag 1 remove/Tech`                                                               |
+| List | `list`                                                                                                              |
+| Sort | `sort`                                                                                                              |
+| Search | `search c/COMPANY` <br> `search p/POSITION` <br> `search s/STATUS` <br> e.g., `search c/Google` |
+| Help | `help`                                                                                                              |
+| Exit | `bye`                                                                                                               |
