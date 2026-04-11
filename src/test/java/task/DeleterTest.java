@@ -121,6 +121,31 @@ class DeleterTest {
     }
 
     @Test
+    public void deleteApplication_missingIndex_shouldNotModifyList() {
+        applications.add(new Application("Google", "SE", "2026-03-01"));
+
+        // invalid delete (no index)
+        ParsedCommand cmd = new ParsedCommand(-999); // assuming invalid index representation
+        boolean continueRunning = runner.run(cmd);
+
+        assertEquals(1, applications.size());
+        assertEquals(true, continueRunning);
+    }
+
+    @Test
+    public void deleteApplication_extraArguments_shouldNotModifyList() {
+        Application app = new Application("Google", "SE", "2026-03-01");
+        applications.add(app);
+
+        // malformed delete command parsed incorrectly
+        ParsedCommand cmd = new ParsedCommand(-1); // invalid due to parsing failure
+        runner.run(cmd);
+
+        assertEquals(1, applications.size());
+        assertEquals(app, applications.get(0));
+    }
+
+    @Test
     public void deleteApplication_invalidIndex_doesNotCrash() {
         applications.add(new Application("Google", "Software Engineer", "2026-03-01"));
 

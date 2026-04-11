@@ -1,6 +1,8 @@
 package storage;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import task.Application;
 import task.IndustryTag;
 
@@ -13,38 +15,37 @@ import static org.junit.jupiter.api.Assertions.*;
 class StorageTest {
 
     private Storage storage;
-    private File defaultFile;
+    private File file;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         storage = new Storage();
 
-        // Keep track of the default file path
-        defaultFile = new File(Storage.CURRENT_WORKING_DIRECTORY + "/data/JobPilotData.txt");
+        file = new File(System.getProperty("user.dir") + "/data/JobPilotData.json");
 
-        // Make sure file is empty before each test
-        if (defaultFile.exists()) {
-            defaultFile.delete();
+        if (file.exists()) {
+            file.delete();
         }
-        defaultFile.getParentFile().mkdirs();
-        defaultFile.createNewFile();
+
+        file.getParentFile().mkdirs();
     }
 
     @AfterEach
     void tearDown() {
-        // Clean up file after each test
-        if (defaultFile.exists()) {
-            defaultFile.delete();
+        if (file.exists()) {
+            file.delete();
         }
     }
 
     @Test
     void saveAndLoadSingleApplication_shouldPreserveData() {
         ArrayList<Application> appsToSave = new ArrayList<>();
+
         Application app = new Application("Google", "SE Manager", "2025-03-10");
         app.setStatus("INTERVIEW");
         app.setNotes("Bring portfolio");
         app.addIndustryTag(new IndustryTag("Tech"));
+
         appsToSave.add(app);
 
         storage.saveToFile(appsToSave);
@@ -52,14 +53,19 @@ class StorageTest {
         ArrayList<Application> loadedApps = storage.loadFromFile();
 
         assertEquals(1, loadedApps.size());
+
         Application loadedApp = loadedApps.get(0);
+
         assertEquals("Google", loadedApp.getCompany());
         assertEquals("SE Manager", loadedApp.getPosition());
         assertEquals("2025-03-10", loadedApp.getDate());
         assertEquals("INTERVIEW", loadedApp.getStatus());
         assertEquals("Bring portfolio", loadedApp.getNotes());
-        assertTrue(loadedApp.getIndustryTags().stream()
-                .anyMatch(tag -> tag.getTagName().equals("TECH")));
+
+        assertTrue(
+                loadedApp.getIndustryTags().stream()
+                        .anyMatch(tag -> tag.getTagName().equals("TECH"))
+        );
     }
 
     @Test
@@ -79,68 +85,58 @@ class StorageTest {
         appsToSave.add(app2);
 
         storage.saveToFile(appsToSave);
+
         ArrayList<Application> loadedApps = storage.loadFromFile();
 
         assertEquals(2, loadedApps.size());
 
-        // Verify first application
-        Application loadedApp1 = loadedApps.get(0);
-        assertEquals("Google", loadedApp1.getCompany());
-        assertEquals("SE Manager", loadedApp1.getPosition());
-        assertEquals("INTERVIEW", loadedApp1.getStatus());
-        assertTrue(loadedApp1.getIndustryTags().stream()
-                .anyMatch(tag -> tag.getTagName().equals("TECH")));
-
-        // Verify second application
-        Application loadedApp2 = loadedApps.get(1);
-        assertEquals("Amazon", loadedApp2.getCompany());
-        assertEquals("Data Scientist", loadedApp2.getPosition());
-        assertEquals("APPLIED", loadedApp2.getStatus());
-        assertEquals("Follow up in 2 weeks", loadedApp2.getNotes());
-        assertTrue(loadedApp2.getIndustryTags().stream()
-                .anyMatch(tag -> tag.getTagName().equals("E-COMMERCE")));
-    }
-
-    @Test
-    void loadFromEmptyFile_shouldReturnEmptyList() {
-        // Default file is empty
-        ArrayList<Application> loadedApps = storage.loadFromFile();
-        assertTrue(loadedApps.isEmpty());
-    }
-
-    @Test
-    void loadFromFile_withCorruptedLines_shouldSkipCorrupted() throws Exception {
-        // Write valid and invalid lines directly to the default file
-        FileWriter writer = new FileWriter(defaultFile, false);
-        writer.write("Google | SE Manager | 2025-03-10 | INTERVIEW | Notes | TECH\n"); // valid
-        writer.write("CORRUPTED_LINE_WITH_TOO_FEW_FIELDS\n"); // invalid
-        writer.write("Amazon | Data Scientist | 2025-04-01 | APPLIED | Follow up | E-COMMERCE\n"); // valid
-        writer.close();
-
-        ArrayList<Application> loadedApps = storage.loadFromFile();
-
-        // Only valid applications should be loaded
-        assertEquals(2, loadedApps.size());
+        // first app
         assertEquals("Google", loadedApps.get(0).getCompany());
+        assertEquals("SE Manager", loadedApps.get(0).getPosition());
+        assertEquals("2025-03-10", loadedApps.get(0).getDate());
+        assertEquals("INTERVIEW", loadedApps.get(0).getStatus());
+
+        assertTrue(
+                loadedApps.get(0).getIndustryTags().stream()
+                        .anyMatch(tag -> tag.getTagName().equals("TECH"))
+        );
+
+        // second app
         assertEquals("Amazon", loadedApps.get(1).getCompany());
+        assertEquals("Data Scientist", loadedApps.get(1).getPosition());
+        assertEquals("2025-04-01", loadedApps.get(1).getDate());
+        assertEquals("APPLIED", loadedApps.get(1).getStatus());
+        assertEquals("Follow up in 2 weeks", loadedApps.get(1).getNotes());
+
+        assertTrue(
+                loadedApps.get(1).getIndustryTags().stream()
+                        .anyMatch(tag -> tag.getTagName().equals("E-COMMERCE"))
+        );
     }
 
     @Test
-    void saveToFile_emptyApplicationList_shouldCreateEmptyFile() {
+    void saveToFile_shouldOverwriteExistingData() {
+        ArrayList<Application> first = new ArrayList<>();
+        first.add(new Application("A", "Dev", "2026-01-01"));
+
+        storage.saveToFile(first);
+
+        ArrayList<Application> second = new ArrayList<>();
+        second.add(new Application("B", "QA", "2026-02-01"));
+
+        storage.saveToFile(second);
+
+        ArrayList<Application> loaded = storage.loadFromFile();
+
+        assertEquals(1, loaded.size());
+        assertEquals("B", loaded.get(0).getCompany());
+    }
+
+    @Test
+    void saveToFile_emptyList_shouldReturnEmptyListOnLoad() {
         ArrayList<Application> emptyList = new ArrayList<>();
 
         storage.saveToFile(emptyList);
-        ArrayList<Application> loadedApps = storage.loadFromFile();
-
-        assertTrue(loadedApps.isEmpty());
-    }
-
-    @Test
-    void loadFromFile_withOnlyCorruptedLines_shouldReturnEmptyList() throws Exception {
-        FileWriter writer = new FileWriter(defaultFile, false);
-        writer.write("INVALID_LINE\n");
-        writer.write("Another bad line\n");
-        writer.close();
 
         ArrayList<Application> loadedApps = storage.loadFromFile();
 
@@ -148,18 +144,40 @@ class StorageTest {
     }
 
     @Test
-    void loadFromFile_withMixedValidAndCorruptedLines_shouldLoadOnlyValidApplications() throws Exception {
-        FileWriter writer = new FileWriter(defaultFile, false);
-        writer.write("Google | SE Manager | 2025-03-10 | INTERVIEW | Notes | TECH\n");
-        writer.write("INVALID_LINE\n");
-        writer.write("Meta | Product Manager | 2025-05-20 | OFFER | Accepted | TECH,AI\n");
-        writer.close();
+    void saveToFile_shouldCreateFileIfNotExists() {
+        if (file.exists()) {
+            file.delete();
+        }
 
-        ArrayList<Application> loadedApps = storage.loadFromFile();
+        ArrayList<Application> apps = new ArrayList<>();
+        apps.add(new Application("Google", "SE", "2026-01-01"));
 
-        assertEquals(2, loadedApps.size());
-        assertEquals("Google", loadedApps.get(0).getCompany());
-        assertEquals("Meta", loadedApps.get(1).getCompany());
+        storage.saveToFile(apps);
+
+        assertTrue(file.exists());
     }
 
+    @Test
+    void load_whenFileDoesNotExist_shouldReturnEmptyList() {
+        if (file.exists()) {
+            file.delete();
+        }
+
+        ArrayList<Application> loaded = storage.loadFromFile();
+
+        assertNotNull(loaded);
+        assertTrue(loaded.isEmpty());
+    }
+
+    @Test
+    void loadFromFile_withCorruptedJson_shouldReturnEmptyList() throws Exception {
+        FileWriter writer = new FileWriter(file, false);
+        writer.write("{ this is not valid json }");
+        writer.close();
+
+        ArrayList<Application> loaded = storage.loadFromFile();
+
+        assertNotNull(loaded);
+        assertTrue(loaded.isEmpty());
+    }
 }

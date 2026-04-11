@@ -20,6 +20,7 @@ import java.util.Comparator;
 public class CommandRunner {
 
     private final ArrayList<Application> applications;
+    private int totalApplicationsAdded = 0;
 
     public CommandRunner(ArrayList<Application> applications) {
         this.applications = applications;
@@ -85,7 +86,7 @@ public class CommandRunner {
 
     private boolean handleBye() {
         try {
-            Ui.showGoodbye(applications.size());
+            Ui.showGoodbye(totalApplicationsAdded);
             Ui.close();
         } catch (IllegalStateException e) {
             Ui.showError("Scanner was already closed.");
@@ -102,6 +103,7 @@ public class CommandRunner {
             Application newApp = new Application(
                     cmd.getCompany(), cmd.getPosition(), cmd.getDate());
             applications.add(newApp);
+            totalApplicationsAdded++;
             Ui.showApplicationAdded(newApp);
         } catch (DateTimeParseException e) {
             Ui.showError("Invalid date! Please use YYYY-MM-DD");

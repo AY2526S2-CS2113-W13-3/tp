@@ -1,7 +1,8 @@
 package task;
 
+import exception.JobPilotException;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +16,7 @@ public class Application implements Comparable<Application> {
 
     private String company;
     private String position;
-    private LocalDate date;
+    private String date;
     private String status;
     private String notes;
     private final Set<IndustryTag> industryTags = new HashSet<>();
@@ -29,9 +30,12 @@ public class Application implements Comparable<Application> {
         assert !position.trim().isEmpty(): "Position cannot be empty string!";
         assert !date.trim().isEmpty(): "Date cannot be empty string!";
 
+        // Validate date
+        LocalDate.parse(date);
+
         this.company = company;
         this.position = position;
-        this.date = LocalDate.parse(date);
+        this.date = date;
         this.status = "PENDING";
         this.notes = "";
     }
@@ -55,8 +59,8 @@ public class Application implements Comparable<Application> {
     }
 
     public String getDate() {
-        assert date != null: "Date should not be null";
-        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        assert date != null : "Date should not be null";
+        return date;
     }
 
     public void setStatus(String status) {
@@ -107,10 +111,14 @@ public class Application implements Comparable<Application> {
      *
      * @param date The new date in YYYY-MM-DD format
      */
-    public void setDate(String date) {
+    public void setDate(String date) throws JobPilotException {
         assert date != null && !date.trim().isEmpty()
                 : "Date cannot be null or empty";
-        this.date = LocalDate.parse(date);
+
+        // Validate date
+        LocalDate.parse(date);
+
+        this.date = date;
     }
 
     @Override
@@ -124,7 +132,7 @@ public class Application implements Comparable<Application> {
         String tagDisplay = industryTags.isEmpty() ? "" : " | Tags: " + industryTags;
         String noteDisplay = notes.isEmpty() ? "" : " (Note: " + notes + ")";
 
-        return company + " | " + position + " | " + getDate() + " | " + status + noteDisplay + tagDisplay;
+        return company + " | " + position + " | " + date + " | " + status + noteDisplay + tagDisplay;
     }
 
     public void addIndustryTag(IndustryTag tag) {

@@ -16,9 +16,13 @@ public class DeleterParser {
      * @throws JobPilotException If the input does not contain an index or if the index is not a valid integer.
      */
     public static ParsedCommand parse(String input) throws JobPilotException {
-        String[] parts = input.split(" ");
+        String[] parts = input.trim().split("\\s+");
         if (parts.length < 2) {
             throw new JobPilotException("Please provide an index. Example: delete 1");
+        }
+
+        if (parts.length > 2) {
+            throw new JobPilotException("Invalid format! Use: delete INDEX");
         }
 
         try {

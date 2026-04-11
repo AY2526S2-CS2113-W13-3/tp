@@ -99,5 +99,5 @@ Deleted application:
 Apple | SE manager | 2027-01-09 | PENDING (Note: Negotiate salary) | Tags: [TECH]
 You have 0 application(s) left.
 ___________________________________________________________________
-Bye! You added 0 application(s).
+Bye! You added 3 application(s).
 ___________________________________________________________________
