@@ -178,7 +178,7 @@ public class Ui {
      * @param app The application to which the tag was added.
      */
     public static void showTagAdded(IndustryTag tag, Application app) {
-        System.out.println("Added tag: " + tag + " -> " + app);
+        System.out.println("Added tag: " + tag + "from" + app);
         System.out.println(HORIZONTAL_LINE);
     }
 
@@ -189,7 +189,7 @@ public class Ui {
      * @param app The application from which the tag was removed.
      */
     public static void showTagRemoved(IndustryTag tag, Application app) {
-        System.out.println("Removed tag: " + tag + " -> " + app);
+        System.out.println("Removed tag: " + tag + "from" + app);
         System.out.println(HORIZONTAL_LINE);
     }
 
