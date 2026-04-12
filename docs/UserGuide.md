@@ -35,6 +35,8 @@ bye                                     Exit the application
 ____________________________________________________
 ```
 
+_Note:_ In the `help` output above, `search [c/COMPANY] [p/POSITION] [s/STATUS]` means you use **any one** of these forms per command (company **or** position **or** status), not several prefixes in the same line.
+
 ### Adding an application: add
 Adds a new job application to JobPilot.
 
@@ -138,6 +140,34 @@ Found 2 application(s) with status 'OFFER':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Salary negotiation)
 2. Shopee | Backend Intern | 2025-03-15 | OFFER (Note: Pending acceptance)
 
+### Managing industry tags: `tag`
+
+You can attach **industry tags** (for example `TECH`, `FINANCE`) to each application so you can see the sector at a glance in `list` output. One application may have multiple tags.
+
+Format:
+
+- `tag INDEX add/TAG` — add a tag to the application at the given `INDEX` (the number shown by `list`)
+- `tag INDEX remove/TAG` — remove that tag from the application
+
+Notes:
+
+- `TAG` must not be empty (there must be text after `add/` or `remove/`).
+- Tag text is **normalized to uppercase** (e.g. `add/tech` is stored and shown as `TECH`).
+- The same tag cannot be stored twice on one application; the set of tags on an entry stays unique.
+
+Examples:
+
+- `tag 1 add/TECH`
+- `tag 1 add/FINANCE`
+- `tag 1 remove/TECH`
+
+Example output:
+
+```text
+Added tag: TECH -> Google | SE manager | 2025-03-10 | PENDING | Tags: [TECH]
+___________________________________________________________________
+```
+
 ### Listing
 Lists all the applications
 
@@ -160,6 +190,10 @@ ___________________________________________________________________
 - Uses a **case-insensitive partial search**.
 - Search function only supports searching
   by one dimension
+
+**Single field per command:** each `search` uses **exactly one** prefix (`c/`, `p/`, or `s/`) and one keyword. Combining multiple criteria in one command (for example `search c/google p/engineer`) is **not supported** in the current version—run separate searches if you need more than one filter.
+
+**Empty or incomplete input:** the keyword after `/` must not be empty (you will see an error such as `Search value cannot be empty!`). Running `search` alone, or without a valid `c/…`, `p/…`, or `s/…` pattern, also shows an error (for example `Please provide a search query. Example: search c/google` or `Invalid format! Use: search c/xxx or p/xxx or s/xxx`).
 
 Format:
 - `search c/COMPANY_NAME`

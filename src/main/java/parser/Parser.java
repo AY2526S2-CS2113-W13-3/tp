@@ -51,11 +51,17 @@ public class Parser {
                 }
                 return new ParsedCommand(CommandType.LIST);
 
-            case "sort":
-                if (!isLoneCommand(trimmed, "sort")) {
-                    return rejectExtraArgs("sort");
+            case "sort": {
+                String[] sortParts = trimmed.split("\\s+", 2);
+                if (sortParts.length == 1) {
+                    return new ParsedCommand(CommandType.SORT);
                 }
-                return new ParsedCommand(CommandType.SORT);
+                String sortArgs = sortParts[1].trim();
+                if (sortArgs.isEmpty()) {
+                    return new ParsedCommand(CommandType.SORT);
+                }
+                return new ParsedCommand(CommandType.SORT, sortArgs);
+            }
 
             case "help":
                 if (!isLoneCommand(trimmed, "help")) {
