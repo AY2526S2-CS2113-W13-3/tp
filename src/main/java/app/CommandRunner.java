@@ -162,6 +162,12 @@ public class CommandRunner {
 
         String sortType = rawSortTerm != null ? rawSortTerm.trim().toLowerCase() : "";
         boolean reverse = sortType.contains("reverse");
+        String fieldKey = sortType.replace("reverse", "").trim();
+        if (!fieldKey.isEmpty() && !fieldKey.startsWith("date") && !fieldKey.startsWith("company")
+                && !fieldKey.startsWith("status")) {
+            Ui.showError("Invalid sort field! Use: sort [date|company|status] [reverse]");
+            return;
+        }
 
         Comparator<Application> comparator = getComparator(sortType);
 

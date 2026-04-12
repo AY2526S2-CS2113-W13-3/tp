@@ -62,8 +62,8 @@ class Application {
     - industryTags: Set<IndustryTag>
     + setStatus(status: String): void
     + setNotes(notes: String): void
-    + addIndustryTag(tag: IndustryTag): void
-    + removeIndustryTag(tag: IndustryTag): void
+    + addIndustryTag(tag: IndustryTag): boolean
+    + removeIndustryTag(tag: IndustryTag): boolean
 }
 
 class Ui {

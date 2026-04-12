@@ -8,22 +8,29 @@ participant "ArrayList<Application>" as AppList
 participant Application
 
 User -> Ui : "filter s/OFFER"
+activate Ui
 Ui -> CommandRunner : run(command)
+activate CommandRunner
 CommandRunner -> FilterParser : parse("filter s/OFFER")
+activate FilterParser
 FilterParser --> CommandRunner : ParsedCommand(type=FILTER, searchTerm="OFFER")
+deactivate FilterParser
 CommandRunner -> Filterer : filterByStatus(applications, "OFFER")
+activate Filterer
 Filterer -> AppList : iterate through list
 
 loop for each application
     Filterer -> Application : getStatus()
     Application --> Filterer : status
-    Filterer -> Filterer : status.toUpperCase().contains("OFFER")
-    alt matches
-        Filterer -> Filterer : add to results list
-    end
+    Filterer -> Filterer : status.toUpperCase().contains("OFFER")?\nadd to results if match
 end
 
 Filterer --> CommandRunner : results list
-CommandRunner -> Ui : showApplicationList(results)
+deactivate Filterer
+CommandRunner -> Ui : showFilterResults(results, query)
+activate Ui
 Ui --> User : displays filtered applications
+deactivate Ui
+deactivate CommandRunner
+deactivate Ui
 @enduml

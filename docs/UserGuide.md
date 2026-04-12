@@ -125,7 +125,7 @@ Retrieves all applications that match a specific status. This is useful for focu
 
 Format: filter s/STATUS
 
-The search is case-insensitive and supports partial matching (e.g., filter status/off will find applications with the status "OFFER").
+The search is case-insensitive and supports partial matching (e.g., `filter s/off` will find applications with the status "OFFER").
 
 Examples:
 
@@ -238,6 +238,10 @@ ___________________________________________________________________
 Sorts applications by date, company name, or status, with support for ascending or reverse order.
 No applications will be removed during sorting.
 
+- **`sort` alone** sorts by **submission date** (ascending), same as `sort date`.
+- After sorting, the app prints one line describing what was used, e.g. `Sorted by submission date.` or `Sorted by company name (reverse order).`
+- Only the keywords **`date`**, **`company`**, and **`status`** (each optionally with **`reverse`**) are accepted; other words (e.g. `sort hi`) show an error and do **not** reorder the list.
+
 Format: 
 - `sort`
 - `sort date`
@@ -253,8 +257,12 @@ Examples:
 - `sort company`
 - `sort status reverse`
 
-Example Output:
-`Sorted by submission date!`
+Example output:
+
+```text
+Sorted by submission date.
+___________________________________________________________________
+```
 
 ### Exiting the program: bye
 

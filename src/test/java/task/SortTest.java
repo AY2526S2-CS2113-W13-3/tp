@@ -58,4 +58,18 @@ public class SortTest {
         assertEquals(app2, applications.get(0));
         assertEquals(app1, applications.get(1));
     }
+
+    @Test
+    void sortApplications_invalidField_doesNotReorder() {
+        Application app1 = new Application("Zebra", "Role", "2025-01-01");
+        Application app2 = new Application("Apple", "Role", "2025-02-01");
+        applications.add(app1);
+        applications.add(app2);
+
+        ParsedCommand cmd = new ParsedCommand(CommandType.SORT, "hi");
+        runner.run(cmd);
+
+        assertEquals(app1, applications.get(0));
+        assertEquals(app2, applications.get(1));
+    }
 }

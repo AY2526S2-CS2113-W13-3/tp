@@ -31,7 +31,7 @@ public class Filterer {
         assert applications != null : "The applications list should not be null";
 
         if (statusQuery == null || statusQuery.isBlank()) {
-            throw new JobPilotException("Status filter cannot be empty. Use: filter status/OFFER");
+            throw new JobPilotException("Status filter cannot be empty. Use: filter s/OFFER");
         }
 
         String normalizedQuery = statusQuery.trim().toUpperCase();

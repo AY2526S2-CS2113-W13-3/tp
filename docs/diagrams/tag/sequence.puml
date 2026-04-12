@@ -2,21 +2,31 @@
 actor User
 participant Ui
 participant CommandRunner
-participant TagParser
+participant TaggerParser
 participant Application
 participant IndustryTag
 
 User -> Ui : "tag 1 add/TECH"
+activate Ui
 Ui -> CommandRunner : run(command)
-CommandRunner -> TagParser : parse("tag 1 add/TECH")
-TagParser --> CommandRunner : ParsedCommand(index=1, action=add, tag="TECH")
-CommandRunner -> Application : getApplication(0)
+activate CommandRunner
+CommandRunner -> TaggerParser : parse("tag 1 add/TECH")
+activate TaggerParser
+TaggerParser --> CommandRunner : ParsedCommand(index=1, action=add, tag="TECH")
+deactivate TaggerParser
+CommandRunner -> Application : get application at index
 Application --> CommandRunner : app
 CommandRunner -> IndustryTag : new IndustryTag("TECH")
+activate IndustryTag
 IndustryTag --> CommandRunner : tag (normalized to "TECH")
+deactivate IndustryTag
 CommandRunner -> Application : addIndustryTag(tag)
 Application -> Application : industryTags.add(tag)
 Application --> CommandRunner : (updated)
 CommandRunner -> Ui : showTagAdded(app)
+activate Ui
 Ui --> User : "Added tag: TECH -> Google | SE manager | ..."
+deactivate Ui
+deactivate CommandRunner
+deactivate Ui
 @enduml
