@@ -63,7 +63,7 @@ ___________________________________________________________________
 Found 1 application(s) matching 's/offer':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
 ___________________________________________________________________
-Sorted by submission date!
+Sorted by submission date.
 Here are your applications:
 1. Amazon | Data Analyst | 2025-03-08 | INTERVIEW (Note: Case study prep) | Tags: [FINANCE, DATA]
 2. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]

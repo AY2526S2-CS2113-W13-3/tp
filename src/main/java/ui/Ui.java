@@ -156,10 +156,25 @@ public class Ui {
     }
 
     /**
-     * Displays a message indicating that applications have been sorted.
+     * Displays a message indicating how applications were sorted.
+     *
+     * @param sortSpec trimmed lowercased sort specification (e.g. {@code ""}, {@code "date reverse"},
+     *                 {@code "company"})
      */
-    public static void showSortedMessage() {
-        System.out.println("Sorted by submission date!");
+    public static void showSortedMessage(String sortSpec) {
+        String s = sortSpec != null ? sortSpec.trim().toLowerCase() : "";
+        boolean rev = s.contains("reverse");
+        String key = s.replace("reverse", "").trim();
+        String field;
+        if (key.startsWith("company")) {
+            field = "company name";
+        } else if (key.startsWith("status")) {
+            field = "status";
+        } else {
+            field = "submission date";
+        }
+        String order = rev ? " (reverse order)." : ".";
+        System.out.println("Sorted by " + field + order);
     }
 
     /**

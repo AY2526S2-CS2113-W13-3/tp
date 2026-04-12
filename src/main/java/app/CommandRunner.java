@@ -171,7 +171,7 @@ public class CommandRunner {
             applications.sort(comparator);
         }
 
-        Ui.showSortedMessage();
+        Ui.showSortedMessage(sortType);
         Ui.showApplicationList(applications);
     }
 
