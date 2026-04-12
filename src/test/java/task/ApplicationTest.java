@@ -155,4 +155,20 @@ class ApplicationTest {
         Application app = applications.get(0);
         assertEquals("PENDING", app.getStatus());
     }
+
+    @Test
+    public void run_addCommand_duplicateApplication_notAdded() {
+        runner.run(Parser.parse("add c/AMD p/Engineer d/2026-01-10"));
+        assertEquals(1, applications.size());
+        runner.run(Parser.parse("add c/AMD p/Engineer d/2026-01-10"));
+        assertEquals(1, applications.size());
+    }
+
+    @Test
+    public void run_addCommand_duplicateApplicationDifferentCase_notAdded() {
+        runner.run(Parser.parse("add c/Google p/Software Engineer d/2024-09-12"));
+        assertEquals(1, applications.size());
+        runner.run(Parser.parse("add c/GOOGLE p/SOFTWARE ENGINEER d/2024-09-12"));
+        assertEquals(1, applications.size());
+    }
 }

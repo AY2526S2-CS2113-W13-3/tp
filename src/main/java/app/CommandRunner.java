@@ -102,6 +102,16 @@ public class CommandRunner {
         try {
             Application newApp = new Application(
                     cmd.getCompany(), cmd.getPosition(), cmd.getDate());
+
+            for (Application existingApp : applications) {
+                if (existingApp.isDuplicate(newApp)) {
+                    Ui.showError("Duplicate application! You already have an application for '" +
+                            cmd.getCompany() + "' with position '" + cmd.getPosition() +
+                            "' on date " + cmd.getDate() + ". Use 'edit' to modify existing application.");
+                    return;
+                }
+            }
+
             applications.add(newApp);
             totalApplicationsAdded++;
             Ui.showApplicationAdded(newApp);

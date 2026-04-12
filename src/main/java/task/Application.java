@@ -148,4 +148,21 @@ public class Application implements Comparable<Application> {
     public Set<IndustryTag> getIndustryTags() {
         return Collections.unmodifiableSet(industryTags);
     }
+
+    /**
+     * Checks if this application is a duplicate of another application.
+     * Two applications are considered duplicates if they have the same company,
+     * position, and date.
+     *
+     * @param other The other application to compare with
+     * @return true if duplicate, false otherwise
+     */
+    public boolean isDuplicate(Application other) {
+        if (other == null) {
+            return false;
+        }
+        return this.company.equalsIgnoreCase(other.company) &&
+                this.position.equalsIgnoreCase(other.position) &&
+                this.date.equals(other.date);
+    }
 }

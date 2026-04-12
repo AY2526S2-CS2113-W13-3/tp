@@ -1,6 +1,6 @@
 [
   {
-    "company": "Acme",
+    "company": "meta xyz",
     "position": "Dev",
     "date": "2026-01-01",
     "status": "PENDING",
@@ -19,6 +19,14 @@
     "company": "Google",
     "position": "Dev",
     "date": "2025-01-01",
+    "status": "PENDING",
+    "notes": "",
+    "industryTags": []
+  },
+  {
+    "company": "meta",
+    "position": "intern",
+    "date": "2026-10-10",
     "status": "PENDING",
     "notes": "",
     "industryTags": []
