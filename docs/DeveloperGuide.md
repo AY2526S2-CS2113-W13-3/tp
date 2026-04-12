@@ -52,14 +52,17 @@ The main Parser routes the edit command to EditorParser based on the command key
 
 The **API** of this component is specified in `Storage.java`.
 
-![Ui Component](diagrams/component-storage/storage-class.png)
+![Storage Component](diagrams/component-storage/storage-class.png)
 
 The `Storage` component,
 
-* can save job application data in a text format (`.txt`), separated by '\|', and read them back into corresponding `Application` objects.
-* handles missing directories or files automatically by creating the necessary `data/JobPilotData.txt` file upon initialization if it does not exist.
-* parses the text file, actively invalidating corrupted or invalid lines during the loading process to ensure the application does not crash upon startup.
-* depends on some classes in the `task` component, because the `Storage` component's primary job is to serialize and deserialize `Application` and `IndustryTag` objects.
+* Can save job application data in **JSON format (`.json`)**, and read them back into corresponding `Application` objects.
+* Handles missing directories or files automatically by creating the necessary `data/JobPilotData.json` file upon initialization if it does not exist.
+* Implements **defensive parsing** to ensure the application never crashes upon startup:
+  * If individual application entries are missing required fields (caught via `AssertionError` or `NullPointerException`), the component safely skips the corrupted entry and continues loading the rest of the intact data.
+  * If the entire file is structurally malformed (e.g., `JsonParseException`), it catches the error, delegates a warning to the `Ui` component, and boots up with a fresh, empty list.
+* Depends on classes in the `task` component, because the `Storage` component's primary job is to serialize and deserialize `Application` and `IndustryTag` objects.
+* Utilizes the external **Gson** library for all JSON serialization and deserialization processes.
 
 ### CommandRunner Component
 

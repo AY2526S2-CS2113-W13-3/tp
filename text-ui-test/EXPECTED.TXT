@@ -7,7 +7,7 @@ Hello from
 
 Welcome to JobPilot!
 Type 'help' to see all available commands!
-___________________________________________________________________
+___________________________________________________________________________
 Available Commands:
 add c/COMPANY p/POSITION d/DATE                             Add a new job application
 edit INDEX [c/COMPANY] [p/POSITION] [d/DATE] [s/STATUS]     Edit existing application
@@ -23,84 +23,84 @@ search p/POSITION                                           Search applications 
 search s/STATUS                                             Search applications by status
 help                                                        Show this message
 bye                                                         Exit the application
-___________________________________________________________________
+___________________________________________________________________________
 Added: Google | SE manager | 2025-03-10 | PENDING
-___________________________________________________________________
+___________________________________________________________________________
 Added: Amazon | Data Analyst | 2025-03-08 | PENDING
-___________________________________________________________________
+___________________________________________________________________________
 Added: Microsoft | SDE Intern | 2025-03-12 | PENDING
-___________________________________________________________________
+___________________________________________________________________________
 Here are your applications:
 1. Google | SE manager | 2025-03-10 | PENDING
 2. Amazon | Data Analyst | 2025-03-08 | PENDING
 3. Microsoft | SDE Intern | 2025-03-12 | PENDING
-___________________________________________________________________
+___________________________________________________________________________
 Added tag: TECH -> Google | SE manager | 2025-03-10 | PENDING | Tags: [TECH]
-___________________________________________________________________
+___________________________________________________________________________
 Added tag: FINANCE -> Amazon | Data Analyst | 2025-03-08 | PENDING | Tags: [FINANCE]
-___________________________________________________________________
+___________________________________________________________________________
 Added tag: DATA -> Amazon | Data Analyst | 2025-03-08 | PENDING | Tags: [FINANCE, DATA]
-___________________________________________________________________
+___________________________________________________________________________
 Added tag: TECH -> Microsoft | SDE Intern | 2025-03-12 | PENDING | Tags: [TECH]
-___________________________________________________________________
+___________________________________________________________________________
 Added tag: INTERN -> Microsoft | SDE Intern | 2025-03-12 | PENDING | Tags: [TECH, INTERN]
-___________________________________________________________________
+___________________________________________________________________________
 Updated Status: Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-___________________________________________________________________
+___________________________________________________________________________
 Updated Status: Amazon | Data Analyst | 2025-03-08 | INTERVIEW (Note: Case study prep) | Tags: [FINANCE, DATA]
-___________________________________________________________________
+___________________________________________________________________________
 Updated Status: Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
-___________________________________________________________________
+___________________________________________________________________________
 Found 1 application(s) matching 'c/google':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-___________________________________________________________________
+___________________________________________________________________________
 Found 1 application(s) matching 'c/micro':
 1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
-___________________________________________________________________
+___________________________________________________________________________
 Found 1 application(s) matching 'p/intern':
 1. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
-___________________________________________________________________
+___________________________________________________________________________
 Found 1 application(s) matching 's/offer':
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-___________________________________________________________________
+___________________________________________________________________________
 Sorted by submission date.
 Here are your applications:
 1. Amazon | Data Analyst | 2025-03-08 | INTERVIEW (Note: Case study prep) | Tags: [FINANCE, DATA]
 2. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
 3. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
-___________________________________________________________________
+___________________________________________________________________________
 Here are your applications:
 1. Amazon | Data Analyst | 2025-03-08 | INTERVIEW (Note: Case study prep) | Tags: [FINANCE, DATA]
 2. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
 3. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
-___________________________________________________________________
+___________________________________________________________________________
 Removed tag: /FINANCE -> Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-___________________________________________________________________
+___________________________________________________________________________
 Deleted application:
 Amazon | Data Analyst | 2025-03-08 | INTERVIEW (Note: Case study prep) | Tags: [FINANCE, DATA]
 You have 2 application(s) left.
-___________________________________________________________________
+___________________________________________________________________________
 Here are your applications:
 1. Google | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
 2. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
-___________________________________________________________________
+___________________________________________________________________________
 Updated application:
 Apple | SE manager | 2025-03-10 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-___________________________________________________________________
+___________________________________________________________________________
 Updated application:
 Apple | SE manager | 2027-01-09 | OFFER (Note: Negotiate salary) | Tags: [TECH]
-___________________________________________________________________
+___________________________________________________________________________
 Here are your applications:
 1. Apple | SE manager | 2027-01-09 | OFFER (Note: Negotiate salary) | Tags: [TECH]
 2. Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
-___________________________________________________________________
+___________________________________________________________________________
 Deleted application:
 Microsoft | SDE Intern | 2025-03-12 | PENDING (Note: Waiting for reply) | Tags: [TECH, INTERN]
 You have 1 application(s) left.
-___________________________________________________________________
+___________________________________________________________________________
 Deleted application:
 Apple | SE manager | 2027-01-09 | OFFER (Note: Negotiate salary) | Tags: [TECH]
 You have 0 application(s) left.
-___________________________________________________________________
+___________________________________________________________________________
 Bye! You added 3 application(s).
-___________________________________________________________________
+___________________________________________________________________________
