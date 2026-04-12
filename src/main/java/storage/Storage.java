@@ -3,7 +3,10 @@ package storage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.MalformedJsonException;
+
 import task.Application;
+import ui.Ui;
 
 import java.io.File;
 import java.io.FileReader;
@@ -75,8 +78,9 @@ public class Storage {
 
     /**
      * Reads applications from the storage file, parses them, and returns them as a list.
+     * Safely filters out corrupted entries and handles malformed JSON without crashing.
      *
-     * @return An ArrayList containing the saved Applications. Returns an empty list if the file is empty.
+     * @return An ArrayList containing the saved Applications. Returns an empty list if the file is empty or corrupted.
      */
     public ArrayList<Application> loadFromFile() {
         ensureFileExists();
@@ -84,20 +88,32 @@ public class Storage {
         ArrayList<Application> applications = new ArrayList<>();
 
         try (FileReader reader = new FileReader(jobPilotDataFile)) {
-
             Type listType = new TypeToken<ArrayList<Application>>() {}.getType();
-
             ArrayList<Application> data = gson.fromJson(reader, listType);
 
             if (data != null) {
-                applications = data;
+                for (Application app : data) {
+                    try {
+                        // Test the assertions to ensure Gson didn't inject null fields
+                        app.getCompany();
+                        app.getPosition();
+                        app.getDate();
+                        app.getStatus();
+                        applications.add(app);
+                    } catch (AssertionError | NullPointerException e) {
+                        System.out.println(" [WARNING] A corrupted application entry was found and skipped.");
+                        LOGGER.log(Level.WARNING, "Corrupted entry skipped", e);
+                    }
+                }
             }
 
+        } catch (com.google.gson.JsonParseException e) {
+            Ui.showCorruptedDataWarning();
+            LOGGER.log(Level.WARNING, "JSON Parse Error: {0}", e.getMessage());
         } catch (Exception e) {
-            System.out.println("Error reading data: " + e.getMessage());
-            LOGGER.log(Level.SEVERE, "Load error", e);
+            Ui.showLoadError(e.getMessage());
+            LOGGER.log(Level.WARNING, "Load error: {0}", e.getMessage());
         }
-
         return applications;
     }
 

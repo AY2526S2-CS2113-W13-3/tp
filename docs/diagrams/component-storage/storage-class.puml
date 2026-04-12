@@ -1,39 +1,45 @@
-@startuml
-skinparam packageStyle rectangle
-skinparam ClassBackgroundColor #bfa060
-skinparam ClassBorderColor #6e5927
-skinparam ArrowColor #6e5927
-skinparam StereotypeCBackgroundColor #bfa060
-hide circle
-skinparam arrowThickness 1.1
-skinparam classAttributeIconSize 0
+\@startuml
+ skinparam packageStyle rectangle
+ skinparam ClassBackgroundColor #bfa060
+ skinparam ClassBorderColor #6e5927
+ skinparam ArrowColor #6e5927
+ skinparam StereotypeCBackgroundColor #bfa060
+ hide circle
+ skinparam arrowThickness 1.1
+ skinparam classAttributeIconSize 0
 
+ package "Storage Component" <<Rectangle>> #FFFFFF {
+     class "Storage" as Storage {
+         - {static} LOGGER : Logger
+         - {static} CURRENT_WORKING_DIRECTORY : String
+         - {static} FILE : File
+         - gson : Gson
+         - jobPilotDataFile : File
+         + Storage()
+         - ensureFileExists() : void
+         + loadFromFile() : ArrayList<Application>
+         + saveToFile(applications : ArrayList<Application>) : void
+     }
+ }
 
-package "Storage Component" <<Rectangle>> #FFFFFF {
-    class "Storage" as Storage {
-        - FILE_PATH : Path
-        + loadFromFile() : ArrayList<Application>
-        + saveToFile(...) : void
-    }
-}
+ package "Task Component" as Model #FFFFFF {
+     class Application #EEEEEE
+     class IndustryTag #EEEEEE
+ }
 
-' External package for the data models being saved
-package "Task Component" as Model #FFFFFF {
-    class Application #EEEEEE
-    class IndustryTag #EEEEEE
-}
+ rectangle "com.google.gson" as GsonLib #FFFFFF {
+     class Gson #EEEEEE
+ }
 
-' Supporting dependencies for I/O
-rectangle "java.io / java.util" as Support #FFFFFF {
-    class File #EEEEEE
-    class Scanner #EEEEEE
-    class FileWriter #EEEEEE
-}
+ rectangle "java.io / java.nio" as Support #FFFFFF {
+     class File #EEEEEE
+     class FileReader #EEEEEE
+     class FileWriter #EEEEEE
+ }
 
-' Defining dependencies mirroring AB3's visual structure
-Storage .left.> Support : uses for text operations >
-Storage .down.> Model : each is serialized/deserialized <
+ Storage .left.> Support : uses for file I/O >
+ Storage .right.> GsonLib : uses for JSON parsing >
+ Storage .down.> Model : serializes/deserializes >
 
-' Hidden links to keep layout clean
-Storage -[hidden]- Model
-@enduml
+ Storage -[hidden]- Model
+ @enduml

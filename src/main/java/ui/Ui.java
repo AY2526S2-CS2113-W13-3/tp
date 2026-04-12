@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Ui {
     private static final Scanner scanner = new Scanner(System.in);
     private static final String HORIZONTAL_LINE =
-            "___________________________________________________________________";
+            "___________________________________________________________________________";
 
     /**
      * Reads a command entered by the user from the console.
@@ -156,10 +156,9 @@ public class Ui {
     }
 
     /**
-     * Displays a message indicating how applications were sorted.
+     * Displays a message indicating that applications have been sorted.
      *
-     * @param sortSpec trimmed lowercased sort specification (e.g. {@code ""}, {@code "date reverse"},
-     *                 {@code "company"})
+     * @param sortSpec Determines the sorting order.
      */
     public static void showSortedMessage(String sortSpec) {
         String s = sortSpec != null ? sortSpec.trim().toLowerCase() : "";
@@ -239,5 +238,23 @@ public class Ui {
      */
     public static void close() {
         scanner.close();
+    }
+
+    /**
+     * Displays a warning when the data file is structurally corrupted.
+     */
+    public static void showCorruptedDataWarning() {
+        System.out.println(" [WARNING] Data file is severely corrupted. Starting with a fresh list.");
+        System.out.println(HORIZONTAL_LINE);
+    }
+
+    /**
+     * Displays an error message when reading the data file fails.
+     *
+     * @param errorMessage The specific error exception message.
+     */
+    public static void showLoadError(String errorMessage) {
+        System.out.println(" [ERROR] Error reading data: " + errorMessage);
+        System.out.println(HORIZONTAL_LINE);
     }
 }

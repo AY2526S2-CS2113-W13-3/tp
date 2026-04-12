@@ -34,10 +34,15 @@ package "Task Component" as Model #FFFFFF {
     class "Filterer" as Filterer #EEEEEE
 }
 
-' Incoming dependencies to UI
+package "Storage Component" as StorageLogic #FFFFFF {
+    class "Storage" as Storage #EEEEEE
+}
+
+
 JobPilot .down.> Ui : reads input via >
 CommandRunner .right.> Ui : invokes display methods >
 Parser .down.> Ui : invokes showError() >
+Storage .down.> Ui : invokes for warning messages >
 Filterer .up.> Ui : invokes showFilterResults() >
 
 ' Outgoing dependencies from UI
