@@ -115,7 +115,7 @@ The following diagram illustrates how the `CommandRunner` processes different co
 
 ## Implementation
 
-### Edit Application Feature
+### Editor Application Feature
 
 #### Sequence Diagram
 
@@ -514,13 +514,13 @@ The following sequence diagram illustrates the flow of updating status and notes
 
 #### Error Handling
 
-| Error Scenario | Condition                              | User Response |
-|----------------|----------------------------------------|---------------|
+| Error Scenario | Condition                                | User Response |
+|----------------|------------------------------------------|---------------|
 | Missing index | User enters `status s/OFFER` without index | "Please provide an index. Example: status 1 set/OFFER" |
-| Invalid index | Index out of range                     | "Invalid application number! You have X application(s)." |
-| Invalid format | Missing `s/` or incorrectly formatted  | "Invalid status format! Use: status INDEX set/STATUS note/NOTE" |
-| Empty status | User enters `status 1 s/`              | "Status cannot be empty!" |
-| Both fields missing | User enters `status 1`                 | "No valid fields to update! Use: set/STATUS and/or note/NOTE" |
+| Invalid index | Index out of range                       | "Invalid application number! You have X application(s)." |
+| Invalid format | Missing `s/` or incorrectly formatted    | "Invalid status format! Use: status INDEX set/STATUS note/NOTE" |
+| Empty status | User enters `status 1 s/`                | "Status cannot be empty!" |
+| Both fields missing | User enters `status 1`                   | "No valid fields to update! Use: set/STATUS and/or note/NOTE" |
 
 #### Design Rationale
 
@@ -590,16 +590,16 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 
 ### Edit Feature Testing
 
-| Test          | Command | Expected |
-|---------------|---------|----------|
-| Edit company  | `edit 1 c/Microsoft` | Company updated |
-| Edit position | `edit 1 p/Senior Engineer` | Position updated |
-| Edit date     | `edit 1 d/2024-12-01` | Date updated |
-| Edit status   | `edit 1 s/Interview` | Status updated to Interview |
-| Edit multiple | `edit 1 c/Google p/SWE d/2024-09-12` | All fields updated |
-| Invalid index | `edit 99 c/Google` | Error: invalid index |
-| No fields     | `edit 1` | Error: no fields to update |
-| Invalid date  | `edit 1 d/2024-13-01` | Error: invalid date format |
+| Test          | Command                              | Expected                    |
+|---------------|--------------------------------------|-----------------------------|
+| Edit company  | `edit 1 c/Microsoft`                 | Company updated             |
+| Edit position | `edit 1 p/Senior Engineer`           | Position updated            |
+| Edit date     | `edit 1 d/2024-12-01`                | Date updated                |
+| Edit status   | `edit 1 s/Interview`                 | Status updated to Interview |
+| Edit multiple | `edit 1 c/Google p/SWE d/2024-09-12` | All fields updated          |
+| Invalid index | `edit 99 c/Google`                   | Error: invalid index        |
+| No fields     | `edit 1`                             | Error: no fields to update  |
+| Invalid date  | `edit 1 d/2024-13-01`                | Error: invalid date format  |
 
 ### Search by Company Feature Testing
 

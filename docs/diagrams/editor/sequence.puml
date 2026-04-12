@@ -20,25 +20,16 @@ activate Parser
 Parser -> EditorParser : parse(input)
 activate EditorParser
 
-EditorParser -> EditorParser : normalize whitespace
-note right: replaceAll("\\s+", " ")
+EditorParser -> EditorParser : normalizeWhitespace()
+EditorParser -> EditorParser : extractIndex()
+EditorParser -> EditorParser : findFieldsStart()
+EditorParser -> EditorParser : parseFields()
 
-EditorParser -> EditorParser : extract index
-note right: parts[1] → 0
-
-EditorParser -> EditorParser : find fieldsStart
-note right: skip "edit INDEX"
-
-EditorParser -> EditorParser : parse fields
-note right
-  find c/, p/, d/, s/ prefixes
-  using findNextPrefix()
-end note
-
-alt newCompany != null
+opt c/ field present
     EditorParser -> EditorParser : company = "Microsoft"
 end
-alt newPosition != null
+
+opt p/ field present
     EditorParser -> EditorParser : position = "Senior Engineer"
 end
 
@@ -56,19 +47,18 @@ activate Editor
 
 Editor -> List : get(index)
 activate List
-List --> Editor : target application
+List --> Editor : target
 deactivate List
 
-alt newCompany != null
-    Editor -> Editor : target.setCompany("Microsoft")
+opt newCompany != null
+    Editor -> Editor : target.setCompany(newCompany)
 end
 
-alt newPosition != null
-    Editor -> Editor : target.setPosition("Senior Engineer")
+opt newPosition != null
+    Editor -> Editor : target.setPosition(newPosition)
 end
 
 Editor -> Editor : validateIndex()
-note right: check 0 ≤ index < size
 
 Editor -> Ui : showApplicationEdited(target)
 activate Ui
