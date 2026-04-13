@@ -579,18 +579,18 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 
 ### Delete Feature Testing
 
-| Test | Command | Expected |
-|---|---|---|
-| Valid delete | `delete 1` | First application removed from list. Deleted application details and remaining count shown. `JobPilotData.txt` updated. |
-| Invalid index | `delete 0` | `JobPilotException` thrown indicating invalid index. No deletion occurs. Storage remains unchanged. |
-| Missing index | `delete` | `JobPilotException` thrown indicating invalid index. No deletion occurs. Data file remains unchanged. |
-| Non-numeric index | `delete abc` | `JobPilotException` thrown due to non-numeric input. No deletion occurs. Storage remains consistent. |
-| Index out of range | `delete N+1` | `JobPilotException` thrown indicating index is out of bounds. No deletion occurs. Data file remains unchanged. |
+| Test               | Command      | Expected                                                                                                                |
+|--------------------|--------------|-------------------------------------------------------------------------------------------------------------------------|
+| Valid delete       | `delete 1`   | First application removed from list. Deleted application details and remaining count shown. `JobPilotData.txt` updated. |
+| Invalid index      | `delete 0`   | `JobPilotException` thrown indicating invalid index. No deletion occurs. Storage remains unchanged.                     |
+| Missing index      | `delete`     | `JobPilotException` thrown indicating invalid index. No deletion occurs. Data file remains unchanged.                   |
+| Non-numeric index  | `delete abc` | `JobPilotException` thrown due to non-numeric input. No deletion occurs. Storage remains consistent.                    |
+| Index out of range | `delete N+1` | `JobPilotException` thrown indicating index is out of bounds. No deletion occurs. Data file remains unchanged.          |
 
 <div style="page-break-after: always;"></div>
 
 ### Storage Feature Testing
 
-| Test | Action | Expected                                                                                                                                               |
-|---|---|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Test                    | Action                                     | Expected                                                                                                                                               |
+|-------------------------|--------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Save after modification | Perform `add`, `edit`, or `delete` command | `Storage.saveToFile()` is called. `JobPilotData.txt` is updated with the latest application list. On next launch, the list reflects all modifications. |
