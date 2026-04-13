@@ -1,21 +1,29 @@
 @startuml
 actor User
-participant JobPilot
-User -> JobPilot : input "search c/google" (or p/xxx, s/xxx)
-JobPilot -> JobPilot : search(type, query)
-JobPilot -> JobPilot : findMatches(applications, type, query)
+participant Ui
+participant Parser
+participant SearcherParser
+participant CommandRunner
+participant Application
+
+User -> Ui : "search c/google"
+Ui -> Parser : parse("search c/google")
+Parser -> SearcherParser : parse("search c/google")
+SearcherParser --> Parser : ParsedCommand(type=SEARCH, type="c", query="google")
+Parser --> CommandRunner : run(cmd)
 loop for each application
     alt type=c
-        JobPilot -> Application : getCompany()
-        Application --> JobPilot : company
+        CommandRunner -> Application : getCompany()
+        Application --> CommandRunner : company
     else type=p
-        JobPilot -> Application : getPosition()
-        Application --> JobPilot : position
+        CommandRunner -> Application : getPosition()
+        Application --> CommandRunner : position
     else type=s
-        JobPilot -> Application : getStatus()
-        Application --> JobPilot : status
+        CommandRunner -> Application : getStatus()
+        Application --> CommandRunner : status
     end
-    JobPilot -> JobPilot : contains(query)?
+    CommandRunner -> CommandRunner : contains(query)?
 end
-JobPilot -> User : display matching results
+CommandRunner -> Ui : showSearchResults(results, "c/google")
+Ui --> User : display matching results
 @enduml

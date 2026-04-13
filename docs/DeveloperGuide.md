@@ -235,9 +235,9 @@ The following diagram illustrates the case where no applications match the searc
 | Error Scenario       | Condition                                      | User Response                                                |
 |---------------------|-----------------------------------------------|-------------------------------------------------------------|
 | Empty Search Term     | User enters `search c/`, `p/`, or `s/` without keyword | "Search value cannot be empty!"                              |
-| No Applications       | Application list is empty                     | "No applications to search!"                                 |
-| No Match Found        | No application matches the keyword           | "No applications found for [type]: [keyword]"               |
-| Invalid Format        | Input does not follow `search c/xxx`, `p/xxx`, or `s/xxx` | "Invalid search format! Use: search c/xxx or p/xxx or s/xxx"|
+| No Applications       | Application list is empty                     | "Application list is empty!"                                 |
+| No Match Found        | No application matches the keyword           | "No applications found matching '[type]/[keyword]'."         |
+| Invalid Format        | Input does not follow `search c/xxx`, `p/xxx`, or `s/xxx` | "Invalid format! Use: search c/xxx or p/xxx or s/xxx"        |
 | Invalid Search Type   | Type is not `c`, `p`, or `s`                 | "Invalid search type! Use c/, p/, or s/"                     |
 
 ---
@@ -584,12 +584,12 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 
 | Test | Command | Expected |
 |------|--------|----------|
-| No match | `search Microsoft` | Prints "No applications found for company: Microsoft" |
-| Exact match | `search Google` | Shows 1 result with Google application only |
-| Partial match | `search Go` | Shows multiple results (e.g., Google, GoGoTravel) |
-| Case insensitive | `search GOOGLE` | Matches "Google" successfully |
-| Empty search term | `search ` | Error: "Please provide a company name to search" |
-| Empty list | `search Google` (no applications) | "No applications to search!" |
+| No match | `search c/Microsoft` | Prints "No applications found matching 'c/microsoft'." |
+| Single match | `search c/Google` | Shows 1 result matching `c/google` |
+| Partial match | `search c/Go` | Shows applications whose company contains `go` |
+| Case insensitive | `search c/GOOGLE` | Matches `Google` successfully |
+| Empty search term | `search c/` | Error: "Search value cannot be empty!" |
+| Empty list | `search c/Google` (no applications) | "Application list is empty!" |
 
 ### Filter by Status Feature Testing
 

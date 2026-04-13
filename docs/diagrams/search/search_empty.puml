@@ -1,9 +1,15 @@
 @startuml
 actor User
-participant JobPilot
-User -> JobPilot : input "search c/" (or p/ /s/)
-JobPilot -> JobPilot : search(type, query="")
+participant Ui
+participant Parser
+participant SearcherParser
+
+User -> Ui : "search c/"
+Ui -> Parser : parse("search c/")
+Parser -> SearcherParser : parse("search c/")
 alt searchTerm is empty
-    JobPilot -> User : show error message "Search value cannot be empty!"
+    SearcherParser --> Parser : throw JobPilotException
+    Parser -> Ui : showError("Search value cannot be empty!")
+    Ui --> User : error displayed
 end
 @enduml

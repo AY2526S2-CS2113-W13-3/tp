@@ -1,18 +1,25 @@
 @startuml
 actor User
-participant JobPilot
-participant "ArrayList<Application>" as AppList
+participant Ui
+participant Parser
+participant SearcherParser
+participant CommandRunner
 participant Application
-User -> JobPilot : input "search p/nonexistent"
-JobPilot -> JobPilot : search(type="p", query="nonexistent")
+User -> Ui : "search p/nonexistent"
+Ui -> Parser : parse("search p/nonexistent")
+Parser -> SearcherParser : parse("search p/nonexistent")
+SearcherParser --> Parser : ParsedCommand(type=SEARCH, type="p", query="nonexistent")
+Parser --> CommandRunner : run(cmd)
 loop for each application
-    JobPilot -> Application : getPosition()
-    Application --> JobPilot : position
-    JobPilot -> JobPilot : contains(query)?
+    CommandRunner -> Application : getPosition()
+    Application --> CommandRunner : position
+    CommandRunner -> CommandRunner : contains(query)?
 end
 alt no matches found
-    JobPilot -> User : "No applications found for position: nonexistent"
+    CommandRunner -> Ui : showSearchResults(empty, "p/nonexistent")
+    Ui --> User : "No applications found matching 'p/nonexistent'."
 else matches found
-    JobPilot -> User : display results
+    CommandRunner -> Ui : showSearchResults(results, "p/nonexistent")
+    Ui --> User : display results
 end
 @enduml
