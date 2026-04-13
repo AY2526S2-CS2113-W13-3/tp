@@ -13,16 +13,20 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Executes parsed commands and manages application flow.
  */
 public class CommandRunner {
+    private static final Logger LOGGER = Logger.getLogger(CommandRunner.class.getName());
 
     private final ArrayList<Application> applications;
     private int totalApplicationsAdded = 0;
 
     public CommandRunner(ArrayList<Application> applications) {
+        assert applications != null : "Applications list should not be null";
         this.applications = applications;
     }
 
@@ -30,6 +34,7 @@ public class CommandRunner {
         if (cmd == null) {
             return true;
         }
+        LOGGER.log(Level.FINE, "Executing command type: {0}", cmd.getType());
 
         switch (cmd.getType()) {
         case BYE:
@@ -161,13 +166,12 @@ public class CommandRunner {
         }
 
         String sortType = rawSortTerm != null ? rawSortTerm.trim().toLowerCase() : "";
-        boolean reverse = sortType.contains("reverse");
-        String fieldKey = sortType.replace("reverse", "").trim();
-        if (!fieldKey.isEmpty() && !fieldKey.startsWith("date") && !fieldKey.startsWith("company")
-                && !fieldKey.startsWith("status")) {
+        String[] tokens = sortType.isEmpty() ? new String[0] : sortType.split("\\s+");
+        if (!isValidSortTokens(tokens)) {
             Ui.showError("Invalid sort field! Use: sort [date|company|status] [reverse]");
             return;
         }
+        boolean reverse = hasReverseToken(tokens);
 
         Comparator<Application> comparator = getComparator(sortType);
 
@@ -189,6 +193,25 @@ public class CommandRunner {
         } else {
             return Comparator.naturalOrder();
         }
+    }
+
+    private boolean isValidSortTokens(String[] tokens) {
+        if (tokens.length == 0) {
+            return true;
+        }
+        if (tokens.length > 2) {
+            return false;
+        }
+        String field = tokens[0];
+        boolean validField = field.equals("date") || field.equals("company") || field.equals("status");
+        if (!validField) {
+            return false;
+        }
+        return tokens.length != 2 || tokens[1].equals("reverse");
+    }
+
+    private boolean hasReverseToken(String[] tokens) {
+        return tokens.length == 2 && tokens[1].equals("reverse");
     }
 
     // ===================== SEARCH =====================

@@ -72,4 +72,32 @@ public class SortTest {
         assertEquals(app1, applications.get(0));
         assertEquals(app2, applications.get(1));
     }
+
+    @Test
+    void sortApplications_invalidSimilarField_doesNotReorder() {
+        Application app1 = new Application("Zebra", "Role", "2025-01-01");
+        Application app2 = new Application("Apple", "Role", "2025-02-01");
+        applications.add(app1);
+        applications.add(app2);
+
+        ParsedCommand cmd = new ParsedCommand(CommandType.SORT, "companyyyy");
+        runner.run(cmd);
+
+        assertEquals(app1, applications.get(0));
+        assertEquals(app2, applications.get(1));
+    }
+
+    @Test
+    void sortApplications_reverseSubstringOnly_doesNotActAsReverse() {
+        Application app1 = new Application("Apple", "Role", "2025-01-01");
+        Application app2 = new Application("Zebra", "Role", "2025-02-01");
+        applications.add(app1);
+        applications.add(app2);
+
+        ParsedCommand cmd = new ParsedCommand(CommandType.SORT, "date noreverse");
+        runner.run(cmd);
+
+        assertEquals(app1, applications.get(0));
+        assertEquals(app2, applications.get(1));
+    }
 }
