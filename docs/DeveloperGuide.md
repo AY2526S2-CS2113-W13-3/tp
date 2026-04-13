@@ -2,7 +2,7 @@
 
 ## Acknowledgements
 
-This project was guided by the [SE-EDU initiative's](https://se-education.org) AddressBook-Level3 (AB3). We took guidance from its core architecture., parser design, 
+This project was guided by the [SE-EDU initiative's](https://se-education.org) AddressBook-Level3 (AB3). We took guidance from its core architecture, parser design, 
 and command execution flow to better suit JobPilot.
   
 ## Design
@@ -546,7 +546,7 @@ tracker to allow users to get a bird's eye view of all their applications and ma
 1. Download the `JobPilot.jar` file.
 2. Place the jar in an empty folder. 
 3. Open a terminal in that folder and run the app with the following command: `java -jar JobPilot.jar`
-      **Expected:** JobPilot launches. The CLI prompt appears showing the JobPilot logo.
+     **Expected:** JobPilot launches. The CLI prompt appears showing the JobPilot logo.
 
 
 ### Edit Feature Testing
