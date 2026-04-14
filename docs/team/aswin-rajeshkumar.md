@@ -1,136 +1,232 @@
-# Aswin Rajesh Kumar - Project Portfolio Page
+# Aswin Rajesh Kumar's Project Portfolio Page
 
 ## Overview
-JobPilot is a CLI application designed to help computing students efficiently manage their job applications. It allows users to track recruitment progress, maintain status notes, and search through entries using a simple command-line interface.
+**JobPilot** is a command-line application designed to help computing students efficiently manage their job applications.
+I implemented the status command, filter by status feature, and extended the status command with a notes sub-feature, along with comprehensive code testing.
+---
 
-I led the implementation of the advanced status and note management system, developed the status-based filtering utility, and resolved critical CI/CD environment conflicts to ensure cross-platform stability.
+## Summary of Contributions
 
-### Summary of Contributions
-*[Link to code on tP Code Dashboard](https://nus-cs2113-ay2526s2.github.io/tp-dashboard-viewer/lastActivity/index.html#group=W13-3&status=any&order=name&reverse=false&repoSort=true)*
+### Code Contributed
+*[link to code on tP Code Dashboard.](https://nus-cs2113-ay2526-s2.github.io/tp-dashboard/?search=Aswin-RajeshKumar&sort=groupTitle&sortWithin=title&timeframe=commit&mergegroup=&groupSelect=groupByRepos&breakdown=true&checkedFileTypes=docs~functional-code~test-code~other&since=2026-02-20T00%3A00%3A00&filteredFileName=&tabOpen=true&tabType=authorship&tabAuthor=Aswin-RajeshKumar&tabRepo=AY2526S2-CS2113-W13-3%2Ftp%5Bmaster%5D&authorshipIsMergeGroup=false&authorshipFileTypes=functional-code~test-code~docs&authorshipIsBinaryFileTypeChecked=false&authorshipIsIgnoredFilesChecked=false)
+
+---
 
 ### Enhancements Implemented
 
-#### Advanced Status and Notes Management
-Decoupled the original status field into two independent attributes: `status` (progress tracking) and `notes` (recruitment comments).
+#### 1. Application Status and Notes Feature (Core Feature)
+- Implemented `status INDEX [s/STATUS] [note/NOTE]`
+- Supports **partial updates**:
+  - Status only
+  - Notes only
+  - Both simultaneously
+- Preserves existing values when fields are omitted
 
-Key Features:
-* **Independent Prefixes**: Uses `s/` and `note/` prefixes for non-destructive updates.
-* **Advanced Parsing**: Implemented a state-based parsing loop ("The Inflator") in `StatusParser` to support flexible prefix ordering.
-* **Data Persistence**: Integrated separate fields into the application model with appropriate assertions.
+**Key Implementation Details:**
+- Developed `StatusParser`:
+  - Implements strict **“Junk Zone” validation** to reject unexpected text between index and prefixes.
+  - Supports flexible prefix ordering (`s/`, `note/`).
+  - Detects duplicate prefixes to prevent ambiguity.
+- Implemented prefix-based parsing logic to extract arguments safely.
+- Integrated with `CommandRunner` using **conditional updates**:
 
-Why it's complete:
-* Allows users to update their recruitment stage without overwriting existing detailed notes.
-* Supports flexible prefix ordering; `status 1 s/OFFER note/Great` and `status 1 note/Great s/OFFER` are both valid.
-* Handles empty status values defensively to prevent data corruption.
+**Significance:**
+- Handles complex CLI parsing edge cases.
+- Prevents unintended data overwrites.
+- Designed with strong modularity (Parser vs Logic separation).
 
-Implementation complexity:
-* Required designing a specialized subparser that handles multiple optional flags in a single command string.
-* Solved a critical bug where `java.util.logging` timestamps caused non-deterministic output in GitHub Actions.
-* Implemented a static initialization block to suppress loggers, ensuring stable character-for-character matching in the test suite.
+#### 2. Filter by Status Feature (Core Feature)
+- Implemented `filter s/STATUS`
+- Supports **case-insensitive partial matching** (e.g., `off` → `OFFER`, `p` → `PENDING`, `PROCESSING`).
 
-#### Filter by Status Utility
-Specialized utility to retrieve a subset of applications matching a specific recruitment stage.
+**Key Implementation Details:**
+- Built `FilterParser`:
+  - Enforces strict format (`s/` prefix required).
+  - Rejects malformed input and missing arguments.
+- Developed `Filterer` class:
+  - Encapsulates filtering logic (Single Responsibility Principle).
+  - Handles null safety and whitespace normalization.
 
-Key Features:
-* **Case-Insensitive Logic**: Implemented matching logic in the `Filterer` class.
-* **Partial Matching**: Support for partial status matches (e.g., "OFF" matches "OFFER").
-* **Defensive Design**: Included null handling to ensure the application remains robust against incomplete data.
+**Significance:**
+- Balances flexibility (partial matching) with strict validation.
+- Clean separation between parsing, logic, and UI.
 
-Why it's complete:
-* Efficiently narrows down large lists to focus only on active leads or specific stages.
-* Gracefully handles scenarios where no matches are found or the application list is empty.
-* Integrates seamlessly with the `Ui` component to display filtered results in a standard list format.
+#### 3. Testing (High Depth)
+Implemented comprehensive test coverage across features:
 
-Implementation complexity:
-* Designed a `FilterParser` that validates required prefixes (`s/`) before execution.
-* Balanced performance by utilizing linear search on the `ArrayList`, maintaining efficiency for the target load.
-* Followed strict separation of concerns, decoupling the logical filtering from the user interface display.
+- **StatusTest**:
+  - Equivalence Partitioning (valid/invalid updates).
+  - Boundary Value Analysis (index handling).
+  - Robustness testing: Long strings (1000+ characters), special characters, and null handling.
+- **FiltererTest**:
+  - Integration-level testing of filtering logic.
+  - Validates case-insensitivity, partial matching, and multiple matches.
+  - Edge cases: Empty application list, null status values, whitespace-heavy input.
+- **Parser Tests**:
+  - `StatusParserTest`: Junk Zone validation, duplicate prefix detection.
+  - `FilterParserTest`: Format enforcement, edge case handling.
 
-### Team Contributions
-* Identified and resolved Continuous Integration (CI) failures related to cross-platform logger timestamps.
-* Coordinated the team's transition from legacy main-loop execution to the modular `CommandRunner` architecture.
-* Mentored team members on implementing defensive coding patterns and unit testing strategies.
-
-## Contributions to Developer Guide (Extracts)
-
-### Filter by Status Feature
-The **Filter by Status** mechanism allows users to retrieve a subset of applications matching a specific status via a dedicated `Filterer` class.
-
-#### Implementation
-The operation is handled via the following methods:
-* `FilterParser#parse(String)`: Extracts the status query from raw input.
-* `Filterer#filterByStatus(ArrayList<Application>, String)`: Performs the logical match.
-
-**Step 1**: User executes `filter s/OFFER`.
-**Step 2**: `Parser` routes execution to `FilterParser`.
-**Step 3**: `FilterParser` validates prefix and returns `ParsedCommand`.
-**Step 4**: `CommandRunner` calls `Filterer.filterByStatus`.
-
-![Filter Sequence Diagram](diagrams/filter/sequence.png)
-*Figure 1: Filter Feature Execution Flow*
-
-### Separate Notes from Status Feature
-
-#### Design Considerations
-**Aspect: Data Integrity**
-* **Current Implementation**: Separate fields for `status` and `notes`.
-    * *Pros*: High flexibility; users can update one without the other.
-    * *Cons*: Requires more complex parsing logic.
-
-#### Sequence Diagram
-![Status Sequence Diagram](diagrams/status/sequence.png)
-*Figure 2: Status and Note Update Flow*
-
-**Error Handling**
-| Error Scenario | Condition | User Response |
-|----------------|-----------|---------------|
-| Missing Index | User enters `status` without a number | "Please provide an index..." |
-| Invalid Index | Index exceeds list size | "Invalid application number!" |
-| Missing Prefixes | No `s/` or `note/` flags provided | "No valid fields to update!" |
-| Empty Status | User enters `status 1 s/` | "Status cannot be empty!" |
-
-### User Stories
-| Version | As a ... | I want to ... | So that I can ... |
-|------|----------|---------------------------------------|------------------------------------|
-| v1.0 | user | update application status | track my application progress |
-| v2.0 | user | search applications by company name | locate specific companies |
-| v2.0 | user | filter applications by status | focus on a specific stage |
-
-## Contributions to User Guide (Extracts)
-
-### Updating application status: `status`
-Updates the recruitment progress and allows for independent note-taking.
-
-**Format**: `status INDEX [s/STATUS] [note/NOTE]`
-* `s/STATUS`: The current stage (e.g., Interview, Offer).
-* `note/NOTE`: (Optional) Additional feedback or context.
-
-**Example**:
-`status 1 s/Interview note/Scheduled for next Tuesday`
-
-**Example output**:
-`Status updated: Google | SE manager | 2025-03-10 | INTERVIEW (Note: Scheduled for next Tuesday)`
-
-### Filtering applications by status: `filter`
-Retrieves all applications that match a specific status.
-
-**Format**: `filter s/STATUS`
-* `s/STATUS`: The status string to match.
-
-**Example**:
-`filter s/OFFER`
-
-**Example output**:
-`Found 2 application(s) with status matching 'OFFER':`
-`1. Google | SE manager | 2025-03-10 | OFFER (Note: Salary negotiation)`
+**Significance:**
+- Goes beyond basic unit testing (BVA + EP + robustness).
+- Tests real system behavior, not just isolated components.
+- Improves reliability and prevents regressions.
 
 ---
-### Manual Testing Instructions
-**Test Case: Search by Status**
-1. Setup: Ensure at least one application has status "OFFER".
-2. Action: `search s/OFFER`.
-3. Expected: List shows only applications matching "OFFER".
 
-**Test Case: Partial Status Match**
-1. Action: `filter s/PEND`.
-2. Expected: Applications with status "PENDING" are displayed.
+### User Guide Contributions
+Wrote documentation for the `status` (with notes) and `filter` commands.
+
+**Key Contributions:**
+- Explained partial updates and smart matching behavior.
+- Outlined format integrity rules.
+- Provided structured command examples with realistic outputs.
+
+---
+
+### Developer Guide Contributions
+
+#### Status and Notes Feature
+- Documented `StatusParser` design and parsing strategy.
+- Detailed the execution flow via `CommandRunner` and the conditional update mechanism.
+- Included error handling tables and design rationale (modularity, validation strategy).
+- Added and Enhanced UML sequence diagram illustrating the full execution flow.
+
+#### Filter Feature
+- Documented `FilterParser` and `Filterer` architecture.
+- Detailed the execution flow and validation logic.
+- Included design rationale (SRP, partial matching), error handling cases, and performance considerations.
+- Added and Enhanced UML sequence diagram illustrating the full execution flow.
+---
+
+### Contributions to Team-Based Tasks
+- Integrated features into existing architecture (`Parser`, `CommandRunner`).
+- Ensured compatibility with the `Application` data model and UI output formatting.
+- Maintained consistency with prefix-based CLI command design.
+- Contributed to feature completeness and system stability with high-level testing and debugging.
+- Helped resolve CI blockers caused by command dispatch and compile errors.
+- Updated the UG and DG to ensure consistency, proper structure, clear formatting, and up-to-date content.
+---
+
+## Contributions to the Developer Guide (Extracts)
+
+### Application Status and Notes Feature
+
+#### Implementation Details
+The Status feature allows users to update an application's recruitment stage and attach notes independently without overwriting existing data.
+
+**Command format:**
+`status INDEX [s/STATUS] [note/NOTE]`
+
+**Execution Flow:**
+1. **User inputs:** `status 1 s/OFFER note/Negotiate salary`
+2. **Parser** routes input to `StatusParser`.
+3. **StatusParser:**
+  - Validates index.
+  - Performs Junk Zone validation.
+  - Extracts prefix values into `ParsedCommand`.
+4. **CommandRunner:**
+  - Validates index bounds.
+  - Applies conditional updates.
+5. **Ui** displays the updated application.
+
+#### Error Handling
+
+| Error Scenario        | Condition                                                          | User Response                                              |
+|-----------------------|--------------------------------------------------------------------|------------------------------------------------------------|
+| **Missing Index**     | User enters `status s/OFFER` without index                         | "Please provide an index. Example: status 1 s/OFFER"       |
+| **Invalid Index**     | Index is 0, negative, or exceeds list size                         | "Invalid application number! You have X application(s)."   |
+| **Junk Zone Text**    | Unexpected text before prefixes (e.g., `status 1 updated s/OFFER`) | "Invalid format! Unexpected text before prefixes: updated" |
+| **Empty Status**      | User enters `status 1 s/`                                          | "Status value cannot be empty!"                            |
+| **Missing Arguments** | User enters `status 1` without prefixes                            | "No status or note provided! Use s/ or note/."             |
+
+#### Design Rationale
+
+| Decision                          | Rationale                                                                                                                       |
+|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| **Primary Status Field**          | Serves as the key metric for sorting and filtering; normalized to uppercase for consistent searching.                           |
+| **Independent Notes Sub-feature** | Decouples subjective user comments from objective recruitment stages, preventing data loss during status transitions.           |
+| **Conditional Setter Execution**  | By only calling setters for non-null `ParsedCommand` fields, the system supports partial updates, improving CLI efficiency.     |
+| **Strict Junk Zone Validation**   | Prevents user ambiguity by ensuring all text following the index is associated with a valid prefix.                             |
+| **Dedicated Sub-Parser**          | Encapsulates complex prefix-searching logic (e.g., handling `note/` inside a status string) away from the main command routing. |
+
+
+### Filter by Status Feature
+
+#### Implementation Details
+The Filter feature retrieves applications that match a given status keyword using flexible matching.
+
+**Command format:**
+`filter s/STATUS`
+
+#### Design Rationale
+
+| Decision                                           | Rationale                                                                                                                                                                                              |
+|----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Separate `Filterer` Class**                      | Maintains the Single Responsibility Principle by isolating filtering logic from parsing and UI responsibilities, improving modularity and testability.                                                 |
+| **Case-Insensitive Partial Matching (`contains`)** | Supports flexible "smart matching" behaviour, allowing partial inputs such as `off` to match `OFFER`, and `p` to match both `PENDING` and `PROCESSING`. This aligns with the User Guide specification. |
+| **Linear Scan over `ArrayList`**                   | Simple and efficient for the expected dataset size (≤ 500 applications), avoiding unnecessary complexity while maintaining acceptable performance.                                                     |
+
+---
+
+#### Error Handling
+
+| Error Scenario    | Condition                     | User Response                                                           |
+|-------------------|-------------------------------|-------------------------------------------------------------------------|
+| Missing Arguments | User enters `filter` alone    | "Filter command is missing arguments! Use: filter s/STATUS"             |
+| Missing Prefix    | User enters `filter PENDING`  | "Invalid filter format! Expected: filter s/STATUS"                      |
+| Empty Value       | User enters `filter s/`       | "The filter value cannot be empty! Please provide a status after 's/'." |
+| Format Violation  | Junk text appears before `s/` | "Invalid filter format! Unexpected input before prefix."                |
+
+---
+
+## Contributions to the User Guide (Extracts)
+
+### Updating Application Status
+Updates the recruitment status and optionally attaches notes.
+
+**Format:**
+`status INDEX [s/STATUS] [note/NOTE]`
+
+**Examples**
+
+- `status 1 s/Interview note/Technical round next Tuesday`
+
+```text
+Status updated:
+Google | SE manager | 2025-03-10 | INTERVIEW (Note: Technical round next Tuesday)
+___________________________________________________________________________
+```
+
+- `status 2 s/REJECTED`
+
+```text
+Status updated:
+Amazon | Data Analyst | 2025-03-08 | REJECTED
+___________________________________________________________________________
+```
+
+### Filtering Applications by Status
+Filters applications using case-insensitive partial matching.
+
+**Format:**
+`filter s/STATUS`
+
+**Examples:**
+
+- `filter s/OFFER`
+
+```text
+Filtered by status: OFFER
+Found 2 application(s) with status 'OFFER':
+1. Google | SE manager | 2025-03-10 | OFFER (Note: Salary negotiation) | Tags: [TECH]
+2. Shopee | Backend Intern | 2025-03-15 | OFFER (Note: Pending acceptance)
+___________________________________________________________________________
+```
+- `filter s/Pend`
+
+```text
+Filtered by status: PEND
+Found 1 application(s) with status 'PEND':
+1. Meta | Frontend | 2026-06-01 | PENDING
+___________________________________________________________________________
+```
