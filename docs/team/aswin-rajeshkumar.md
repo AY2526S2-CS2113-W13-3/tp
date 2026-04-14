@@ -4,14 +4,11 @@
 **JobPilot** is a command-line application designed to help computing students efficiently manage their job applications.
 I implemented the status command, filter by status feature, and extended the status command with a notes sub-feature, along with comprehensive code testing.
 ---
-
 ## Summary of Contributions
 
 ### Code Contributed
 *[link to code on tP Code Dashboard.](https://nus-cs2113-ay2526-s2.github.io/tp-dashboard/?search=Aswin-RajeshKumar&sort=groupTitle&sortWithin=title&timeframe=commit&mergegroup=&groupSelect=groupByRepos&breakdown=true&checkedFileTypes=docs~functional-code~test-code~other&since=2026-02-20T00%3A00%3A00&filteredFileName=&tabOpen=true&tabType=authorship&tabAuthor=Aswin-RajeshKumar&tabRepo=AY2526S2-CS2113-W13-3%2Ftp%5Bmaster%5D&authorshipIsMergeGroup=false&authorshipFileTypes=functional-code~test-code~docs&authorshipIsBinaryFileTypeChecked=false&authorshipIsIgnoredFilesChecked=false)
-
 ---
-
 ### Enhancements Implemented
 
 #### 1. Application Status and Notes Feature (Core Feature)
@@ -30,11 +27,6 @@ I implemented the status command, filter by status feature, and extended the sta
 - Implemented prefix-based parsing logic to extract arguments safely.
 - Integrated with `CommandRunner` using **conditional updates**:
 
-**Significance:**
-- Handles complex CLI parsing edge cases.
-- Prevents unintended data overwrites.
-- Designed with strong modularity (Parser vs Logic separation).
-
 #### 2. Filter by Status Feature (Core Feature)
 - Implemented `filter s/STATUS`
 - Supports **case-insensitive partial matching** (e.g., `off` → `OFFER`, `p` → `PENDING`, `PROCESSING`).
@@ -46,10 +38,6 @@ I implemented the status command, filter by status feature, and extended the sta
 - Developed `Filterer` class:
   - Encapsulates filtering logic (Single Responsibility Principle).
   - Handles null safety and whitespace normalization.
-
-**Significance:**
-- Balances flexibility (partial matching) with strict validation.
-- Clean separation between parsing, logic, and UI.
 
 #### 3. Testing (High Depth)
 Implemented comprehensive test coverage across features:
@@ -66,45 +54,10 @@ Implemented comprehensive test coverage across features:
   - `StatusParserTest`: Junk Zone validation, duplicate prefix detection.
   - `FilterParserTest`: Format enforcement, edge case handling.
 
-**Significance:**
-- Goes beyond basic unit testing (BVA + EP + robustness).
-- Tests real system behavior, not just isolated components.
-- Improves reliability and prevents regressions.
-
----
-
-### User Guide Contributions
-Wrote documentation for the `status` (with notes) and `filter` commands.
-
-**Key Contributions:**
-- Explained partial updates and smart matching behavior.
-- Outlined format integrity rules.
-- Provided structured command examples with realistic outputs.
-
----
-
-### Developer Guide Contributions
-
-#### Status and Notes Feature
-- Documented `StatusParser` design and parsing strategy.
-- Detailed the execution flow via `CommandRunner` and the conditional update mechanism.
-- Included error handling tables and design rationale (modularity, validation strategy).
-- Added and Enhanced UML sequence diagram illustrating the full execution flow.
-
-#### Filter Feature
-- Documented `FilterParser` and `Filterer` architecture.
-- Detailed the execution flow and validation logic.
-- Included design rationale (SRP, partial matching), error handling cases, and performance considerations.
-- Added and Enhanced UML sequence diagram illustrating the full execution flow.
----
-
 ### Contributions to Team-Based Tasks
 - Integrated features into existing architecture (`Parser`, `CommandRunner`).
-- Ensured compatibility with the `Application` data model and UI output formatting.
-- Maintained consistency with prefix-based CLI command design.
 - Contributed to feature completeness and system stability with high-level testing and debugging.
 - Helped resolve CI blockers caused by command dispatch and compile errors.
-- Updated the UG and DG to ensure consistency, proper structure, clear formatting, and up-to-date content.
 ---
 
 ## Contributions to the Developer Guide (Extracts)
@@ -190,7 +143,6 @@ Updates the recruitment status and optionally attaches notes.
 **Examples**
 
 - `status 1 s/Interview note/Technical round next Tuesday`
-
 ```text
 Status updated:
 Google | SE manager | 2025-03-10 | INTERVIEW (Note: Technical round next Tuesday)
@@ -198,7 +150,6 @@ ___________________________________________________________________________
 ```
 
 - `status 2 s/REJECTED`
-
 ```text
 Status updated:
 Amazon | Data Analyst | 2025-03-08 | REJECTED
@@ -212,9 +163,7 @@ Filters applications using case-insensitive partial matching.
 `filter s/STATUS`
 
 **Examples:**
-
 - `filter s/OFFER`
-
 ```text
 Filtered by status: OFFER
 Found 2 application(s) with status 'OFFER':
@@ -223,7 +172,6 @@ Found 2 application(s) with status 'OFFER':
 ___________________________________________________________________________
 ```
 - `filter s/Pend`
-
 ```text
 Filtered by status: PEND
 Found 1 application(s) with status 'PEND':
